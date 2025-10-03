@@ -34,7 +34,7 @@ export const useFetch = ({URL, triggerInput}:Props) => {
       }
     };
     void fetchData();
-  }, [triggerInput]);
+  }, [triggerInput, URL]);
 
   return { data, loading, error };
 };

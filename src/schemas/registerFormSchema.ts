@@ -4,7 +4,8 @@ export const RegisterFormSchema = z.object({
     userName: z
       .string()
       .min(3, "El nombre de usuario debe tener al menos 3 caracteres")
-      .max(30, "El nombre de usuario debe tener como máximo 30 caracteres"),
+      .max(30, "El nombre de usuario debe tener como máximo 30 caracteres")
+      .regex(/^[a-zA-Z0-9_]+$/, "El nombre de usuario sólo puede contener letras, números y guiones bajos"),
     userPassword: z
       .string()
       .min(8, "La constraseña debe tener al menos 8 caracteres")

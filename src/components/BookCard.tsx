@@ -1,4 +1,4 @@
-import type{ Item } from "../../../shared/schemas/apiResonpeSchema"
+import type { Item } from "../schemas/apiResponseSchema"
 
 interface Props {
     bookItem: Item

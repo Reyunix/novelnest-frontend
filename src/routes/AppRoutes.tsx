@@ -6,7 +6,7 @@ import { Footer } from "../pages/Footer";
 import { SearchPage } from "../pages/SearchPage";
 import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
-import { Test } from "../Test";
+// import { Test } from "../Test";
 
 export const AppRoutes:React.FC = () =>{
 
@@ -23,7 +23,7 @@ export const AppRoutes:React.FC = () =>{
                 <Route path="/buscar" element={<SearchPage/>} />
                 <Route path="/login" element={<Login/>} />
                 <Route path="/register" element={<Register/>} />
-                <Route path="/test" element={<Test/>} />
+                {/* <Route path="/test" element={<Test/>} /> */}
             </Routes>
         </main>
 
