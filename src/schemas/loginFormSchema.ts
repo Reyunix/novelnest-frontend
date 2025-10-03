@@ -2,7 +2,7 @@ import z from "zod";
 
 export const LoginFormSchema = z
   .object({
-    userName: z.string().optional(),
+    userName: z.string().trim().optional(),
     userEmail: z.email("Formato de correo inválido").optional(),
     userPassword: z.string().min(1, "La contraseña es obligatoria"),
   })
