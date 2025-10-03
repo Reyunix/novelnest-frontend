@@ -11,6 +11,7 @@ export const Register = () => {
       formLinks={REGISTER_FORM_LINKS}
       title="Crear cuenta"
       buttonLiteral="Crear cuenta"
+      formSchemaType="register"
     />
   );
 };
