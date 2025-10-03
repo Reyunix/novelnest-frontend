@@ -14,7 +14,7 @@ export const FOOTER_MENU_LINKS = [
   { id: 2, literal: "Políticas de Privacidad", href: "/" },
 ];
 
-export const REGISTER_FORM_LINKS = [
+export const REGISTER_FORM_LINKS: FormLink[] = [
   { id: 0, literal: "Condiciones del Servicio", href: "/" },
   { id: 1, literal: "Pólitica de Privacidad", href: "/" },
   { id: 2, literal: "¿Ya tienes una cuenta? Inicia sesión", href: "/login" },
@@ -56,7 +56,7 @@ export const REGISTER_FORM_FIELDS = [
     inputType: "text",
     autofocus: false,
   },
-]
+];
 
 export const LOGIN_FORM_LINKS: FormLink[] = [
   {
@@ -67,7 +67,7 @@ export const LOGIN_FORM_LINKS: FormLink[] = [
     fieldPosition: "userPassword",
   },
   { id: 1, literal: "¿No tienes una cuenta? Registrarse", href: "/register" },
-]
+];
 
 export const LOGIN_FORM_FIELDS = [
   {
@@ -84,7 +84,38 @@ export const LOGIN_FORM_FIELDS = [
     inputType: "password",
     autofocus: false,
   },
-]
+];
+
+export const CONTACT_FORM_FIELDS = [
+  {
+    id: "contactName",
+    literal: "Nombre",
+    required: true,
+    inputType: "text",
+    autofocus: true,
+  },
+  {
+    id: "contactEmail",
+    literal: "Dirección de correo",
+    required: true,
+    inputType: "text",
+    autofocus: false,
+  },
+  {
+    id: "contactCompany",
+    literal: "Empresa",
+    required: true,
+    inputType: "textarea",
+    autofocus: false,
+  },
+  {
+    id: "sendCopy",
+    literal: "Deseo recibir una copia a mi correo",
+    required: false,
+    autofocus: false,
+    inputType: "checkbox",
+  },
+];
 
 export const FORM_ERRORMAP = {
   USERNAME_ALREADY_EXISTS: "userName",

@@ -11,6 +11,13 @@ export const Login:React.FC = () => {
     buttonLiteral="Iniciar Sesión"
     title="¡Hola de nuevo! ¡Nos alegramos mucho de volver a verte!"    
     formSchemaType="login"
+    payloadTransformer={(data) => {
+    const isEmail = data.userName?.includes("@");
+    return isEmail
+      ? { userEmail: data.userName, userPassword: data.userPassword }
+      : { userName: data.userName, userPassword: data.userPassword };
+    }}
+    
     />
   );
 };

@@ -1,14 +1,12 @@
 import { NavLink } from "react-router-dom";
-import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  RegisterFormSchema,
-  type RegisterForm,
-} from "../schemas/registerFormSchema";
+import { RegisterFormSchema, type RegisterForm, } from "../schemas/registerFormSchema";
 import { LoginFormSchema, type LoginForm } from "../schemas/loginFormSchema";
 import { FORM_ERRORMAP } from "../consts";
 import type { FormProps } from "../types/interfaces";
+import { ContactFormSchema, type ContactForm, } from "../schemas/contactFormSchema";
 
 export const GenerateForm: React.FC<FormProps> = ({
   formFieldsList,
@@ -17,21 +15,24 @@ export const GenerateForm: React.FC<FormProps> = ({
   title,
   buttonLiteral,
   formSchemaType,
+  payloadTransformer,
 }) => {
   const schemaMap = {
     login: LoginFormSchema,
     register: RegisterFormSchema,
+    contact: ContactFormSchema,
   };
 
   type typeMap = {
     login: LoginForm;
     register: RegisterForm;
+    contact: ContactForm;
   };
 
   const formSchema = schemaMap[formSchemaType];
   type FormData = typeMap[typeof formSchemaType];
 
-  const focusField = formFieldsList[0].id;
+  const focusField = formFieldsList.find((field) => field.autofocus)?.id;
   const {
     register,
     setFocus,
@@ -39,24 +40,16 @@ export const GenerateForm: React.FC<FormProps> = ({
     reset,
     setError,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(formSchema),
-  });
+  } = useForm({ resolver: zodResolver(formSchema) });
 
   useEffect(() => {
     setFocus(focusField as keyof FormData);
   }, [focusField, setFocus]);
 
   const onSubmit = async (data: FormData) => {
-    const payload = data.userName?.includes("@")
-      ? {
-          userEmail: data.userName,
-          userPassword: data.userPassword,
-        }
-      : {
-          userName: data.userName,
-          userPassword: data.userPassword,
-        };
+    const payload = payloadTransformer
+      ? payloadTransformer(data as LoginForm)
+      : data;
     console.log(apiEndpoint);
     try {
       const response = await fetch(apiEndpoint, {
@@ -105,13 +98,26 @@ export const GenerateForm: React.FC<FormProps> = ({
                   {field.literal}
                   {field.required && <span className="required-field"> *</span>}
                 </label>
-                <input
-                  type={field.inputType}
-                  id={field.id}
-                  required={field.required}
-                  {...register(field.id as keyof FormData)}
-                />
-                {
+
+                {field.inputType === "textarea" ? (
+                  <textarea
+                    key={field.id}
+                    id={field.id}
+                    required={field.required}
+                    {...register(field.id as keyof FormData)}
+                  >
+                  </textarea>
+                ) : (
+                  <input
+                    key={field.id}
+                    type={field.inputType}
+                    id={field.id}
+                    required={field.required}
+                    {...register(field.id as keyof FormData)}
+                  />
+                )}
+
+                {formLinks &&
                   formLinks.map((link) => {
                     if (link.customPosition && link.fieldPosition === field.id)
                       return (
@@ -131,15 +137,16 @@ export const GenerateForm: React.FC<FormProps> = ({
               {buttonLiteral}
             </button>
             <div className="flex-row">
-              {formLinks.map((link) => {
-                if (!link.customPosition) {
-                  return (
-                    <NavLink to={link.href} className="links" key={link.id}>
-                      {link.literal}
-                    </NavLink>
-                  );
-                }
-              })}
+              {formLinks &&
+                formLinks.map((link) => {
+                  if (!link.customPosition) {
+                    return (
+                      <NavLink to={link.href} className="links" key={link.id}>
+                        {link.literal}
+                      </NavLink>
+                    );
+                  }
+                })}
             </div>
           </footer>
         </form>

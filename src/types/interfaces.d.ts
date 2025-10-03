@@ -1,10 +1,13 @@
+import type { LoginForm } from "../schemas/loginFormSchema";
+
 export interface FormProps {
   formFieldsList: FormField[];
   apiEndpoint: string;
-  formLinks: FormLink[];
+  formLinks?: FormLink[];
   title: string;
   buttonLiteral: string;
   formSchemaType: schemaType;
+  payloadTransformer?: (data: LoginForm) => unknown 
 }
 
 export interface FormField {
@@ -26,6 +29,7 @@ export interface FormLink {
 export const schemaTypes = {
   registerForm: "register",
   logingForm: "login",
+  contactForm: "contact"
 } as const;
 
 export type schemaType =  typeof schemaTypes[keyof typeof schemaTypes]
