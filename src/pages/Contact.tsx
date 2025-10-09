@@ -9,6 +9,8 @@ export const Contact = () => {
     formSchemaType='contact'
     title='Envíanos tus sugerencias'
     formFieldsList={CONTACT_FORM_FIELDS}
+
+
     />
   )
 }

@@ -3,7 +3,7 @@ import type { FormLink } from "./types/interfaces";
 export const HEADER_MENU_LINKS = [
   { id: 0, literal: "Inicio", href: "/inicio" },
   { id: 1, literal: "Mi Colección", href: "/" },
-  { id: 2, literal: "Contacto", href: "/" },
+  { id: 2, literal: "Contacto", href: "/contact" },
   { id: 3, literal: "Iniciar Sesión", href: "/login" },
   { id: 4, literal: "Buscar", href: "/buscar" },
 ];
@@ -33,28 +33,28 @@ export const REGISTER_FORM_FIELDS = [
     literal: "Nombre de usuario",
     required: true,
     inputType: "text",
-    autofocus: false,
+    // autofocus: false,
   },
   {
     id: "userPassword",
     literal: "Contraseña",
     required: true,
     inputType: "password",
-    autofocus: false,
+    // autofocus: false,
   },
   {
     id: "confirmPassword",
     literal: "Repetir contraseña",
     required: true,
     inputType: "password",
-    autofocus: false,
+    // autofocus: false,
   },
   {
     id: "userAddress",
     literal: "Dirección",
     required: false,
     inputType: "text",
-    autofocus: false,
+    // autofocus: false,
   },
 ];
 
@@ -82,7 +82,7 @@ export const LOGIN_FORM_FIELDS = [
     literal: "Contraseña",
     required: true,
     inputType: "password",
-    autofocus: false,
+    // // autofocus: false,
   },
 ];
 
@@ -98,23 +98,33 @@ export const CONTACT_FORM_FIELDS = [
     id: "contactEmail",
     literal: "Dirección de correo",
     required: true,
-    inputType: "text",
-    autofocus: false,
+    inputType: "email",
+    // // autofocus: false,
   },
   {
     id: "contactCompany",
     literal: "Empresa",
     required: true,
+    inputType: "text",
+    // // autofocus: false,
+  },
+
+  {
+    id: "contactMessage",
+    literal: "Mensaje",
+    required: true,
+    // // autofocus: false,
     inputType: "textarea",
-    autofocus: false,
+  
   },
   {
     id: "sendCopy",
     literal: "Deseo recibir una copia a mi correo",
     required: false,
-    autofocus: false,
+    // // autofocus: false,
     inputType: "checkbox",
   },
+
 ];
 
 export const FORM_ERRORMAP = {
