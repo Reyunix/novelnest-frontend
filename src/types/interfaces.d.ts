@@ -1,21 +1,21 @@
-import type { LoginForm } from "../schemas/loginFormSchema";
 
-export interface FormProps {
+export interface iFormProps<T extends schemaType> {
   formFieldsList: FormField[];
   apiEndpoint: string;
   formLinks?: FormLink[];
   title: string;
   buttonLiteral: string;
-  formSchemaType: schemaType;
-  payloadTransformer?: (data: LoginForm) => unknown 
+  formSchemaType: T;
+  payloadTransformer?: (data: typeMap[T]) => unknown;
 }
+
 
 export interface FormField {
   id: string;
   literal: string;
   required: boolean;
   inputType: string;
-  autofocus: boolean;
+  autofocus?: boolean;
 }
 
 export interface FormLink {

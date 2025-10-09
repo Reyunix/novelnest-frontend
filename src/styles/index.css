@@ -242,3 +242,11 @@ body {
   width: 100%;
   height: 2.5rem;
 }
+
+.error-message{
+  color: rgb(255, 0, 0);
+}
+
+.form-input-field{
+  font-size: 0.9rem;
+}

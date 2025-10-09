@@ -1,14 +1,21 @@
 import { NavLink } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import React, { useEffect } from "react";
+import { useForm} from "react-hook-form";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormSchema, type RegisterForm, } from "../schemas/registerFormSchema";
 import { LoginFormSchema, type LoginForm } from "../schemas/loginFormSchema";
 import { FORM_ERRORMAP } from "../consts";
-import type { FormProps } from "../types/interfaces";
+import type { iFormProps, schemaType } from "../types/interfaces";
 import { ContactFormSchema, type ContactForm, } from "../schemas/contactFormSchema";
+import type { Resolver } from "react-hook-form";
+import type { Path } from "react-hook-form";
+export type typeMap = {
+  login: LoginForm;
+  register: RegisterForm;
+  contact: ContactForm;
+};
 
-export const GenerateForm: React.FC<FormProps> = ({
+export const GenerateForm  = <T extends schemaType>({
   formFieldsList,
   apiEndpoint,
   formLinks,
@@ -16,23 +23,26 @@ export const GenerateForm: React.FC<FormProps> = ({
   buttonLiteral,
   formSchemaType,
   payloadTransformer,
-}) => {
+}: iFormProps<T>) => {
+
   const schemaMap = {
     login: LoginFormSchema,
     register: RegisterFormSchema,
     contact: ContactFormSchema,
   };
 
-  type typeMap = {
-    login: LoginForm;
-    register: RegisterForm;
-    contact: ContactForm;
-  };
+  // type typeMap = {
+  //   login: LoginForm;
+  //   register: RegisterForm;
+  //   contact: ContactForm;
+  // };
 
   const formSchema = schemaMap[formSchemaType];
-  type FormData = typeMap[typeof formSchemaType];
+  type FormData = typeMap[T];
+  type FormDataTyped = Path<FormData>
 
   const focusField = formFieldsList.find((field) => field.autofocus)?.id;
+  const resolverTyped = zodResolver(formSchema) as unknown as Resolver<FormData>;
   const {
     register,
     setFocus,
@@ -40,20 +50,21 @@ export const GenerateForm: React.FC<FormProps> = ({
     reset,
     setError,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(formSchema) });
+  } = useForm<FormData>({ resolver: resolverTyped });
 
   useEffect(() => {
-    setFocus(focusField as keyof FormData);
+    if (focusField) {
+  setFocus(focusField as FormDataTyped);
+};
   }, [focusField, setFocus]);
 
   const onSubmit = async (data: FormData) => {
     const payload = payloadTransformer
-      ? payloadTransformer(data as LoginForm)
-      : data;
-    console.log(apiEndpoint);
+      ? payloadTransformer(data) : data;
     try {
       const response = await fetch(apiEndpoint, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -70,12 +81,11 @@ export const GenerateForm: React.FC<FormProps> = ({
           const fieldName =
             FORM_ERRORMAP[errorData.errorCode as keyof typeof FORM_ERRORMAP];
 
-          setError(fieldName, {
+          setError(fieldName as FormDataTyped, {
             type: "manual",
             message: errorData.message,
           });
         }
-
         return;
       }
       console.log("Usuario registrado exitosamente");
@@ -104,7 +114,10 @@ export const GenerateForm: React.FC<FormProps> = ({
                     key={field.id}
                     id={field.id}
                     required={field.required}
-                    {...register(field.id as keyof FormData)}
+                    rows={15}
+                    cols={70}
+                    className="form-input-field"
+                    {...register(field.id as FormDataTyped)}
                   >
                   </textarea>
                 ) : (
@@ -113,7 +126,8 @@ export const GenerateForm: React.FC<FormProps> = ({
                     type={field.inputType}
                     id={field.id}
                     required={field.required}
-                    {...register(field.id as keyof FormData)}
+                    {...register(field.id as FormDataTyped)}
+                    className="form-input-field"
                   />
                 )}
 
@@ -127,7 +141,7 @@ export const GenerateForm: React.FC<FormProps> = ({
                       );
                   })}
                 {errors[field.id as keyof FormData]?.message && (
-                  <p>{String(errors[field.id as keyof FormData]?.message)}</p>
+                  <p className="error-message">{String(errors[field.id as keyof FormData]?.message)}</p>
                 )}
               </div>
             );
