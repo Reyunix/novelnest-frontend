@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BookCard } from "../components/BookCard";
 import { useFetch } from "../hooks/useFetch";
 
 export const SearchPage = () => {
   const [queryInput, setQueryInput] = useState("");
   const [triggerInput, setTriggerInput] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const normalizedQuery = queryInput.trim();
 
   const PORT = String(import.meta.env.VITE_PORT);
 
-  const URL = `http://localhost:${PORT}/api/v1/books?q=${encodeURIComponent(
-    queryInput
+  const URL = `https://127.0.0.1:${PORT}/api/v1/books?q=${encodeURIComponent(
+    normalizedQuery
   )}`;
 
   const { data, loading, error } = useFetch({
@@ -19,28 +19,19 @@ export const SearchPage = () => {
   });
 
   const handleQueryInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    const encoded = encodeURIComponent(query.trim());
-    setQueryInput(encoded);
-    setInputValue(query);
+    setQueryInput(event.target.value);
   };
 
   const querySubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && queryInput) {
+    if (event.key === "Enter" && normalizedQuery) {
       setTriggerInput((prev) => !prev);
-      setInputValue("");
     }
   };
-
-  useEffect(() => {
-    setTriggerInput(false);
-    setQueryInput("");
-  }, [loading]);
 
   return (
     <div className="search-page-layout">
       <input
-        value={inputValue}
+        value={queryInput}
         type="text"
         className="search-bar"
         onChange={(event) => {
@@ -58,7 +49,7 @@ export const SearchPage = () => {
           ? data.items?.map((bookItem) => {
               return <BookCard key={bookItem.id} bookItem={bookItem} />;
             })
-          : !loading && !error && <span>No hay usuarios</span>}
+          : !loading && !error && <span>No hay resultados</span>}
       </section>
     </div>
   );

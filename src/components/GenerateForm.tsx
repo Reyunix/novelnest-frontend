@@ -31,12 +31,6 @@ export const GenerateForm  = <T extends schemaType>({
     contact: ContactFormSchema,
   };
 
-  // type typeMap = {
-  //   login: LoginForm;
-  //   register: RegisterForm;
-  //   contact: ContactForm;
-  // };
-
   const formSchema = schemaMap[formSchemaType];
   type FormData = typeMap[T];
   type FormDataTyped = Path<FormData>
@@ -88,7 +82,7 @@ export const GenerateForm  = <T extends schemaType>({
         }
         return;
       }
-      console.log("Usuario registrado exitosamente");
+      console.log("Formulario enviado con éxito");
     } catch (error) {
       console.error("Hubo un error en la solicitud:", error);
     }

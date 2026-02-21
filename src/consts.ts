@@ -2,7 +2,7 @@ import type { FormLink } from "./types/interfaces";
 
 export const HEADER_MENU_LINKS = [
   { id: 0, literal: "Inicio", href: "/inicio" },
-  { id: 1, literal: "Mi Colección", href: "/" },
+  { id: 1, literal: "Mi Colección", href: "/mis-libros" },
   { id: 2, literal: "Contacto", href: "/contact" },
   { id: 3, literal: "Iniciar Sesión", href: "/login" },
   { id: 4, literal: "Buscar", href: "/buscar" },

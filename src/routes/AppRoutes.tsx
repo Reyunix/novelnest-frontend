@@ -7,6 +7,9 @@ import { SearchPage } from "../pages/SearchPage";
 import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import { Contact } from "../pages/Contact";
+import { Protected } from "../pages/Protected";
+import { Mybooks } from "../pages/Mybooks";
+import { Logout } from "../pages/Logout";
 // import { Test } from "../Test";
 
 export const AppRoutes:React.FC = () =>{
@@ -25,6 +28,8 @@ export const AppRoutes:React.FC = () =>{
                 <Route path="/login" element={<Login/>} />
                 <Route path="/register" element={<Register/>} />
                 <Route path="/contact" element={<Contact/>} />
+                <Route path="/logout" element={<Logout/>} />
+                <Route path="/mis-libros" element={<Protected><Mybooks/></Protected>} />
 
                 {/* <Route path="/test" element={<Test/>} /> */}
             </Routes>
