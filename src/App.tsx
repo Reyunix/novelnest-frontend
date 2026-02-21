@@ -1,7 +1,12 @@
 import { AppRoutes } from "./routes/AppRoutes";
+import { AuthProvider } from "./provider/authProvider";
 
 function App(): React.JSX.Element {
-  return <AppRoutes></AppRoutes>;
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
 }
 
 export default App;
