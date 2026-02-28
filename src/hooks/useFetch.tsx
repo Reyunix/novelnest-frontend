@@ -2,19 +2,21 @@ import { useState, useEffect } from "react";
 import type { ApiResponse } from "../schemas/apiResponseSchema";
 interface Props {
   URL: string
-  triggerInput: boolean
+  enabled: boolean
 }
 
-export const useFetch = ({URL, triggerInput}:Props) => {
+export const useFetch = ({URL, enabled}:Props) => {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!triggerInput){ return}
+    if (!enabled){ return}
 
     setLoading(true);
     const fetchData = async () => {
+      setError(null);
+
       try {
         const response = await fetch(URL);
         if (!response.ok) {
@@ -34,7 +36,7 @@ export const useFetch = ({URL, triggerInput}:Props) => {
       }
     };
     void fetchData();
-  }, [triggerInput, URL]);
+  }, [enabled, URL]);
 
   return { data, loading, error };
 };

@@ -9,6 +9,7 @@ import type { iFormProps, schemaType } from "../types/interfaces";
 import { ContactFormSchema, type ContactForm, } from "../schemas/contactFormSchema";
 import type { Resolver } from "react-hook-form";
 import type { Path } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 export type typeMap = {
   login: LoginForm;
   register: RegisterForm;
@@ -22,8 +23,11 @@ export const GenerateForm  = <T extends schemaType>({
   title,
   buttonLiteral,
   formSchemaType,
+  redirectOnSuccess,
   payloadTransformer,
+  onSuccess
 }: iFormProps<T>) => {
+  const navigate = useNavigate();
 
   const schemaMap = {
     login: LoginFormSchema,
@@ -81,6 +85,13 @@ export const GenerateForm  = <T extends schemaType>({
           });
         }
         return;
+      }
+      if (onSuccess) {
+        await onSuccess();
+      }
+      // Redirect to the specified page on success, if provided and disables going back to the previous page
+      if (redirectOnSuccess) {
+        navigate(redirectOnSuccess, { replace: true });
       }
       console.log("Formulario enviado con éxito");
     } catch (error) {
