@@ -1,7 +1,10 @@
 import { GenerateForm } from "../components/GenerateForm";
 import { LOGIN_FORM_FIELDS, LOGIN_FORM_LINKS } from "../consts";
+import { useAuth } from "../provider/authContext";
+
 
 export const Login:React.FC = () => {
+  const { refreshSession } = useAuth();
   const API_LOGIN_EP = String(import.meta.env.VITE_API_LOGIN_ENDPOINT)
   return (
     <GenerateForm
@@ -11,13 +14,16 @@ export const Login:React.FC = () => {
     buttonLiteral="Iniciar Sesión"
     title="¡Hola de nuevo! ¡Nos alegramos mucho de volver a verte!"    
     formSchemaType="login"
+    redirectOnSuccess="/inicio"
     payloadTransformer={(data) => {
     const isEmail = data.userName?.includes("@");
     return isEmail
       ? { userEmail: data.userName, userPassword: data.userPassword }
       : { userName: data.userName, userPassword: data.userPassword };
     }}
-    
+    onSuccess={async () => {
+      await refreshSession();
+    }}
     />
   );
 };

@@ -7,6 +7,8 @@ export interface iFormProps<T extends schemaType> {
   buttonLiteral: string;
   formSchemaType: T;
   payloadTransformer?: (data: typeMap[T]) => unknown;
+  redirectOnSuccess?: string;
+  onSuccess?: () => void | Promise<void>;
 }
 
 

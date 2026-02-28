@@ -17,7 +17,6 @@ export const BookCard:React.FC<Props> = ({bookItem}) => {
         thumbnail: secureThumbnail}, 
       canonicalVolumeLink: secureCanonicalLink}
     
-    console.log((secureBookLinks))
   return (    
     <div className="book-card">
         <h3>{secureBookLinks?.title ?? "Título no disponible"}</h3>

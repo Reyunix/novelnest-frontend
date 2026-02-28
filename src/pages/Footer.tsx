@@ -9,7 +9,7 @@ export const Footer: React.FC = () => {
           {FOOTER_MENU_LINKS.map((link) => {
             return (
               <li key={link.id} className="footer-menu-item">
-                <Link to="/"> {link.literal} </Link>
+                <Link to={link.href}> {link.literal} </Link>
               </li>
             );
           })}
