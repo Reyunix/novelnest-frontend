@@ -6,16 +6,10 @@ import {
   type ReactNode,
 } from "react";
 import { AuthContext, type AuthStatus, type User } from "./authContext";
+import { API_ENDPOINTS } from "../consts";
 
-const PROTECTED_ENDPOINT = String(
-  import.meta.env.VITE_API_PROTECTED_ENDPOINT ||
-    `https://127.0.0.1:${String(import.meta.env.VITE_PORT)}/api/v1/users/protected`,
-);
-
-const LOGOUT_ENDPOINT = String(
-  import.meta.env.VITE_API_LOGOUT_ENDPOINT ||
-    `https://127.0.0.1:${String(import.meta.env.VITE_PORT)}/api/v1/users/logout`,
-);
+const ME_ENDPOINT = API_ENDPOINTS.ME;
+const LOGOUT_ENDPOINT = API_ENDPOINTS.LOGOUT;
 
 type ProtectedSessionResponse = {
   data?: {
@@ -46,7 +40,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshSession = useCallback(async () => {
     try {
-      const res = await fetch(PROTECTED_ENDPOINT, {
+      console.log(ME_ENDPOINT);
+      const res = await fetch(ME_ENDPOINT, {
         method: "GET",
         credentials: "include",
       });
@@ -87,7 +82,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const loadInitialSession = async () => {
       try {
-        const res = await fetch(PROTECTED_ENDPOINT, {
+        console.log(ME_ENDPOINT);
+        const res = await fetch(ME_ENDPOINT, {
           method: "GET",
           credentials: "include",
         });

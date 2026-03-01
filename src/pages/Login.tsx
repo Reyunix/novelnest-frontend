@@ -1,6 +1,7 @@
 import { GenerateForm } from "../components/GenerateForm";
 import { LOGIN_FORM_FIELDS, LOGIN_FORM_LINKS } from "../consts";
 import { useAuth } from "../provider/authContext";
+import type { LoginForm } from "../schemas/loginFormSchema";
 
 
 export const Login:React.FC = () => {
@@ -14,8 +15,8 @@ export const Login:React.FC = () => {
     buttonLiteral="Iniciar Sesión"
     title="¡Hola de nuevo! ¡Nos alegramos mucho de volver a verte!"    
     formSchemaType="login"
-    redirectOnSuccess="/inicio"
-    payloadTransformer={(data) => {
+    redirectOnSuccess="/"
+    payloadTransformer={(data: LoginForm) => {
     const isEmail = data.userName?.includes("@");
     return isEmail
       ? { userEmail: data.userName, userPassword: data.userPassword }

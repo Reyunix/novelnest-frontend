@@ -1,5 +1,6 @@
 import { REGISTER_FORM_FIELDS, REGISTER_FORM_LINKS } from "../consts";
 import { GenerateForm } from "../components/GenerateForm";
+import type { RegisterForm } from "../schemas/registerFormSchema";
 
 export const Register = () => {
   const API_REGISTER_EP = String(import.meta.env.VITE_API_REGISTER_ENDPOINT);
@@ -12,6 +13,16 @@ export const Register = () => {
       title="Crear cuenta"
       buttonLiteral="Crear cuenta"
       formSchemaType="register"
+      redirectOnSuccess="/login"
+      payloadTransformer={(data: RegisterForm) => {
+        return {
+          userName: data.userName,
+          userPassword: data.userPassword,
+          confirmPassword: data.confirmPassword,
+          userEmail: data.userEmail,
+          userAddress: data.userAddress,
+        };
+      }}
     />
   );
 };

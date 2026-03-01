@@ -2,11 +2,19 @@ import type { FormLink } from "./types/interfaces";
 
 export const HEADER_MENU_LINKS = [
   { id: 0, literal: "Inicio", href: "/inicio" },
-//  { id: 1, literal: "Mi Colección", href: "/mis-libros" },
   { id: 1, literal: "Contacto", href: "/contact" },
-// { id: 3, literal: "Iniciar Sesión", href: "/login" },
   { id: 2, literal: "Buscar", href: "/buscar" },
 ];
+
+export const HEADER_MENU_LOGGED_LINKS = [
+          { id: 100, literal: "Mi Colección", href: "/mis-libros" },
+          { id: 101, literal: "Cerrar sesión", href: "/logout" },
+        ]
+
+export const HEADER_MENU_UNLOGGED_LINKS = [
+          { id: 200, literal: "Iniciar sesión", href: "/login" },
+          { id: 201, literal: "Registrarse", href: "/register" },
+        ]
 
 export const FOOTER_MENU_LINKS = [
   { id: 0, literal: "Contacto", href: "/contact" },
@@ -135,3 +143,10 @@ export const FORM_ERRORMAP = {
 
 // export type RegisterFormErrors =
 //   (typeof FORM_ERRORMAP)[keyof typeof FORM_ERRORMAP];
+
+export const API_ENDPOINTS = {
+  REGISTER: String(import.meta.env.VITE_API_REGISTER_ENDPOINT || `https://127.0.0.1:${String(import.meta.env.VITE_PORT)}/api/v1/auth/register`),
+  LOGIN: String(import.meta.env.VITE_API_LOGIN_ENDPOINT || `https://127.0.0.1:${String(import.meta.env.VITE_PORT)}/api/v1/auth/login`),
+  LOGOUT: String(import.meta.env.VITE_API_LOGOUT_ENDPOINT || `https://127.0.0.1:${String(import.meta.env.VITE_PORT)}/api/v1/auth/logout`),
+  ME: String(import.meta.env.VITE_API_ME_ENDPOINT || `https://127.0.0.1:${String(import.meta.env.VITE_PORT)}/api/v1/auth/me`),
+};

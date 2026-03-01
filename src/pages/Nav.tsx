@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { HEADER_MENU_LINKS } from "../consts";
+import { HEADER_MENU_LINKS, HEADER_MENU_LOGGED_LINKS, HEADER_MENU_UNLOGGED_LINKS } from "../consts";
 import { useAuth } from "../provider/authContext";
 import { UserGreetings } from "../components/UserGreetings";
 
@@ -8,21 +8,15 @@ export const Nav:React.FC = () => {
 
   const authLinks =
     authStatus === "authenticated"
-      ? [
-          { id: 100, literal: "Mi Colección", href: "/mis-libros" },
-          { id: 101, literal: "Cerrar sesión", href: "/logout" },
-        ]
-      : [
-          { id: 200, literal: "Iniciar sesión", href: "/login" },
-          { id: 201, literal: "Registrarse", href: "/register" },
-        ];
+      ? HEADER_MENU_LOGGED_LINKS
+      : HEADER_MENU_UNLOGGED_LINKS;
 
   const menuLinks =
     authStatus === "loading"
       ? HEADER_MENU_LINKS
       : [...HEADER_MENU_LINKS, ...authLinks];
 
-  const userName = user?.userName || "Usuario";
+  const userName = user?.userName
 
   return (
     <nav className="header-nav">

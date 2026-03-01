@@ -8,13 +8,13 @@ export const SearchPage = () => {
   const normalizedQuery = inputValue.trim();
 
   const PORT = String(import.meta.env.VITE_PORT);
-  const URL = `https://127.0.0.1:${PORT}/api/v1/books?q=${encodeURIComponent(
+  const URL = `https://127.0.0.1:${PORT}/api/v1/books/search?q=${encodeURIComponent(
     submittedQuery,
   )}`;
 
   const { data, loading, error } = useFetch({
     URL: URL,
-    enabled: submittedQuery.length > 0
+    enabled: submittedQuery.length > 0,
   });
 
   const handleQueryInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,13 +50,18 @@ export const SearchPage = () => {
           <span>Error en el servidor, disculpe las molestias.</span>
         ) : data ? (
           data.items && data.items.length > 0 ? (
-          data.items?.map((bookItem) => {
-            return <BookCard key={bookItem.id} bookItem={bookItem} />;
-          })
-        ): (
-          <span className="centered-self">No se han encontrado resultados para su búsqueda.</span>
-        )) : (
-          <span className="centered-self">Ingrese el título de un libro y presione Enter para buscar.</span>
+            data.items?.map((bookItem) => {
+              return <BookCard key={bookItem.id} bookItem={bookItem} />;
+            })
+          ) : (
+            <span className="centered-self">
+              No se han encontrado resultados para su búsqueda.
+            </span>
+          )
+        ) : (
+          <span className="centered-self">
+            Ingrese el título de un libro y presione Enter para buscar.
+          </span>
         )}
       </section>
     </div>
