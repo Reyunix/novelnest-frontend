@@ -1,5 +1,5 @@
-import { GenerateForm } from '../components/GenerateForm'
-import { CONTACT_FORM_FIELDS } from '../consts'
+import { GenerateForm } from '../../components/GenerateForm'
+import { CONTACT_FORM_FIELDS } from '../../consts'
 
 export const Contact = () => {
   return (

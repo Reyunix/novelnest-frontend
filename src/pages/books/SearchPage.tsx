@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { BookCard } from "../components/BookCard";
-import { useFetch } from "../hooks/useFetch";
+import { BookCard } from "../../components/BookCard";
+import { useFetch } from "../../hooks/useFetch";
 
 export const SearchPage = () => {
   const [inputValue, setInputValue] = useState("");

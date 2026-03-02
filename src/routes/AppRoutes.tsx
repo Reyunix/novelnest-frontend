@@ -1,13 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { MainLayout } from "../layouts/MainLayout";
-import { Contact } from "../pages/Contact";
-import { Inicio } from "../pages/Inicio";
-import { Login } from "../pages/Login";
-import { Logout } from "../pages/Logout";
-import { Mybooks } from "../pages/Mybooks";
-import { NotFound } from "../pages/NotFound";
-import { Register } from "../pages/Register";
-import { SearchPage } from "../pages/SearchPage";
+import { Contact } from "../pages/contact/Contact";
+import { Inicio } from "../pages/home/Inicio";
+import { Login } from "../pages/auth/Login";
+import { Logout } from "../pages/auth/Logout";
+import { Mybooks } from "../pages/user-books/Mybooks";
+import { NotFound } from "../pages/system/NotFound";
+import { Register } from "../pages/auth/Register";
+import { SearchPage } from "../pages/books/SearchPage";
 import { ProtectedRoute } from "./guards/ProtectedRoute";
 
 export const AppRoutes = (): React.JSX.Element => {

@@ -19,7 +19,7 @@ Frontend app for NovelNest built with React + TypeScript + Vite.
 - `src/layouts`: app shell and shared layout components (`Header`, `Nav`, `Footer`, `MainLayout`)
 - `src/routes`: router map and guards (`AppRoutes`, `guards/ProtectedRoute`)
 - `src/features/auth`: auth state, context and provider
-- `src/pages`: routed pages (`Login`, `Register`, `SearchPage`, `Mybooks`, etc.)
+- `src/pages`: routed pages grouped by domain (`auth`, `books`, `contact`, `home`, `user-books`, `system`)
 - `src/components`: reusable UI/form components
 - `src/schemas`: frontend form/response schemas
 
