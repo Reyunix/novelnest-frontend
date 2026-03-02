@@ -5,22 +5,17 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { AuthContext, type AuthContextValue, type AuthStatus, type User } from "./authContext";
-import { API_ENDPOINTS } from "../../consts";
-
-const ME_ENDPOINT = API_ENDPOINTS.ME;
-const LOGOUT_ENDPOINT = API_ENDPOINTS.LOGOUT;
-
-type ProtectedSessionResponse = {
-  data?: {
-    user?: {
-      userId?: number;
-      userName?: string;
-      userEmail?: string;
-      role?: string;
-    };
-  };
-};
+import {
+  getCurrentSession,
+  logoutSession,
+  type ProtectedSessionResponse,
+} from "./auth.api";
+import {
+  AuthContext,
+  type AuthContextValue,
+  type AuthStatus,
+  type User,
+} from "./authContext";
 
 const toUser = (payload: ProtectedSessionResponse): User => {
   const sessionUser = payload.data?.user;
@@ -39,12 +34,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(null);
 
   const refreshSession = useCallback(async () => {
-    console.log(ME_ENDPOINT, "Refreshing session...");
     try {
-      const res = await fetch(ME_ENDPOINT, {
-        method: "GET",
-        credentials: "include",
-      });
+      const res = await getCurrentSession();
 
       if (!res.ok) {
         setAuthStatus("unauthenticated");
@@ -63,10 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = useCallback(async () => {
     try {
-      const res = await fetch(LOGOUT_ENDPOINT, {
-        method: "POST",
-        credentials: "include",
-      });
+      const res = await logoutSession();
       setAuthStatus("unauthenticated");
       setUser(null);
       return res.ok;
@@ -83,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const initializeSession = async () => {
       await refreshSession();
     };
-    initializeSession();
+    void initializeSession();
   }, [refreshSession]);
 
   const value: AuthContextValue = useMemo(

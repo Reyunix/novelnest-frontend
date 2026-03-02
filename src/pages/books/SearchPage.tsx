@@ -1,21 +1,13 @@
 import { useState } from "react";
 import { BookCard } from "../../components/BookCard";
-import { useFetch } from "../../hooks/useFetch";
+import { useBookSearch } from "../../features/books/hooks/useBookSearch";
 
 export const SearchPage = () => {
   const [inputValue, setInputValue] = useState("");
   const [submittedQuery, setSubmittedQuery] = useState("");
   const normalizedQuery = inputValue.trim();
 
-  const PORT = String(import.meta.env.VITE_PORT);
-  const URL = `https://127.0.0.1:${PORT}/api/v1/books/search?q=${encodeURIComponent(
-    submittedQuery,
-  )}`;
-
-  const { data, loading, error } = useFetch({
-    URL: URL,
-    enabled: submittedQuery.length > 0,
-  });
+  const { data, loading, error } = useBookSearch(submittedQuery);
 
   const handleQueryInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -23,7 +15,8 @@ export const SearchPage = () => {
 
   const querySubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== "Enter") return;
-    // Normalize input: Trimm whitespace visually on enter press, but only submit if there's a non-empty query
+
+    // Normalize input visually on Enter, but only submit non-empty queries.
     setInputValue(normalizedQuery);
     if (!normalizedQuery) return;
 
