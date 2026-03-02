@@ -2,6 +2,10 @@
 
 Frontend app for NovelNest built with React + TypeScript + Vite.
 
+## Repositories
+- Main (hub): https://github.com/Reyunix/novelnest
+- Backend: https://github.com/Reyunix/novelnest-backend
+
 ## Tech Stack
 
 - React 19
