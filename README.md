@@ -21,6 +21,9 @@ Frontend app for NovelNest built with React + TypeScript + Vite.
 - `src/components`: reusable UI/form components
 - `src/schemas`: frontend form/response schemas
 
+## Documentation
+- Auth flow and context internals: [`../docs/frontend/auth-context.md`](../docs/frontend/auth-context.md)
+
 ## Requirements
 - Bun or npm
 - Backend running at `https://127.0.0.1:3000`
