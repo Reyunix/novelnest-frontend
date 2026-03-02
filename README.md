@@ -45,7 +45,7 @@ Frontend app for NovelNest built with React + TypeScript + Vite.
 
 ## Requirements
 
-- Bun or npm
+- Bun
 - Backend running at `http://localhost:3000`
 
 ## Environment Variables
@@ -69,7 +69,6 @@ Note:
 bun install
 ```
 
-(or `npm install`)
 
 ## Run
 
@@ -77,7 +76,6 @@ bun install
 bun run dev
 ```
 
-(or `npm run dev`)
 
 Default frontend URL: `http://localhost:5173`
 
@@ -87,7 +85,6 @@ Default frontend URL: `http://localhost:5173`
 bun run build
 ```
 
-(or `npm run build`)
 
 ## Notes
 
