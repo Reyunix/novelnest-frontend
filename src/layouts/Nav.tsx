@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { HEADER_MENU_LINKS, HEADER_MENU_LOGGED_LINKS, HEADER_MENU_UNLOGGED_LINKS } from "../consts";
-import { useAuth } from "../provider/authContext";
+import { useAuth } from "../features/auth/authContext";
 import { UserGreetings } from "../components/UserGreetings";
 
 export const Nav:React.FC = () => {

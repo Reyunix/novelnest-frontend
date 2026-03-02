@@ -1,5 +1,5 @@
 import { AppRoutes } from "./routes/AppRoutes";
-import { AuthProvider } from "./provider/authProvider";
+import { AuthProvider } from "./features/auth/authProvider";
 
 function App(): React.JSX.Element {
   return (

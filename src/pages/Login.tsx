@@ -1,6 +1,6 @@
 import { GenerateForm } from "../components/GenerateForm";
 import { LOGIN_FORM_FIELDS, LOGIN_FORM_LINKS } from "../consts";
-import { useAuth } from "../provider/authContext";
+import { useAuth } from "../features/auth/authContext";
 import type { LoginForm } from "../schemas/loginFormSchema";
 
 

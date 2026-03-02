@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../../provider/authContext";
+import { useAuth } from "../../features/auth/authContext";
 
 export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const { authStatus, refreshSession } = useAuth();

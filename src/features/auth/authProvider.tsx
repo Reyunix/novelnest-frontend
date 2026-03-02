@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { AuthContext, type AuthContextValue, type AuthStatus, type User } from "./authContext";
-import { API_ENDPOINTS } from "../consts";
+import { API_ENDPOINTS } from "../../consts";
 
 const ME_ENDPOINT = API_ENDPOINTS.ME;
 const LOGOUT_ENDPOINT = API_ENDPOINTS.LOGOUT;
