@@ -32,6 +32,7 @@ Frontend app for NovelNest built with React + TypeScript + Vite.
 ## Documentation
 - Auth flow and context internals: [`../docs/frontend/auth-context.md`](../docs/frontend/auth-context.md)
 - Protected routes and guard flow: [`../docs/frontend/protected-routes.md`](../docs/frontend/protected-routes.md)
+- Constants/modules organization: [`../docs/frontend/constants-organization.md`](../docs/frontend/constants-organization.md)
 
 ## Requirements
 - Bun or npm
