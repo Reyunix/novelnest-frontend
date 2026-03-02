@@ -11,7 +11,7 @@ export const useFetch = ({URL, enabled}:Props) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!enabled){ return}
+    if (!enabled) return;
 
     setLoading(true);
     const fetchData = async () => {

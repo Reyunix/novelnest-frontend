@@ -5,7 +5,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { AuthContext, type AuthStatus, type User } from "./authContext";
+import { AuthContext, type AuthContextValue, type AuthStatus, type User } from "./authContext";
 import { API_ENDPOINTS } from "../consts";
 
 const ME_ENDPOINT = API_ENDPOINTS.ME;
@@ -39,8 +39,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(null);
 
   const refreshSession = useCallback(async () => {
+    console.log(ME_ENDPOINT, "Refreshing session...");
     try {
-      console.log(ME_ENDPOINT);
       const res = await fetch(ME_ENDPOINT, {
         method: "GET",
         credentials: "include",
@@ -77,44 +77,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  // On mount, check if there's an active session
   useEffect(() => {
-    let isMounted = true;
-
-    const loadInitialSession = async () => {
-      try {
-        console.log(ME_ENDPOINT);
-        const res = await fetch(ME_ENDPOINT, {
-          method: "GET",
-          credentials: "include",
-        });
-
-        if (!isMounted) return;
-
-        if (!res.ok) {
-          setAuthStatus("unauthenticated");
-          setUser(null);
-          return;
-        }
-
-        const payload = (await res.json()) as ProtectedSessionResponse;
-        setAuthStatus("authenticated");
-        setUser(toUser(payload));
-      } catch {
-        if (isMounted) {
-          setAuthStatus("unauthenticated");
-          setUser(null);
-        }
-      }
+    // inline async function to avoid linting warnings
+    const initializeSession = async () => {
+      await refreshSession();
     };
+    initializeSession();
+  }, [refreshSession]);
 
-    void loadInitialSession();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const value = useMemo(
+  const value: AuthContextValue = useMemo(
     () => ({
       authStatus,
       isAuthenticated: authStatus === "authenticated",

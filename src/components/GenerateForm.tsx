@@ -89,7 +89,7 @@ export const GenerateForm  = <T extends schemaType>({
       if (onSuccess) {
         await onSuccess();
       }
-      // Redirect to the specified page on success, if provided and disables going back to the previous page
+      // Redirect to the specified page on success, if provided and disables going back to the previous page > {replace: true}
       if (redirectOnSuccess) {
         navigate(redirectOnSuccess, { replace: true });
       }
