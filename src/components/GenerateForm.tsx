@@ -1,22 +1,31 @@
-import { NavLink } from "react-router-dom";
-import { useForm} from "react-hook-form";
-import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterFormSchema, type RegisterForm, } from "../schemas/registerFormSchema";
-import { LoginFormSchema, type LoginForm } from "../schemas/loginFormSchema";
+import { useEffect } from "react";
+import {
+  useForm,
+  type Path,
+  type Resolver,
+} from "react-hook-form";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FORM_ERRORMAP } from "../consts";
+import { LoginFormSchema, type LoginForm } from "../schemas/loginFormSchema";
+import {
+  ContactFormSchema,
+  type ContactForm,
+} from "../schemas/contactFormSchema";
+import {
+  RegisterFormSchema,
+  type RegisterForm,
+} from "../schemas/registerFormSchema";
+import { parseApiError, postJson } from "../shared/http/postJson";
 import type { iFormProps, schemaType } from "../types/interfaces";
-import { ContactFormSchema, type ContactForm, } from "../schemas/contactFormSchema";
-import type { Resolver } from "react-hook-form";
-import type { Path } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+
 export type typeMap = {
   login: LoginForm;
   register: RegisterForm;
   contact: ContactForm;
 };
 
-export const GenerateForm  = <T extends schemaType>({
+export const GenerateForm = <T extends schemaType>({
   formFieldsList,
   apiEndpoint,
   formLinks,
@@ -25,7 +34,7 @@ export const GenerateForm  = <T extends schemaType>({
   formSchemaType,
   redirectOnSuccess,
   payloadTransformer,
-  onSuccess
+  onSuccess,
 }: iFormProps<T>) => {
   const navigate = useNavigate();
 
@@ -37,7 +46,7 @@ export const GenerateForm  = <T extends schemaType>({
 
   const formSchema = schemaMap[formSchemaType];
   type FormData = typeMap[T];
-  type FormDataTyped = Path<FormData>
+  type FormDataTyped = Path<FormData>;
 
   const focusField = formFieldsList.find((field) => field.autofocus)?.id;
   const resolverTyped = zodResolver(formSchema) as unknown as Resolver<FormData>;
@@ -52,53 +61,48 @@ export const GenerateForm  = <T extends schemaType>({
 
   useEffect(() => {
     if (focusField) {
-  setFocus(focusField as FormDataTyped);
-};
+      setFocus(focusField as FormDataTyped);
+    }
   }, [focusField, setFocus]);
 
   const onSubmit = async (data: FormData) => {
-    const payload = payloadTransformer
-      ? payloadTransformer(data) : data;
+    const payload = payloadTransformer ? payloadTransformer(data) : data;
+
     try {
-      const response = await fetch(apiEndpoint, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await postJson(apiEndpoint, payload);
 
       if (!response.ok) {
-        // Manejar errores del backend
-        const errorData: { errorCode: string; message: string } =
-          await response.json();
-        console.log(errorData.errorCode);
-        // Form error map can be undefined because is not mandatory
-        if (errorData.errorCode in FORM_ERRORMAP) {
-          const fieldName =
-            FORM_ERRORMAP[errorData.errorCode as keyof typeof FORM_ERRORMAP];
+        const errorData = await parseApiError(response);
+        const errorCode = errorData?.errorCode;
+
+        if (errorCode && errorCode in FORM_ERRORMAP) {
+          const fieldName = FORM_ERRORMAP[errorCode as keyof typeof FORM_ERRORMAP];
 
           setError(fieldName as FormDataTyped, {
             type: "manual",
-            message: errorData.message,
+            message: errorData?.message,
           });
         }
+
         return;
       }
+
       if (onSuccess) {
         await onSuccess();
       }
-      // Redirect to the specified page on success, if provided and disables going back to the previous page > {replace: true}
+
+      // Redirect to the specified page on success and replace history entry.
       if (redirectOnSuccess) {
         navigate(redirectOnSuccess, { replace: true });
       }
-      console.log("Formulario enviado con éxito");
+
+      reset();
     } catch (error) {
       console.error("Hubo un error en la solicitud:", error);
+      reset();
     }
-    reset();
   };
+
   return (
     <div className="center">
       <div className="form-layout">
@@ -123,8 +127,7 @@ export const GenerateForm  = <T extends schemaType>({
                     cols={70}
                     className="form-input-field"
                     {...register(field.id as FormDataTyped)}
-                  >
-                  </textarea>
+                  ></textarea>
                 ) : (
                   <input
                     key={field.id}
@@ -146,7 +149,9 @@ export const GenerateForm  = <T extends schemaType>({
                       );
                   })}
                 {errors[field.id as keyof FormData]?.message && (
-                  <p className="error-message">{String(errors[field.id as keyof FormData]?.message)}</p>
+                  <p className="error-message">
+                    {String(errors[field.id as keyof FormData]?.message)}
+                  </p>
                 )}
               </div>
             );

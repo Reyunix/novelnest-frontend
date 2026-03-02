@@ -22,6 +22,7 @@ Frontend app for NovelNest built with React + TypeScript + Vite.
 - `src/features/books`: books domain API and query hooks
 - `src/pages`: routed pages grouped by domain (`auth`, `books`, `contact`, `home`, `user-books`, `system`)
 - `src/components`: reusable UI/form components
+- `src/shared/http`: shared HTTP helpers (JSON post and API error parsing)
 - `src/schemas`: frontend form/response schemas
 
 ## Documentation
