@@ -16,6 +16,8 @@ Frontend app for NovelNest built with React + TypeScript + Vite.
 - Book search UI connected to backend
 
 ## Main Structure
+- `src/layouts`: app shell and shared layout components (`Header`, `Nav`, `Footer`, `MainLayout`)
+- `src/routes`: router map and guards (`AppRoutes`, `guards/ProtectedRoute`)
 - `src/provider`: auth context/provider
 - `src/pages`: routed pages (`Login`, `Register`, `SearchPage`, `Mybooks`, etc.)
 - `src/components`: reusable UI/form components
@@ -23,6 +25,7 @@ Frontend app for NovelNest built with React + TypeScript + Vite.
 
 ## Documentation
 - Auth flow and context internals: [`../docs/frontend/auth-context.md`](../docs/frontend/auth-context.md)
+- Protected routes and guard flow: [`../docs/frontend/protected-routes.md`](../docs/frontend/protected-routes.md)
 
 ## Requirements
 - Bun or npm
