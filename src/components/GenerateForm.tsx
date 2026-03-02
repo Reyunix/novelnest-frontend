@@ -6,7 +6,7 @@ import {
   type Resolver,
 } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FORM_ERRORMAP } from "../consts";
+import { FORM_ERRORMAP } from "../shared/constants/formErrorMap";
 import { LoginFormSchema, type LoginForm } from "../schemas/loginFormSchema";
 import {
   ContactFormSchema,

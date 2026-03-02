@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from "../../consts";
+import { API_ENDPOINTS } from "../../shared/config/api";
 
 export const AUTH_ENDPOINTS = {
   REGISTER: API_ENDPOINTS.REGISTER,

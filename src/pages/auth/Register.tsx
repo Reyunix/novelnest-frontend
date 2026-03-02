@@ -1,5 +1,5 @@
 import { GenerateForm } from "../../components/GenerateForm";
-import { REGISTER_FORM_FIELDS, REGISTER_FORM_LINKS } from "../../consts";
+import { REGISTER_FORM_FIELDS, REGISTER_FORM_LINKS } from "../../features/auth/constants/authForms";
 import { AUTH_ENDPOINTS } from "../../features/auth/auth.api";
 import type { RegisterForm } from "../../schemas/registerFormSchema";
 

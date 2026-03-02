@@ -1,4 +1,4 @@
-import { FOOTER_MENU_LINKS } from "../consts";
+import { FOOTER_MENU_LINKS } from "../shared/constants/navigation";
 import { Link } from "react-router-dom";
 
 export const Footer: React.FC = () => {

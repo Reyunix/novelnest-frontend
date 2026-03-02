@@ -1,5 +1,5 @@
 import { GenerateForm } from "../../components/GenerateForm";
-import { LOGIN_FORM_FIELDS, LOGIN_FORM_LINKS } from "../../consts";
+import { LOGIN_FORM_FIELDS, LOGIN_FORM_LINKS } from "../../features/auth/constants/authForms";
 import { AUTH_ENDPOINTS } from "../../features/auth/auth.api";
 import { useAuth } from "../../features/auth/authContext";
 import type { LoginForm } from "../../schemas/loginFormSchema";
