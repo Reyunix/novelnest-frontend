@@ -1,11 +1,11 @@
-import type { ApiResponse } from "../../../schemas/apiResponseSchema";
+import type { BooksSearchResponse } from "../../../schemas/apiResponseSchema";
 import { useFetch } from "../../../shared/hooks/useFetch";
 import { buildBookSearchUrl } from "../books.api";
 
 export const useBookSearch = (submittedQuery: string) => {
   const url = buildBookSearchUrl(submittedQuery);
 
-  return useFetch<ApiResponse>({
+  return useFetch<BooksSearchResponse>({
     url,
     enabled: submittedQuery.length > 0,
   });

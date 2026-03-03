@@ -1,31 +1,41 @@
-import type { Item } from "../schemas/apiResponseSchema"
+import type { Item } from "../schemas/apiResponseSchema";
 
 interface Props {
-    bookItem: Item
+  bookItem: Item;
 }
-export const BookCard:React.FC<Props> = ({bookItem}) => {
-    const toSecureUrl = (url?: string) => url?.startsWith("http:") ? url.replace(/^http:/,"https:"): url
-    const book = bookItem.volumeInfo
-    const NOT_AVAILABLE_INFO = "no disponible"
-    const secureSmallThumbnail= toSecureUrl(book?.imageLinks?.smallThumbnail)
-    const secureThumbnail= toSecureUrl(book?.imageLinks?.thumbnail)
-    const secureCanonicalLink = toSecureUrl(book?.canonicalVolumeLink)
-    const secureBookLinks = {
-      ...book, 
-      imageLinks: {
-        smallThumbnail: secureSmallThumbnail, 
-        thumbnail: secureThumbnail}, 
-      canonicalVolumeLink: secureCanonicalLink}
-    
-  return (    
+
+export const BookCard: React.FC<Props> = ({ bookItem }) => {
+  const toSecureUrl = (url?: string | null) =>
+    url?.startsWith("http:") ? url.replace(/^http:/, "https:") : url;
+
+  const NOT_AVAILABLE_INFO = "no disponible";
+  const secureThumbnail = toSecureUrl(bookItem.thumbnail);
+  const secureCanonicalLink = toSecureUrl(bookItem.canonicalVolumeLink);
+
+  return (
     <div className="book-card">
-        <h3>{secureBookLinks?.title ?? "Título no disponible"}</h3>
-        <p>Autores: {secureBookLinks?.authors?.join(", ") ?? NOT_AVAILABLE_INFO}</p>
-        <img src={secureBookLinks?.imageLinks?.smallThumbnail} alt="" />
-        <p>Categorías: {secureBookLinks?.categories?.join(", ") ?? NOT_AVAILABLE_INFO}</p>
-        <p>Editorial: {secureBookLinks?.publisher ?? NOT_AVAILABLE_INFO}</p>
-        {secureBookLinks?.publishedDate && <p>Fecha de publicación: {String(secureBookLinks.publishedDate ?? NOT_AVAILABLE_INFO)}</p>}
-        <p>Páginas: {book?.pageCount ?? NOT_AVAILABLE_INFO}</p>
+      <h3>{bookItem.title || "Título no disponible"}</h3>
+      <p>
+        Autores:{" "}
+        {bookItem.authors.length > 0
+          ? bookItem.authors.join(", ")
+          : NOT_AVAILABLE_INFO}
+      </p>
+      {secureThumbnail ? <img src={secureThumbnail} alt={bookItem.title} /> : null}
+      <p>
+        Categorías:{" "}
+        {bookItem.categories.length > 0
+          ? bookItem.categories.join(", ")
+          : NOT_AVAILABLE_INFO}
+      </p>
+      <p>Editorial: {bookItem.publisher ?? NOT_AVAILABLE_INFO}</p>
+      <p>Fecha de publicación: {bookItem.publishedDate ?? NOT_AVAILABLE_INFO}</p>
+      <p>Páginas: {bookItem.pageCount ?? NOT_AVAILABLE_INFO}</p>
+      {secureCanonicalLink ? (
+        <a href={secureCanonicalLink} target="_blank" rel="noreferrer">
+          Ver en Google Books
+        </a>
+      ) : null}
     </div>
-  )
-}
+  );
+};
