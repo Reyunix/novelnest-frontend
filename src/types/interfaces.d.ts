@@ -35,3 +35,10 @@ export const schemaTypes = {
 } as const;
 
 export type schemaType =  typeof schemaTypes[keyof typeof schemaTypes]
+
+
+export type FilterState = "title" | "author" | "subject" | "q";
+export type BookSearchQuery = {
+  filterState: FilterState;
+  query: string;
+}
