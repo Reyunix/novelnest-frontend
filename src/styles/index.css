@@ -19,6 +19,15 @@ html {
   line-height: 1.3;
 }
 
+fieldset {
+  border: none;
+  display: flex;
+  gap: .3rem;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
   padding: 0;

@@ -1,9 +1,8 @@
 import { API_ENDPOINTS } from "../../shared/config/api";
-
-export const BOOKS_ENDPOINTS = {
-  SEARCH: API_ENDPOINTS.BOOKS_SEARCH,
-} as const;
-
-export const buildBookSearchUrl = (query: string): string => {
-  return `${BOOKS_ENDPOINTS.SEARCH}?q=${encodeURIComponent(query)}`;
+import type { BookSearchQuery } from "../../types/interfaces";
+  
+export const buildBookSearchUrl = (query: BookSearchQuery): string => {
+  const params = new URLSearchParams();
+  params.set(query.filterState, query.query);
+  return `${API_ENDPOINTS.BOOKS_SEARCH}?${params.toString()}`;
 };
