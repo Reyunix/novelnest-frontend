@@ -1,7 +1,7 @@
-import type { Item } from "../schemas/apiResponseSchema";
+import type { BooksSearchItem } from "../schemas/apiResponseSchema";
 
 interface Props {
-  bookItem: Item;
+  bookItem: BooksSearchItem;
 }
 
 export const BookCard: React.FC<Props> = ({ bookItem }) => {

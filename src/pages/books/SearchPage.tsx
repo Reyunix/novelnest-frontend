@@ -23,6 +23,7 @@ export const SearchPage = () => {
   const [sortBy, setSortBy] = useState<SortBy>("relevance");
 
   const { data, loading, error } = useBookSearch(submittedQuery);
+  const booksData = data?.data;
 
   const handleQueryInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -76,9 +77,9 @@ export const SearchPage = () => {
           <span className="centered-self">Cargando...</span>
         ) : error ? (
           <span>Error en el servidor, disculpe las molestias.</span>
-        ) : data ? (
-          data.items && data.items.length > 0 ? (
-            data.items.map((bookItem) => {
+        ) : booksData ? (
+          booksData.items.length > 0 ? (
+            booksData.items.map((bookItem) => {
               return <BookCard key={bookItem.id} bookItem={bookItem} />;
             })
           ) : (

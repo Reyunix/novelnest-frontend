@@ -23,9 +23,15 @@ export const BooksSearchResponseSchema = z.object({
   items: z.array(BooksSearchItemSchema),
 });
 
+export const BooksSearchSuccessResponseSchema = z.object({
+  success: z.literal(true),
+  message: z.string(),
+  code: z.string(),
+  data: BooksSearchResponseSchema,
+});
+
 export type BooksSearchItem = z.infer<typeof BooksSearchItemSchema>;
 export type BooksSearchResponse = z.infer<typeof BooksSearchResponseSchema>;
-
-// Backward-compatible aliases while migration settles.
-export type Item = BooksSearchItem;
-export type ApiResponse = BooksSearchResponse;
+export type BooksSearchSuccessResponse = z.infer<
+  typeof BooksSearchSuccessResponseSchema
+>;
