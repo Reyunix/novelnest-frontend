@@ -1,6 +1,6 @@
 import type { FormTypeMap } from "./generic.form.types";
 
-export interface iFormProps<T extends schemaType> {
+export interface FormProps<T extends schemaType> {
   formFieldsList: FormField[];
   apiEndpoint: string;
   formLinks?: FormLink[];
@@ -30,7 +30,7 @@ export interface FormLink {
 
 export const schemaTypes = {
   registerForm: "register",
-  logingForm: "login",
+  loginForm: "login",
   contactForm: "contact"
 } as const;
 

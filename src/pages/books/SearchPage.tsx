@@ -5,6 +5,7 @@ import {
   BOOK_SEARCH_FILTER_OPTIONS,
   BOOK_SORT_OPTIONS,
   DEFAULT_FILTER,
+  DEFAULT_SORT_BY,
   EMPTY_QUERY,
 } from "../../features/books/constants/books.constants";
 import { SearchFilterGroup } from "../../features/books/components/SearchFilterGroup";
@@ -20,7 +21,7 @@ export const SearchPage = () => {
     useState<BookSearchFilter>(DEFAULT_FILTER);
   const [submittedQuery, setSubmittedQuery] =
     useState<BookSearchQuery>(EMPTY_QUERY);
-  const [sortBy, setSortBy] = useState<SortBy>("relevance");
+  const [sortBy, setSortBy] = useState<SortBy>(DEFAULT_SORT_BY);
 
   const { data, loading, error } = useBookSearch(submittedQuery);
   const booksData = data?.data;

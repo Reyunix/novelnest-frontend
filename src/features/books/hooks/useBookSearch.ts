@@ -1,6 +1,6 @@
-import type { BooksSearchSuccessResponse } from "../../../schemas/api.response.schema";
 import { useFetch } from "../../../shared/hooks/useFetch";
 import { buildBookSearchUrl } from "../books.api";
+import type { BooksSearchSuccessResponse } from "../schemas/books.schemas";
 import { type BookSearchQuery } from "../types/books.types";
 
 export const useBookSearch = (submittedQuery: BookSearchQuery) => {

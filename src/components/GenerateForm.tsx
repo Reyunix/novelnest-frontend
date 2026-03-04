@@ -2,13 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm, type Path, type Resolver } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FORM_ERRORMAP } from "../shared/constants/fomr.errormap.constants";
 import { LoginFormSchema } from "../features/auth/schemas/login.form.schemas";
 import { ContactFormSchema } from "../features/contact/schemas/contact.form.schemas";
 import { RegisterFormSchema } from "../features/auth/schemas/register.form.schemas";
 import { parseApiError, postJson } from "../shared/http/postJson";
-import type { iFormProps, schemaType } from "../shared/forms/generic.form.schemas";
+import type { FormProps, schemaType } from "../shared/forms/generic.form.schemas";
 import type { FormTypeMap } from "../shared/forms/generic.form.types";
+import { FORM_ERRORMAP } from "../shared/constants/form.errormap.constants";
 
 export const GenerateForm = <T extends schemaType>({
   formFieldsList,
@@ -20,7 +20,7 @@ export const GenerateForm = <T extends schemaType>({
   redirectOnSuccess,
   payloadTransformer,
   onSuccess,
-}: iFormProps<T>) => {
+}: FormProps<T>) => {
   const navigate = useNavigate();
 
   const schemaMap = {

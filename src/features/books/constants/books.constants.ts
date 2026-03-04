@@ -1,4 +1,4 @@
-import { type BookSearchFilter, type BookSearchQuery, type FilterOption, type SortOption } from "../types/books.types";
+import { type BookSearchFilter, type BookSearchQuery, type FilterOption, type SortBy, type SortOption } from "../types/books.types";
 
 export const BOOK_SEARCH_FILTER_OPTIONS: FilterOption[] = [
   { id: "all", value: "q", literal: "Todo" },
@@ -13,7 +13,7 @@ export const BOOK_SORT_OPTIONS: SortOption[] = [
 ];
 
 export const DEFAULT_FILTER: BookSearchFilter = BOOK_SEARCH_FILTER_OPTIONS[0].value;
-export const DEFAULT_SORT_BY: string = BOOK_SORT_OPTIONS[0].value;
+export const DEFAULT_SORT_BY: SortBy = BOOK_SORT_OPTIONS[0].value;
 
 export const EMPTY_QUERY: BookSearchQuery = {
     filterState: DEFAULT_FILTER,
