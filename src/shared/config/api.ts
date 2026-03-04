@@ -17,6 +17,10 @@ export const API_ENDPOINTS = {
     import.meta.env.VITE_API_ME_ENDPOINT ||
       `http://127.0.0.1:${PORT}/api/v1/auth/me`,
   ),
+  REFRESH: String(
+    import.meta.env.VITE_API_REFRESH_ENDPOINT ||
+      `http://127.0.0.1:${PORT}/api/v1/auth/refresh`,
+  ),
   BOOKS_SEARCH: String(
     import.meta.env.VITE_API_BOOKS_SEARCH_ENDPOINT ||
       `http://127.0.0.1:${PORT}/api/v1/books/search`,

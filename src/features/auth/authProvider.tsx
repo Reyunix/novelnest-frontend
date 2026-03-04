@@ -8,6 +8,7 @@ import {
 import {
   getCurrentSession,
   logoutSession,
+  refreshAccessToken,
   type ProtectedSessionResponse,
 } from "./auth.api";
 import {
@@ -35,7 +36,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshSession = useCallback(async () => {
     try {
-      const res = await getCurrentSession();
+      let res = await getCurrentSession();
+
+      if (res.status === 401) {
+        const refreshRes = await refreshAccessToken();
+        if (!refreshRes.ok) {
+          setAuthStatus("unauthenticated");
+          setUser(null);
+          return;
+        }
+        res = await getCurrentSession();
+      }
 
       if (!res.ok) {
         setAuthStatus("unauthenticated");
@@ -51,7 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
     }
   }, []);
-
+  
   const logout = useCallback(async () => {
     try {
       const res = await logoutSession();

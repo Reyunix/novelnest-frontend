@@ -5,6 +5,7 @@ export const AUTH_ENDPOINTS = {
   LOGIN: API_ENDPOINTS.LOGIN,
   LOGOUT: API_ENDPOINTS.LOGOUT,
   ME: API_ENDPOINTS.ME,
+  REFRESH: API_ENDPOINTS.REFRESH
 } as const;
 
 export type ProtectedSessionResponse = {
@@ -24,6 +25,13 @@ export const getCurrentSession = async (): Promise<Response> => {
     credentials: "include",
   });
 };
+
+export const refreshAccessToken = async (): Promise<Response> => {
+  return fetch(AUTH_ENDPOINTS.REFRESH, {
+    method: "POST",
+    credentials: "include",
+  });
+}
 
 export const logoutSession = async (): Promise<Response> => {
   return fetch(AUTH_ENDPOINTS.LOGOUT, {
