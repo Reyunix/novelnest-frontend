@@ -1,29 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import {
-  useForm,
-  type Path,
-  type Resolver,
-} from "react-hook-form";
+import { useForm, type Path, type Resolver } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FORM_ERRORMAP } from "../shared/constants/formErrorMap";
-import { LoginFormSchema, type LoginForm } from "../schemas/loginFormSchema";
-import {
-  ContactFormSchema,
-  type ContactForm,
-} from "../schemas/contactFormSchema";
-import {
-  RegisterFormSchema,
-  type RegisterForm,
-} from "../schemas/registerFormSchema";
+import { FORM_ERRORMAP } from "../shared/constants/fomr.errormap.constants";
+import { LoginFormSchema } from "../features/auth/schemas/login.form.schemas";
+import { ContactFormSchema } from "../features/contact/schemas/contact.form.schemas";
+import { RegisterFormSchema } from "../features/auth/schemas/register.form.schemas";
 import { parseApiError, postJson } from "../shared/http/postJson";
-import type { iFormProps, schemaType } from "../types/interfaces";
-
-export type typeMap = {
-  login: LoginForm;
-  register: RegisterForm;
-  contact: ContactForm;
-};
+import type { iFormProps, schemaType } from "../shared/forms/generic.form.schemas";
+import type { FormTypeMap } from "../shared/forms/generic.form.types";
 
 export const GenerateForm = <T extends schemaType>({
   formFieldsList,
@@ -45,11 +30,13 @@ export const GenerateForm = <T extends schemaType>({
   };
 
   const formSchema = schemaMap[formSchemaType];
-  type FormData = typeMap[T];
+  type FormData = FormTypeMap[T];
   type FormDataTyped = Path<FormData>;
 
   const focusField = formFieldsList.find((field) => field.autofocus)?.id;
-  const resolverTyped = zodResolver(formSchema) as unknown as Resolver<FormData>;
+  const resolverTyped = zodResolver(
+    formSchema,
+  ) as unknown as Resolver<FormData>;
   const {
     register,
     setFocus,
@@ -76,26 +63,23 @@ export const GenerateForm = <T extends schemaType>({
         const errorCode = errorData?.errorCode;
 
         if (errorCode && errorCode in FORM_ERRORMAP) {
-          const fieldName = FORM_ERRORMAP[errorCode as keyof typeof FORM_ERRORMAP];
+          const fieldName =
+            FORM_ERRORMAP[errorCode as keyof typeof FORM_ERRORMAP];
 
           setError(fieldName as FormDataTyped, {
             type: "manual",
             message: errorData?.message,
           });
         }
-
         return;
       }
-
       if (onSuccess) {
         await onSuccess();
       }
-
       // Redirect to the specified page on success and replace history entry.
       if (redirectOnSuccess) {
         navigate(redirectOnSuccess, { replace: true });
       }
-
       reset();
     } catch (error) {
       console.error("Hubo un error en la solicitud:", error);

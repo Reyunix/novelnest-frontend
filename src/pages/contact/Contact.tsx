@@ -1,5 +1,5 @@
 import { GenerateForm } from '../../components/GenerateForm'
-import { CONTACT_FORM_FIELDS } from '../../features/contact/constants/contactForm'
+import { CONTACT_FORM_FIELDS } from '../../features/contact/constants/contact.form.constants'
 
 export const Contact = () => {
   return (

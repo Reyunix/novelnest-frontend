@@ -1,8 +1,7 @@
 import { GenerateForm } from "../../components/GenerateForm";
-import { LOGIN_FORM_FIELDS, LOGIN_FORM_LINKS } from "../../features/auth/constants/authForms";
-import { AUTH_ENDPOINTS } from "../../features/auth/auth.api";
+import { AUTH_ENDPOINTS, LOGIN_FORM_FIELDS, LOGIN_FORM_LINKS } from "../../features/auth/constants/auth.constants";
 import { useAuth } from "../../features/auth/authContext";
-import type { LoginForm } from "../../schemas/loginFormSchema";
+import type { LoginForm } from "../../features/auth/schemas/login.form.schemas";
 
 export const Login: React.FC = () => {
   const { refreshSession } = useAuth();

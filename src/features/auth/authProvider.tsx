@@ -12,11 +12,11 @@ import {
   type ProtectedSessionResponse,
 } from "./auth.api";
 import {
-  AuthContext,
   type AuthContextValue,
   type AuthStatus,
   type User,
-} from "./authContext";
+} from "./types/auth.types";
+import { AuthContext } from "./authContext";
 
 const toUser = (payload: ProtectedSessionResponse): User => {
   const sessionUser = payload.data?.user;

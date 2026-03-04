@@ -1,3 +1,4 @@
+import type { FormTypeMap } from "./generic.form.types";
 
 export interface iFormProps<T extends schemaType> {
   formFieldsList: FormField[];
@@ -6,11 +7,10 @@ export interface iFormProps<T extends schemaType> {
   title: string;
   buttonLiteral: string;
   formSchemaType: T;
-  payloadTransformer?: (data: typeMap[T]) => unknown;
+  payloadTransformer?: (data: FormTypeMap[T]) => unknown;
   redirectOnSuccess?: string;
   onSuccess?: () => void | Promise<void>;
 }
-
 
 export interface FormField {
   id: string;

@@ -1,12 +1,4 @@
-import { API_ENDPOINTS } from "../../shared/config/api";
-
-export const AUTH_ENDPOINTS = {
-  REGISTER: API_ENDPOINTS.REGISTER,
-  LOGIN: API_ENDPOINTS.LOGIN,
-  LOGOUT: API_ENDPOINTS.LOGOUT,
-  ME: API_ENDPOINTS.ME,
-  REFRESH: API_ENDPOINTS.REFRESH
-} as const;
+import { AUTH_ENDPOINTS } from "./constants/auth.constants";
 
 export type ProtectedSessionResponse = {
   data?: {
@@ -39,3 +31,4 @@ export const logoutSession = async (): Promise<Response> => {
     credentials: "include",
   });
 };
+

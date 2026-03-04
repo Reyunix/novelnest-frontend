@@ -9,7 +9,7 @@ export const RegisterFormSchema = z
       .max(30, "El nombre de usuario debe tener como máximo 30 caracteres")
       .regex(
         /^[a-zA-Z0-9_]+$/,
-        "El nombre de usuario sólo puede contener letras, números y guiones bajos"
+        "El nombre de usuario sólo puede contener letras, números y guiones bajos",
       ),
     userPassword: z
       .string()

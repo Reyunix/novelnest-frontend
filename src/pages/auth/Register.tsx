@@ -1,7 +1,6 @@
 import { GenerateForm } from "../../components/GenerateForm";
-import { REGISTER_FORM_FIELDS, REGISTER_FORM_LINKS } from "../../features/auth/constants/authForms";
-import { AUTH_ENDPOINTS } from "../../features/auth/auth.api";
-import type { RegisterForm } from "../../schemas/registerFormSchema";
+import { AUTH_ENDPOINTS, REGISTER_FORM_FIELDS, REGISTER_FORM_LINKS } from "../../features/auth/constants/auth.constants";
+import type { RegisterForm } from "../../features/auth/schemas/register.form.schemas";
 
 export const Register = () => {
   return (
