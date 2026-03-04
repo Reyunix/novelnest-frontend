@@ -55,13 +55,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const payload = (await res.json()) as ProtectedSessionResponse;
+      const nextUser = toUser(payload);
+
+      if (!nextUser) {
+        setAuthStatus("unauthenticated");
+        setUser(null);
+        return;
+      }
+
+      setUser(nextUser);
+      setAuthStatus("authenticated");
       
-      const user = setUser(toUser(payload));
-      if (user !== null) {setAuthStatus("authenticated")}
-      
-      else{
-        throw new Error
-      };
     } catch {
       setAuthStatus("unauthenticated");
       setUser(null);
