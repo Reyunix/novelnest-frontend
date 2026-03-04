@@ -1,22 +1,26 @@
 import { useState } from "react";
 import { BookCard } from "../../components/BookCard";
 import { useBookSearch } from "../../features/books/hooks/useBookSearch";
-import type { BookSearchQuery, FilterState } from "../../types/interfaces";
-
-const FILTER_OPTIONS = {
-  TITLE: "title",
-  AUTHOR: "author",
-  SUBJECT: "subject",
-  ALL: "q",
-} as const;
-
-const EMPTY_QUERY: BookSearchQuery = { filterState: FILTER_OPTIONS.ALL, query: "" };
+import {
+  BOOK_SEARCH_FILTER_OPTIONS,
+  BOOK_SORT_OPTIONS,
+  DEFAULT_FILTER,
+  EMPTY_QUERY,
+} from "../../features/books/constants/books.cons";
+import { SearchFilterGroup } from "../../features/books/components/SearchFilterGroup";
+import type {
+  BookSearchFilter,
+  BookSearchQuery,
+  SortBy,
+} from "../../features/books/types/books.types";
 
 export const SearchPage = () => {
   const [inputValue, setInputValue] = useState("");
-  const [filterState, setFilterState] = useState<FilterState>(FILTER_OPTIONS.ALL);
-  const [submittedQuery, setSubmittedQuery] = useState<BookSearchQuery>(EMPTY_QUERY);
-  const normalizedQuery = inputValue.trim();
+  const [filterState, setFilterState] =
+    useState<BookSearchFilter>(DEFAULT_FILTER);
+  const [submittedQuery, setSubmittedQuery] =
+    useState<BookSearchQuery>(EMPTY_QUERY);
+  const [sortBy, setSortBy] = useState<SortBy>("relevance");
 
   const { data, loading, error } = useBookSearch(submittedQuery);
 
@@ -26,73 +30,44 @@ export const SearchPage = () => {
 
   const querySubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const normalizedQuery = inputValue.trim();
+    setInputValue(normalizedQuery);
     if (!normalizedQuery) return;
 
-    const queryWithFilter: BookSearchQuery = {
+    setSubmittedQuery({
       filterState,
       query: normalizedQuery,
-    };
-
-    setInputValue(normalizedQuery);
-    setSubmittedQuery(queryWithFilter);
+      sortBy,
+    });
   };
 
   return (
     <div className="search-page-layout">
       <form action="" onSubmit={querySubmit} className="search-form">
-        <fieldset>
-          <input
-            value={inputValue}
-            type="text"
-            className="search-bar"
-            onChange={(event) => {
-              handleQueryInput(event);
-            }}
-          />
-          <input
-            type="radio"
+        <fieldset className="search-fieldset">
+          <div>
+            <input
+              placeholder="Busca por título, autor o tema"
+              value={inputValue}
+              type="text"
+              className="search-bar"
+              onChange={(event) => {
+                handleQueryInput(event);
+              }}
+            />
+          </div>
+          <SearchFilterGroup
             name="searchBy"
-            value="all"
-            id="all"
-            checked={filterState === FILTER_OPTIONS.ALL}
-            onChange={() => {
-              setFilterState(FILTER_OPTIONS.ALL);
-            }}
+            value={filterState}
+            onChange={setFilterState}
+            options={BOOK_SEARCH_FILTER_OPTIONS}
           />
-          <label htmlFor="all">Todo</label>
-          <input
-            type="radio"
-            name="searchBy"
-            value="title"
-            id="title"
-            checked={filterState === FILTER_OPTIONS.TITLE}
-            onChange={() => {
-              setFilterState(FILTER_OPTIONS.TITLE);
-            }}
+          <SearchFilterGroup
+            name="sortBy"
+            value={sortBy}
+            onChange={setSortBy}
+            options={BOOK_SORT_OPTIONS}
           />
-          <label htmlFor="title">Titulo</label>
-          <input
-            type="radio"
-            name="searchBy"
-            value="author"
-            id="author"
-            checked={filterState === FILTER_OPTIONS.AUTHOR}
-            onChange={() => {
-              setFilterState(FILTER_OPTIONS.AUTHOR);
-            }}
-          />
-          <label htmlFor="author">Autor</label>
-          <input
-            type="radio"
-            name="searchBy"
-            value="subject"
-            id="subject"
-            checked={filterState === FILTER_OPTIONS.SUBJECT}
-            onChange={() => {
-              setFilterState(FILTER_OPTIONS.SUBJECT);
-            }}
-          />
-          <label htmlFor="subject">Tema</label>
         </fieldset>
       </form>
 

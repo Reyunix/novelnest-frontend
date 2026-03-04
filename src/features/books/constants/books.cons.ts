@@ -1,0 +1,22 @@
+import { type BookSearchFilter, type BookSearchQuery, type FilterOption, type SortOption } from "../types/books.types";
+
+export const BOOK_SEARCH_FILTER_OPTIONS: FilterOption[] = [
+  { id: "all", value: "q", literal: "Todo" },
+  { id: "title", value: "title", literal: "Titulo" },
+  { id: "author", value: "author", literal: "Autor" },
+  { id: "subject", value: "subject", literal: "Tema" },
+];
+
+export const BOOK_SORT_OPTIONS: SortOption[] = [
+  { id: "relevance", value: "relevance", literal: "Relevancia" },
+  { id: "newest", value: "newest", literal: "Más recientes" },
+];
+
+export const DEFAULT_FILTER: BookSearchFilter = BOOK_SEARCH_FILTER_OPTIONS[0].value;
+export const DEFAULT_SORT_BY: string = BOOK_SORT_OPTIONS[0].value;
+
+export const EMPTY_QUERY: BookSearchQuery = {
+    filterState: DEFAULT_FILTER,
+    query: "",
+    sortBy: "relevance"
+}
