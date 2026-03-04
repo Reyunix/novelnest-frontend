@@ -20,3 +20,9 @@ export const EMPTY_QUERY: BookSearchQuery = {
     query: "",
     sortBy: "relevance"
 }
+
+export const BOOK_CARD_MESSAGES = {
+    TITLE_NOT_AVAILABLE: "Título no disponible",
+    AUTHOR_NOT_AVAILABLE: "Título no disponible",
+    NOT_AVAILABLE_INFO: "No disponible"
+}

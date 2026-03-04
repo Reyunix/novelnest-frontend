@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { BookCard } from "../../components/BookCard";
+import { BookCard } from "../../features/books/components/BookCard";
 import { useBookSearch } from "../../features/books/hooks/useBookSearch";
 import {
   BOOK_SEARCH_FILTER_OPTIONS,
   BOOK_SORT_OPTIONS,
   DEFAULT_FILTER,
   EMPTY_QUERY,
-} from "../../features/books/constants/books.cons";
+} from "../../features/books/constants/books.constants";
 import { SearchFilterGroup } from "../../features/books/components/SearchFilterGroup";
 import type {
   BookSearchFilter,
@@ -80,7 +80,7 @@ export const SearchPage = () => {
         ) : booksData ? (
           booksData.items.length > 0 ? (
             booksData.items.map((bookItem) => {
-              return <BookCard key={bookItem.id} bookItem={bookItem} />;
+              return <BookCard key={bookItem.providerBookId} bookItem={bookItem} provider={booksData.provider} />;
             })
           ) : (
             <span className="centered-self">

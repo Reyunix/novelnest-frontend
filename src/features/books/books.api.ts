@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from "../../shared/config/api";
+import { API_ENDPOINTS } from "../../shared/config/config.api";
 import type { BookSearchQuery } from "./types/books.types";
   
 export const buildBookSearchUrl = (query: BookSearchQuery): string => {

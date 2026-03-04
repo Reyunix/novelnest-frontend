@@ -1,7 +1,27 @@
 import { z } from "zod";
 
+// Bookcard
+export const SaveToLibrarySchema = z.object({
+  provider: z.string().min(1),
+  providerBookId: z.string().min(1),
+  title: z.string(),
+  authors: z.array(z.string()),
+  thumbnail: z.string().nullable().optional(),
+  canonicalVolumeLink: z.string().nullable().optional(),
+});
+
+export type SaveToLibraryData = z.infer<typeof SaveToLibrarySchema>;
+
+export const parseSaveTolibraryData = (data: unknown): SaveToLibraryData => {
+  const result = SaveToLibrarySchema.safeParse(data);
+  if (!result.success) throw new Error("Error al enviar los datos");
+
+  return result.data as SaveToLibraryData;
+};
+
+// Search Page
 export const BooksSearchItemSchema = z.object({
-  id: z.string(),
+  providerBookId: z.string(),
   title: z.string(),
   authors: z.array(z.string()),
   publisher: z.string().nullable(),

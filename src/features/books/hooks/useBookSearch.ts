@@ -1,4 +1,4 @@
-import type { BooksSearchSuccessResponse } from "../../../schemas/apiResponseSchema";
+import type { BooksSearchSuccessResponse } from "../../../schemas/api.response.schema";
 import { useFetch } from "../../../shared/hooks/useFetch";
 import { buildBookSearchUrl } from "../books.api";
 import { type BookSearchQuery } from "../types/books.types";

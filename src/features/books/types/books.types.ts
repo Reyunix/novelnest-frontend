@@ -19,3 +19,4 @@ export type BookSearchQuery = {
   sortBy: SortBy;
 };
 
+export type SaveStateType = "idle" | "saving" | "saved" | "error"
