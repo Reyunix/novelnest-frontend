@@ -1,7 +1,7 @@
 import { type BookSearchFilter, type BookSearchQuery, type FilterOption, type SortBy, type SortOption } from "../types/books.types";
 
 export const BOOK_SEARCH_FILTER_OPTIONS: FilterOption[] = [
-  { id: "all", value: "q", literal: "Todo" },
+  { id: "all", value: "all", literal: "Todo" },
   { id: "title", value: "title", literal: "Titulo" },
   { id: "author", value: "author", literal: "Autor" },
   { id: "subject", value: "subject", literal: "Tema" },
