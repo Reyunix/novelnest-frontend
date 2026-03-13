@@ -10,6 +10,7 @@ export interface FormProps<T extends schemaType> {
   payloadTransformer?: (data: FormTypeMap[T]) => unknown;
   redirectOnSuccess?: string;
   onSuccess?: () => void | Promise<void>;
+  successMessage?: string
 }
 
 export interface FormField {

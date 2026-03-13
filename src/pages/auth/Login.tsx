@@ -13,6 +13,7 @@ export const Login: React.FC = () => {
       formLinks={LOGIN_FORM_LINKS}
       buttonLiteral="Iniciar Sesión"
       title="¡Hola de nuevo! ¡Nos alegramos mucho de volver a verte!"
+      successMessage="¡Inicio de sesión completado!"
       formSchemaType="login"
       redirectOnSuccess="/"
       payloadTransformer={(data: LoginForm) => {

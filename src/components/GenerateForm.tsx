@@ -24,6 +24,7 @@ export const GenerateForm = <T extends schemaType>({
   redirectOnSuccess,
   payloadTransformer,
   onSuccess,
+  successMessage,
 }: FormProps<T>) => {
   const navigate = useNavigate();
   const {showNotification} = useNotifications()
@@ -84,7 +85,7 @@ export const GenerateForm = <T extends schemaType>({
       navigate(redirectOnSuccess, { replace: true });
     }
     
-    showNotification("Éxito", "success")
+    showNotification((successMessage? successMessage : "Éxito"), "success")
     reset();
   };
 
