@@ -5,10 +5,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { LoginFormSchema } from "../features/auth/schemas/login.form.schemas";
 import { ContactFormSchema } from "../features/contact/schemas/contact.form.schemas";
 import { RegisterFormSchema } from "../features/auth/schemas/register.form.schemas";
-import { parseApiError, postJson } from "../shared/http/postJson";
-import type { FormProps, schemaType } from "../shared/forms/generic.form.schemas";
-import type { FormTypeMap } from "../shared/forms/generic.form.types";
-import { FORM_ERRORMAP } from "../shared/constants/form.errormap.constants";
+import { useSubmitForm } from "../features/auth/hooks/useSubmitForm";
+import { FORM_ERRORMAP } from "../shared/constants/formErrorMap.constants";
+import type {
+  FormProps,
+  schemaType,
+} from "../shared/schemas/genericForm.schemas";
+import type { FormTypeMap } from "../shared/types/genericForm.types";
+import { useNotifications } from "../features/notifications/notificationContext";
 
 export const GenerateForm = <T extends schemaType>({
   formFieldsList,
@@ -22,7 +26,7 @@ export const GenerateForm = <T extends schemaType>({
   onSuccess,
 }: FormProps<T>) => {
   const navigate = useNavigate();
-
+  const {showNotification} = useNotifications()
   const schemaMap = {
     login: LoginFormSchema,
     register: RegisterFormSchema,
@@ -45,6 +49,7 @@ export const GenerateForm = <T extends schemaType>({
     setError,
     formState: { errors },
   } = useForm<FormData>({ resolver: resolverTyped });
+  const { submitForm, loading } = useSubmitForm<unknown>(apiEndpoint);
 
   useEffect(() => {
     if (focusField) {
@@ -54,37 +59,33 @@ export const GenerateForm = <T extends schemaType>({
 
   const onSubmit = async (data: FormData) => {
     const payload = payloadTransformer ? payloadTransformer(data) : data;
+    const result = await submitForm(payload);
 
-    try {
-      const response = await postJson(apiEndpoint, payload);
+    if (!result.ok) {
+      const fieldName =
+        result.error.errorCode in FORM_ERRORMAP
+          ? FORM_ERRORMAP[result.error.errorCode as keyof typeof FORM_ERRORMAP]
+          : null;
 
-      if (!response.ok) {
-        const errorData = await parseApiError(response);
-        const errorCode = errorData?.errorCode;
-
-        if (errorCode && errorCode in FORM_ERRORMAP) {
-          const fieldName =
-            FORM_ERRORMAP[errorCode as keyof typeof FORM_ERRORMAP];
-
-          setError(fieldName as FormDataTyped, {
-            type: "manual",
-            message: errorData?.message,
-          });
-        }
-        return;
+      if (fieldName) {
+        setError(fieldName as FormDataTyped, {
+          type: "manual",
+          message: result.error.message,
+        });
       }
-      if (onSuccess) {
-        await onSuccess();
-      }
-      // Redirect to the specified page on success and replace history entry.
-      if (redirectOnSuccess) {
-        navigate(redirectOnSuccess, { replace: true });
-      }
-      reset();
-    } catch (error) {
-      console.error("Hubo un error en la solicitud:", error);
-      reset();
+      return;
     }
+
+    if (onSuccess) {
+      await onSuccess();
+    }
+    
+    if (redirectOnSuccess) {
+      navigate(redirectOnSuccess, { replace: true });
+    }
+    
+    showNotification("Éxito", "success")
+    reset();
   };
 
   return (
@@ -141,8 +142,8 @@ export const GenerateForm = <T extends schemaType>({
             );
           })}
           <footer className="form-footer">
-            <button type="submit" className="btn">
-              {buttonLiteral}
+            <button type="submit" className="btn" disabled={loading}>
+              {loading ? "Enviando..." : buttonLiteral}
             </button>
             <div className="flex-row">
               {formLinks &&

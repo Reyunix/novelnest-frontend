@@ -270,3 +270,34 @@ body {
   font-size: 0.9rem;
   width: 100%;
 }
+
+/* Notifications */
+.notification-toast{
+  box-sizing: border-box;
+  position:fixed;
+  background-color:cornsilk;
+  color: black;
+  top: 20px;
+  right: 20px;
+  font-size: 14px;
+  display:inline-flex;
+  padding: 10px;
+  gap: 15px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.notification-toast--error{
+  background-color: brown;
+  color: white;
+}
+
+.notification-toast--success{
+  background-color: rgb(67, 255, 67);
+  color: white;
+}
+
+.notification-toast--info{
+  background-color: gold;
+  color: white;
+}

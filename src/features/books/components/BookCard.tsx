@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { API_ENDPOINTS } from "../../../shared/config/config.api";
-import { parseApiError, postJson } from "../../../shared/http/postJson";
+import { useNotifications } from "../../notifications/notificationContext";
 import { toSecureUrl } from "../../../shared/http/secureUrl";
 import type { SaveStateType } from "../types/books.types";
 import { BOOK_CARD_MESSAGES } from "../constants/books.constants";
@@ -9,6 +9,7 @@ import {
   type BooksSearchItem,
   type SaveToLibraryData,
 } from "../schemas/books.schemas";
+import { useSaveBook } from "../hooks/useSaveBook";
 
 interface Props {
   bookItem: BooksSearchItem;
@@ -17,8 +18,8 @@ interface Props {
 
 export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
   const [saveState, setSaveState] = useState<SaveStateType>("idle");
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const isSaving = saveState === "saving";
+  const { saveBook, loading } = useSaveBook(API_ENDPOINTS.BOOK_SAVE);
+  const { showNotification } = useNotifications();
   const isSaved = saveState === "saved";
   const NOT_AVAILABLE_INFO = BOOK_CARD_MESSAGES.NOT_AVAILABLE_INFO;
   const secureThumbnail = toSecureUrl(bookItem.thumbnail);
@@ -26,7 +27,6 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
 
   const handleclickSaveToLibrary = async () => {
     setSaveState("saving");
-    setSaveError(null);
 
     const payload: SaveToLibraryData = {
       provider,
@@ -36,17 +36,25 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
       thumbnail: secureThumbnail,
       canonicalVolumeLink: secureCanonicalLink,
     };
+
     try {
       const parsed = parseSaveTolibraryData(payload);
-      const res = await postJson(API_ENDPOINTS.BOOK_SAVE, parsed);
-      if (!res.ok) {
-        const apiErr = await parseApiError(res);
-        throw new Error(apiErr?.message ?? `Request failed (${res.status})`);
+      const result = await saveBook(parsed);
+
+      if (!result.ok) {
+        setSaveState("error");
+        showNotification(result.error.message, "error");
+        return;
       }
+
       setSaveState("saved");
-    } catch (err) {
+      showNotification("Book saved to your library", "success");
+    } catch (error) {
       setSaveState("error");
-      setSaveError(err instanceof Error ? err.message : "Error inesperado");
+      showNotification(
+        error instanceof Error ? error.message : "Unexpected error",
+        "error",
+      );
     }
   };
   return (
@@ -80,13 +88,12 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
       <button
         type="button"
         onClick={handleclickSaveToLibrary}
-        disabled={isSaving || isSaved}
+        disabled={loading || isSaved}
       >
-        {(isSaving && <>Guardando</>) || (isSaved && <>Añadido</>) || (
+        {(loading && <>Guardando</>) || (isSaved && <>Añadido</>) || (
           <>Guardar en mi biblioteca</>
         )}
       </button>
-      {saveError && <p className="error-message">{saveError}</p>}
     </div>
   );
 };

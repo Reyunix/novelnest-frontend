@@ -22,12 +22,7 @@ const toUser = (payload: ProtectedSessionResponse): User => {
   const sessionUser = payload.data?.user;
   if (!sessionUser) return null;
 
-  return {
-    userId: sessionUser.userId,
-    userName: sessionUser.userName,
-    userEmail: sessionUser.userEmail,
-    role: sessionUser.role,
-  };
+  return sessionUser
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -65,7 +60,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       setUser(nextUser);
       setAuthStatus("authenticated");
-      
     } catch {
       setAuthStatus("unauthenticated");
       setUser(null);

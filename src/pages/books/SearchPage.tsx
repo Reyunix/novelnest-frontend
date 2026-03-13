@@ -49,6 +49,7 @@ export const SearchPage = () => {
         <fieldset className="search-fieldset">
           <div>
             <input
+              autoFocus
               placeholder="Busca por título, autor o tema"
               value={inputValue}
               type="text"
@@ -81,7 +82,13 @@ export const SearchPage = () => {
         ) : booksData ? (
           booksData.items.length > 0 ? (
             booksData.items.map((bookItem) => {
-              return <BookCard key={bookItem.providerBookId} bookItem={bookItem} provider={booksData.provider} />;
+              return (
+                <BookCard
+                  key={bookItem.providerBookId}
+                  bookItem={bookItem}
+                  provider={booksData.provider}
+                />
+              );
             })
           ) : (
             <span className="centered-self">

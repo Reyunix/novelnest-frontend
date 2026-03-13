@@ -1,5 +1,5 @@
-import type { FormLink } from "../../../shared/forms/generic.form.schemas";
 import { API_ENDPOINTS } from "../../../shared/config/config.api";
+import type { FormLink } from "../../../shared/schemas/genericForm.schemas";
 
 export const REGISTER_FORM_LINKS: FormLink[] = [
   { id: 0, literal: "Condiciones del Servicio", href: "/" },
@@ -68,10 +68,4 @@ export const LOGIN_FORM_FIELDS = [
   },
 ];
 
-export const AUTH_ENDPOINTS = {
-  REGISTER: API_ENDPOINTS.REGISTER,
-  LOGIN: API_ENDPOINTS.LOGIN,
-  LOGOUT: API_ENDPOINTS.LOGOUT,
-  ME: API_ENDPOINTS.ME,
-  REFRESH: API_ENDPOINTS.REFRESH,
-} as const;
+export const AUTH_ENDPOINTS = API_ENDPOINTS

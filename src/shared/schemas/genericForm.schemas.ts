@@ -1,4 +1,4 @@
-import type { FormTypeMap } from "./generic.form.types";
+import type { FormTypeMap } from "../types/genericForm.types";
 
 export interface FormProps<T extends schemaType> {
   formFieldsList: FormField[];
