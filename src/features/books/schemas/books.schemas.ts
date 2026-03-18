@@ -55,3 +55,45 @@ export type BooksSearchResponse = z.infer<typeof BooksSearchResponseSchema>;
 export type BooksSearchSuccessResponse = z.infer<
   typeof BooksSearchSuccessResponseSchema
 >;
+
+// userBooks
+const UserBookStatus = [
+  "reading",
+  "completed",
+  "abandoned",
+  "want_to_read",
+] as const;
+
+const nonEmptyString = z.string().nonempty();
+const isoDate = z.iso.datetime();
+
+export const UserBookSchema = z.object({
+  id: z.int().positive(),
+  userId: z.int().positive(),
+  provider: nonEmptyString,
+  providerBookId: nonEmptyString,
+  title: nonEmptyString,
+  authors: z.array(nonEmptyString),
+  thumbnail: z.url().nullable(),
+  canonicalVolumeLink: z.url().nullable(),
+  review: nonEmptyString.nullable(),
+  rating: z.int().min(0).max(5).nullable(),
+  status: z.enum(UserBookStatus),
+  startedAt: isoDate.nullable(),
+  finishedAt: isoDate.nullable(),
+  createdAt: isoDate,
+  updatedAt: isoDate,
+});
+
+export type UserBookStatus = (typeof UserBookStatus)[number];
+export type UserBookSchemaType = z.infer<typeof UserBookSchema>;
+
+export const getUserBooksResponseSchema = z.array(UserBookSchema)
+export type GetUserBookResponse = z.infer<typeof getUserBooksResponseSchema>
+
+export const getUserBooksApiResponseSchema = z.object({
+  success: z.literal(true),
+  message: z.string(),
+  code: z.string(),
+  data: getUserBooksResponseSchema,
+});

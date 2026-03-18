@@ -26,6 +26,11 @@ export const API_ENDPOINTS = {
       `http://127.0.0.1:${PORT}/api/v1/books/search`,
   ),
   BOOK_SAVE: String(
-    import.meta.env.VITE_API_BOOK_SAVE_ENDPOINT ||
-      `http://127.0.0.1:${PORT}/api/v1/users/me/books`,),
+    import.meta.env.VITE_API_USERS_ME_BOOKS_ENDPOINT ||
+      `http://127.0.0.1:${PORT}/api/v1/users/me/books`,
+  ),
+  GET_USER_BOOKS: String(
+    import.meta.env.VITE_API_USERS_ME_BOOKS_ENDPOINT ||
+      `http://127.0.0.1:${PORT}/api/v1/users/me/books`,
+  ),
 } as const;

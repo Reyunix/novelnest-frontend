@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { postJson } from "../../../shared/http/postJson2";
+import { postJson } from "../../../shared/http/postJson";
 import type { SaveToLibraryData } from "../schemas/books.schemas";
 import { AppHttpError } from "../../../shared/types/httpError.types";
 import type { ApiSuccessResponse } from "../../../shared/types/apiResponse.types";

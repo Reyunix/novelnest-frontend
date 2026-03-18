@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { AppHttpError } from "../../../shared/types/httpError.types";
-import { postJson } from "../../../shared/http/postJson2";
+import { postJson } from "../../../shared/http/postJson";
 import type { ApiSuccessResponse } from "../../../shared/types/apiResponse.types";
 
 type SubmitResult<TData> =
