@@ -1,13 +1,16 @@
 import { z } from "zod";
 
+const nonEmptyString = z.string().nonempty();
+const isoDate = z.iso.datetime();
+
 // Bookcard
 export const SaveToLibrarySchema = z.object({
-  provider: z.string().min(1),
-  providerBookId: z.string().min(1),
-  title: z.string(),
-  authors: z.array(z.string()),
-  thumbnail: z.string().nullable().optional(),
-  canonicalVolumeLink: z.string().nullable().optional(),
+  provider: nonEmptyString,
+  providerBookId: nonEmptyString,
+  title: nonEmptyString,
+  authors: z.array(nonEmptyString),
+  thumbnail: nonEmptyString.nullable().optional(),
+  canonicalVolumeLink: nonEmptyString.nullable().optional(),
 });
 
 export type SaveToLibraryData = z.infer<typeof SaveToLibrarySchema>;
@@ -21,22 +24,22 @@ export const parseSaveTolibraryData = (data: unknown): SaveToLibraryData => {
 
 // Search Page
 export const BooksSearchItemSchema = z.object({
-  providerBookId: z.string(),
-  title: z.string(),
-  authors: z.array(z.string()),
-  publisher: z.string().nullable(),
-  publishedDate: z.string().nullable(),
+  providerBookId: nonEmptyString,
+  title: nonEmptyString,
+  authors: z.array(nonEmptyString),
+  publisher: nonEmptyString.nullable(),
+  publishedDate: nonEmptyString.nullable(),
   pageCount: z.number().nullable(),
-  categories: z.array(z.string()),
-  maturityRating: z.string().nullable(),
-  thumbnail: z.string().nullable(),
-  canonicalVolumeLink: z.string().nullable(),
-  description: z.string().nullable(),
-  language: z.string().nullable(),
+  categories: z.array(nonEmptyString),
+  maturityRating: nonEmptyString.nullable(),
+  thumbnail: nonEmptyString.nullable(),
+  canonicalVolumeLink: nonEmptyString.nullable(),
+  description: nonEmptyString.nullable(),
+  language: nonEmptyString.nullable(),
 });
 
 export const BooksSearchResponseSchema = z.object({
-  provider: z.string(),
+  provider: nonEmptyString,
   totalItems: z.number().int().min(0),
   page: z.number().int().min(1),
   limit: z.number().int().min(1),
@@ -45,8 +48,8 @@ export const BooksSearchResponseSchema = z.object({
 
 export const BooksSearchSuccessResponseSchema = z.object({
   success: z.literal(true),
-  message: z.string(),
-  code: z.string(),
+  message: nonEmptyString,
+  code: nonEmptyString,
   data: BooksSearchResponseSchema,
 });
 
@@ -63,9 +66,6 @@ const UserBookStatus = [
   "abandoned",
   "want_to_read",
 ] as const;
-
-const nonEmptyString = z.string().nonempty();
-const isoDate = z.iso.datetime();
 
 export const UserBookSchema = z.object({
   id: z.int().positive(),
@@ -88,12 +88,43 @@ export const UserBookSchema = z.object({
 export type UserBookStatus = (typeof UserBookStatus)[number];
 export type UserBookSchemaType = z.infer<typeof UserBookSchema>;
 
-export const getUserBooksResponseSchema = z.array(UserBookSchema)
-export type GetUserBookResponse = z.infer<typeof getUserBooksResponseSchema>
+export const getUserBooksResponseSchema = z.array(UserBookSchema);
+export type GetUserBookResponse = z.infer<typeof getUserBooksResponseSchema>;
 
 export const getUserBooksApiResponseSchema = z.object({
   success: z.literal(true),
-  message: z.string(),
-  code: z.string(),
+  message: nonEmptyString,
+  code: nonEmptyString,
   data: getUserBooksResponseSchema,
 });
+
+export const getUserBookApiResponseSchema = z.object({
+  success: z.literal(true),
+  message: nonEmptyString,
+  code: nonEmptyString,
+  data: UserBookSchema,
+});
+
+// userLists
+export const UserListSchema = z.object({
+  id: z.int().positive(),
+  userId: z.int().positive(),
+  name: nonEmptyString,
+  description: nonEmptyString.nullable(),
+  isDefault: z.boolean(),
+  isPrivate: z.boolean(),
+  createdAt: isoDate,
+  updatedAt: isoDate,
+});
+
+export const UserListSchemaApiResponse = z.object({
+  success: z.boolean(),
+  message: nonEmptyString,
+  code: nonEmptyString,
+  data: z.array(UserListSchema),
+});
+
+export type UserListSchemaType = z.infer<typeof UserListSchema>;
+export type UserListSchemaApiResponseType = z.infer<
+  typeof UserListSchemaApiResponse
+>;

@@ -11,7 +11,7 @@ export const Register = () => {
       title="Crear cuenta"
       buttonLiteral="Crear cuenta"
       formSchemaType="register"
-      successMessage="¡Registro completado completado!"
+      successMessage="¡Registro completado con éxito!"
       redirectOnSuccess="/login"
       payloadTransformer={(data: RegisterForm) => {
         return {

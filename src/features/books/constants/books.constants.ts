@@ -26,3 +26,10 @@ export const BOOK_CARD_MESSAGES = {
     AUTHOR_NOT_AVAILABLE: "Título no disponible",
     NOT_AVAILABLE_INFO: "No disponible"
 }
+
+export const BOOK_STATUS_LITERAL = {
+  want_to_read: "quiero leer",
+  reading: "leyendo",
+  completed: "completado",
+  abandoned: "abandonado",
+}

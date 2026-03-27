@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface UseFetchOptions<TData> {
   url: string;
@@ -11,6 +11,7 @@ interface UseFetchResult<TData> {
   data: TData | null;
   loading: boolean;
   error: string | null;
+  refetch: () => Promise<void>;
 }
 
 const defaultParser = async <TData>(response: Response): Promise<TData> => {
@@ -27,49 +28,37 @@ export const useFetch = <TData>({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!enabled) return;
-
-    const controller = new AbortController();
-
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
 
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url, {
-          ...requestInit,
-          signal: controller.signal,
-        });
+    try {
+      const response = await fetch(url, {
+        ...requestInit,
+      });
 
-        if (!response.ok) {
-          throw new Error(`Request failed (${response.status})`);
-        }
-
-        const parser = parseResponse ?? defaultParser<TData>;
-        const parsed = await parser(response);
-        setData(parsed);
-      } catch (err) {
-        if (err instanceof DOMException && err.name === "AbortError") {
-          return;
-        }
-
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Unexpected request error");
-        }
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`Request failed (${response.status})`);
       }
-    };
 
+      const parser = parseResponse ?? defaultParser<TData>;
+      const parsed = await parser(response);
+      setData(parsed);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Unexpected request error");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [url, requestInit, parseResponse]);
+
+  useEffect(() => {
+    if (!enabled) return;
     void fetchData();
+  }, [enabled, fetchData]);
 
-    return () => {
-      controller.abort();
-    };
-  }, [enabled, parseResponse, requestInit, url]);
-
-  return { data, loading, error };
+  return { data, loading, error, refetch: fetchData };
 };

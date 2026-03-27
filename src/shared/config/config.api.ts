@@ -1,5 +1,10 @@
 const PORT = String(import.meta.env.VITE_PORT);
 
+export const USER_ME_BOOKS_ENDOPINT = String(
+  import.meta.env.VITE_API_USERS_ME_BOOKS_ENDPOINT ||
+    `http://127.0.0.1:${PORT}/api/v1/users/me/books`,
+);
+
 export const API_ENDPOINTS = {
   REGISTER: String(
     import.meta.env.VITE_API_REGISTER_ENDPOINT ||
@@ -25,12 +30,15 @@ export const API_ENDPOINTS = {
     import.meta.env.VITE_API_BOOKS_SEARCH_ENDPOINT ||
       `http://127.0.0.1:${PORT}/api/v1/books/search`,
   ),
-  BOOK_SAVE: String(
-    import.meta.env.VITE_API_USERS_ME_BOOKS_ENDPOINT ||
-      `http://127.0.0.1:${PORT}/api/v1/users/me/books`,
+  BOOK_SAVE: USER_ME_BOOKS_ENDOPINT,
+
+  GET_USERBOOKS: USER_ME_BOOKS_ENDOPINT,
+
+  DELETE_USERBOOK: USER_ME_BOOKS_ENDOPINT,
+
+  GET_USER_LISTS: String(
+    import.meta.env.VITE_API_USERS_ME_LISTS ||
+      `http://127.0.0.1:${PORT}/api/v1/users/me/lists`,
   ),
-  GET_USER_BOOKS: String(
-    import.meta.env.VITE_API_USERS_ME_BOOKS_ENDPOINT ||
-      `http://127.0.0.1:${PORT}/api/v1/users/me/books`,
-  ),
+  USER_BOOKS: USER_ME_BOOKS_ENDOPINT
 } as const;

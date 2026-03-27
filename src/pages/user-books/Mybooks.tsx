@@ -1,28 +1,14 @@
-import { BookDisplay } from "../../features/books/components/BookDisplay";
-import { useGetUserBooks } from "../../features/books/hooks/useGetUserBooks";
-
+import { UserBooksDisplay } from "../../features/books/components/UserBooksDisplay";
 export const Mybooks = () => {
-  const { data, loading, error } = useGetUserBooks();
-
   return (
     <div className="my-books-page-layout">
-      <h1>Mis Libros</h1>
-      <section className="books">
-        {loading ? (
-          <span>Cargando ...</span>
-        ) : error ? (
-          <span>{error}</span>
-        ) : data ? (
-          data?.map((userBook) => {
-            return <BookDisplay key={userBook.id} userBook={userBook}></BookDisplay>;
-          })
-        ) : (
-          <span>
-            No tienes ningún libro guardado. ¡Comineza a coleccionar desde la
-            página de búsqueda!
-          </span>
-        )}
-      </section>
+      <span className="my-books-page-header">
+        <h1 className="my-books-page-title">Mis Libros</h1>{" "}
+        <form action="" onSubmit={(e) => e.preventDefault()}>
+          <input type="text" placeholder="Buscar y añadir libros" />
+        </form>
+      </span>
+      <UserBooksDisplay />
     </div>
   );
 };

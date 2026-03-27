@@ -1,6 +1,7 @@
 :root {
   --light-color: #f5f2eb;
   --dark-color: #363735;
+  --border-color: #e0e0e0;
 }
 
 #root {
@@ -14,12 +15,20 @@
 
 html {
   font-size: 19px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
   line-height: 1.3;
 }
-
-
 
 body {
   margin: 0;
@@ -27,15 +36,21 @@ body {
   background-color: var(--light-color);
 }
 
+a {
+  text-decoration: none;
+  color: var(--dark-color);
+}
+
 /* Header */
 .header {
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
   text-align: center;
   color: var(--dark-color);
-  padding-bottom: 2.5rem;
-  padding-top: 2.5rem;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .header-menu {
@@ -150,7 +165,7 @@ body {
 .search-fieldset {
   border: none;
   display: block;
-  gap: .3rem;
+  gap: 0.3rem;
   justify-content: center;
   align-items: center;
   margin: 0;
@@ -165,7 +180,7 @@ body {
 
 .search-filter-group {
   display: flex;
-  gap: .5rem;
+  gap: 0.5rem;
   justify-content: center;
   align-items: center;
 }
@@ -193,7 +208,7 @@ body {
   gap: 1rem;
 }
 
-.links{
+.links {
   font-size: 0.75rem;
   text-decoration: none;
 }
@@ -262,51 +277,93 @@ body {
   height: 2.5rem;
 }
 
-.error-message{
+.error-message {
   color: rgb(255, 0, 0);
 }
 
-.form-input-field{
+.form-input-field {
   font-size: 0.9rem;
   width: 100%;
 }
 
 /* Notifications */
-.notification-toast{
+.notification-toast {
   box-sizing: border-box;
-  position:fixed;
-  background-color:cornsilk;
+  position: fixed;
+  background-color: cornsilk;
   color: black;
   top: 20px;
   right: 20px;
   font-size: 14px;
-  display:inline-flex;
+  display: inline-flex;
   padding: 10px;
   gap: 15px;
   border-radius: 3px;
   font-weight: 600;
 }
 
-.notification-toast--error{
+.notification-toast--error {
   background-color: brown;
   color: white;
 }
 
-.notification-toast--success{
-  background-color: rgb(67, 255, 67);
+.notification-toast--success {
+  background-color: rgb(61, 214, 125);
   color: white;
 }
 
-.notification-toast--info{
+.notification-toast--info {
   background-color: gold;
   color: white;
 }
 
 /* User Books*/
 
-.display-userbook{
+.book-details {
   display: flex;
-  background-color: aliceblue;
+  background-color: white;
   gap: 3em;
-  border: solid 1px;
+  border-bottom: solid 1px;
+  border-color: var(--border-color);
+  padding: 20px 10px 20px 20px;
+  max-width: 800px;
+}
+
+.book-details-texts {
+  min-width: 0;
+  flex: 1;
+}
+
+.book-details-title {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userbooks-collection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 800px;
+}
+
+.my-books-page-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 800px;
+}
+
+.my-books-page-header {
+  display: flex;
+  flex-direction: row;
+  max-height: 3rem;
+  align-items: center;
+  
+  align-content: space-between
+}
+
+.my-books-page-title {
+  font-size: 1.4rem;
 }
