@@ -1,4 +1,5 @@
-import { type BookSearchFilter, type BookSearchQuery, type FilterOption, type SortBy, type SortOption } from "../types/books.types";
+import type { BookSearchQuery } from "../schemas/books.schemas";
+import { type BookSearchFilter, type FilterOption, type SortBy, type SortOption } from "../types/books.types";
 
 export const BOOK_SEARCH_FILTER_OPTIONS: FilterOption[] = [
   { id: "all", value: "all", literal: "Todo" },

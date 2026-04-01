@@ -6,24 +6,22 @@ import {
   BOOK_SORT_OPTIONS,
   DEFAULT_FILTER,
   DEFAULT_SORT_BY,
-  EMPTY_QUERY,
 } from "../../features/books/constants/books.constants";
 import { SearchFilterGroup } from "../../features/books/components/SearchFilterGroup";
 import type {
   BookSearchFilter,
-  BookSearchQuery,
   SortBy,
 } from "../../features/books/types/books.types";
+import { useSearchParams } from "react-router-dom";
 
 export const SearchPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [inputValue, setInputValue] = useState("");
   const [filterState, setFilterState] =
     useState<BookSearchFilter>(DEFAULT_FILTER);
-  const [submittedQuery, setSubmittedQuery] =
-    useState<BookSearchQuery>(EMPTY_QUERY);
   const [sortBy, setSortBy] = useState<SortBy>(DEFAULT_SORT_BY);
 
-  const { data, loading, error } = useBookSearch(submittedQuery);
+  const { data, loading, error } = useBookSearch(searchParams);
   const booksData = data?.data;
 
   const handleQueryInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +34,7 @@ export const SearchPage = () => {
     setInputValue(normalizedQuery);
     if (!normalizedQuery) return;
 
-    setSubmittedQuery({
+    setSearchParams({
       filterState,
       query: normalizedQuery,
       sortBy,

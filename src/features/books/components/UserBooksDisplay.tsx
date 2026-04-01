@@ -10,28 +10,33 @@ import type {
 import { useUpdateUserBookStatus } from "../hooks/useUpdateUserBookStatus";
 import { BOOK_STATUS_LITERAL } from "../constants/books.constants";
 
-const countBooks = (books: UserBookSchemaType[], status: UserBookStatus) => {
+const countBooks = (books: UserBookSchemaType[], status?: UserBookStatus) => {
+  if (!status) return books.length;
   return books.filter((book) => book.status === status).length;
 };
-export const UserBooksDisplay = () => {
+export const UserBooksDisplay = ({
+  statusUrlParam,
+}: {
+  statusUrlParam?: UserBookStatus;
+}) => {
   const [deletedIds, setDeletedIds] = useState<number[]>([]);
   const {
-    loading: booksLading,
+    loading: booksLoading,
     data,
     error: booksError,
     refetch,
-  } = useGetUserBooks();
+  } = useGetUserBooks(statusUrlParam);
+  const { showNotification } = useNotifications();
   const { deleteBook } = useDeleteUserBook();
   const { updateUserBookStatus } = useUpdateUserBookStatus();
+
   const visibleBooks =
     data?.filter((book) => !deletedIds.includes(book.id)) ?? [];
 
-  const booksPendingCount = countBooks(visibleBooks, "want_to_read");
-  const booksReadingCount = countBooks(visibleBooks, "reading");
-  const booksCompletedCount = countBooks(visibleBooks, "completed");
-  const booksAbandonedCount = countBooks(visibleBooks, "abandoned");
-
-  const { showNotification } = useNotifications();
+  const booksPendingCount = countBooks(visibleBooks, statusUrlParam);
+  const bookStatusLabel = statusUrlParam
+    ? `${BOOK_STATUS_LITERAL[statusUrlParam].toUpperCase()} (${booksPendingCount}) `
+    : `TODOS (${booksPendingCount})`;
 
   const handleDelete = async (bookId: number) => {
     const response = await deleteBook(bookId);
@@ -50,64 +55,27 @@ export const UserBooksDisplay = () => {
       return;
     }
     await refetch();
-    showNotification(`Estado actualizado a ${BOOK_STATUS_LITERAL[status]}`, "success")
+    showNotification(
+      `Estado actualizado a ${BOOK_STATUS_LITERAL[status]}`,
+      "success",
+    );
   };
 
   return (
     <section className="userbooks-collection">
-      {booksLading ? (
+      {booksLoading ? (
         <span>Cargando...</span>
       ) : booksError ? (
         <span>{booksError}</span>
       ) : visibleBooks && visibleBooks.length > 0 ? (
         <>
-          <h3>Pendientes de lectura ({booksPendingCount})</h3>
+          <h3>{bookStatusLabel}</h3>
           {visibleBooks
-            .filter((book) => book.status === "want_to_read")
-            .map((filtered) => {
+            .map((book) => {
               return (
                 <BookDisplay
-                  key={filtered.id}
-                  userBook={filtered}
-                  onDelete={handleDelete}
-                  onChangeStatus={handleUpdateStatus}
-                />
-              );
-            })}
-          <h3>Leyendo ({booksReadingCount})</h3>
-          {visibleBooks
-            .filter((book) => book.status === "reading")
-            .map((filtered) => {
-              return (
-                <BookDisplay
-                  key={filtered.id}
-                  userBook={filtered}
-                  onDelete={handleDelete}
-                  onChangeStatus={handleUpdateStatus}
-                />
-              );
-            })}
-          <h3>Completados ({booksCompletedCount})</h3>
-          {visibleBooks
-            .filter((book) => book.status === "completed")
-            .map((filtered) => {
-              return (
-                <BookDisplay
-                  key={filtered.id}
-                  userBook={filtered}
-                  onDelete={handleDelete}
-                  onChangeStatus={handleUpdateStatus}
-                />
-              );
-            })}
-          <h3>Abandonados ({booksAbandonedCount})</h3>
-          {visibleBooks
-            .filter((book) => book.status === "abandoned")
-            .map((filtered) => {
-              return (
-                <BookDisplay
-                  key={filtered.id}
-                  userBook={filtered}
+                  key={book.id}
+                  userBook={book}
                   onDelete={handleDelete}
                   onChangeStatus={handleUpdateStatus}
                 />
@@ -116,7 +84,7 @@ export const UserBooksDisplay = () => {
         </>
       ) : (
         <span>
-          No has guardado todavía ningún libro. Comienza tu colección buscando
+          Colección vacía. Comienza tu colección buscando
           en la barra de búsqueda.
         </span>
       )}

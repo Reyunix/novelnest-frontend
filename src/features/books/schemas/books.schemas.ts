@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const nonEmptyString = z.string().nonempty();
+const nonEmptyString = z.string().nonempty("Este campo no puede estar vacío");
 const isoDate = z.iso.datetime();
 
 // Bookcard
@@ -58,6 +58,15 @@ export type BooksSearchResponse = z.infer<typeof BooksSearchResponseSchema>;
 export type BooksSearchSuccessResponse = z.infer<
   typeof BooksSearchSuccessResponseSchema
 >;
+
+
+export const BookSearchQuerySchema = z.object({
+  filterState: z.enum(["title", "author", "subject", "all"]),
+  query: nonEmptyString,
+  sortBy: nonEmptyString,
+});
+
+export type BookSearchQuery = z.infer<typeof BookSearchQuerySchema>;
 
 // userBooks
 const UserBookStatus = [

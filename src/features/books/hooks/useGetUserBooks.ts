@@ -6,8 +6,8 @@ import {
   type GetUserBookResponse,
 } from "../schemas/books.schemas";
 
-export const useGetUserBooks = () => {
-  const url = API_ENDPOINTS.GET_USERBOOKS;
+export const useGetUserBooks = (status?: string) => {
+  const url = `${API_ENDPOINTS.GET_USERBOOKS}${status ? `?status=${status}` : ""}`;
 
   const requestInit = useMemo<RequestInit>(
     () => ({

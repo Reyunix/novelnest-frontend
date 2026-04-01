@@ -13,10 +13,10 @@ export type SortOption = {
   literal: string;
 };
 
-export type BookSearchQuery = {
-  filterState: BookSearchFilter;
-  query: string;
-  sortBy: SortBy;
-};
+// export type BookSearchQuery = {
+//   filterState: BookSearchFilter;
+//   query: string;
+//   sortBy: SortBy;
+// };
 
 export type SaveStateType = "idle" | "saving" | "saved" | "error"
