@@ -1,7 +1,6 @@
 const DEFAULT_PORT = "3000";
 const rawBaseUrl =
   import.meta.env.VITE_API_BASE_URL ??
-  import.meta.env.VITE_BASE_URL ??
   `http://localhost:${import.meta.env.VITE_PORT ?? DEFAULT_PORT}`;
 
 const API_BASE_URL = String(rawBaseUrl).replace(/\/+$/, "");
