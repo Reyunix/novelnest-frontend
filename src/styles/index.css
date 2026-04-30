@@ -40,7 +40,7 @@ a {
   color: var(--dark-color);
 }
 
-ul{
+ul {
   list-style: none;
 }
 
@@ -363,10 +363,23 @@ ul{
   flex-direction: row;
   max-height: 3rem;
   align-items: center;
-  
-  align-content: space-between
+
+  align-content: space-between;
 }
 
 .my-books-page-title {
   font-size: 1.4rem;
+}
+
+.my-books-filters-list {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.my-books-filter-active {
+  font-weight: 600;
+  background-color: rgb(222, 224, 144);
 }

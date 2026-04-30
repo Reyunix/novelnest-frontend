@@ -10,10 +10,14 @@ import type {
 import { useUpdateUserBookStatus } from "../hooks/useUpdateUserBookStatus";
 import { BOOK_STATUS_LITERAL } from "../constants/books.constants";
 
-const countBooks = (books: UserBookSchemaType[], status?: UserBookStatus) => {
+const countBooksByStatus = (
+  books: UserBookSchemaType[],
+  status?: UserBookStatus,
+) => {
   if (!status) return books.length;
   return books.filter((book) => book.status === status).length;
 };
+
 export const UserBooksDisplay = ({
   statusUrlParam,
 }: {
@@ -33,7 +37,7 @@ export const UserBooksDisplay = ({
   const visibleBooks =
     data?.filter((book) => !deletedIds.includes(book.id)) ?? [];
 
-  const booksPendingCount = countBooks(visibleBooks, statusUrlParam);
+  const booksPendingCount = countBooksByStatus(visibleBooks, statusUrlParam);
   const bookStatusLabel = statusUrlParam
     ? `${BOOK_STATUS_LITERAL[statusUrlParam].toUpperCase()} (${booksPendingCount}) `
     : `TODOS (${booksPendingCount})`;
@@ -70,22 +74,21 @@ export const UserBooksDisplay = ({
       ) : visibleBooks && visibleBooks.length > 0 ? (
         <>
           <h3>{bookStatusLabel}</h3>
-          {visibleBooks
-            .map((book) => {
-              return (
-                <BookDisplay
-                  key={book.id}
-                  userBook={book}
-                  onDelete={handleDelete}
-                  onChangeStatus={handleUpdateStatus}
-                />
-              );
-            })}
+          {visibleBooks.map((book) => {
+            return (
+              <BookDisplay
+                key={book.id}
+                userBook={book}
+                onDelete={handleDelete}
+                onChangeStatus={handleUpdateStatus}
+              />
+            );
+          })}
         </>
       ) : (
         <span>
-          Colección vacía. Comienza tu colección buscando
-          en la barra de búsqueda.
+          Colección vacía. Comienza tu colección buscando en la barra de
+          búsqueda.
         </span>
       )}
     </section>

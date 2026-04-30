@@ -1,6 +1,7 @@
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { UserBooksDisplay } from "../../features/books/components/UserBooksDisplay";
 import { useState } from "react";
+import { BOOK_STATUS_FILTERS } from "../../features/books/constants/books.constants";
 export const Mybooks = () => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
@@ -13,6 +14,10 @@ export const Mybooks = () => {
     rawStatus === "abandoned"
       ? rawStatus
       : undefined;
+
+  const isFilterActive = (filterId: string) =>{
+   return  (rawStatus === filterId) || (filterId === "all" && rawStatus === null);
+  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,24 +56,17 @@ export const Mybooks = () => {
       <section>
         <h2>Colecciones</h2>
         <div>
-          <ul>
-            <li>
-              <NavLink to="/mis-libros">Todos</NavLink>
-            </li>
-            <li>
-              <NavLink to="/mis-libros?status=want_to_read">
-                Quiero leer
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/mis-libros?status=reading">Leyendo</NavLink>
-            </li>
-            <li>
-              <NavLink to="/mis-libros?status=completed">Completados</NavLink>
-            </li>
-            <li>
-              <NavLink to="/mis-libros?status=abandoned">Abandonados</NavLink>
-            </li>
+          <ul className="my-books-filters-list">
+            {BOOK_STATUS_FILTERS.map((filter) => (
+              <li key={filter.id}>
+                <NavLink
+                  to={filter.href}
+                  className={isFilterActive(filter.id) ? "my-books-filter-active" : "my-books-filter"}
+                >
+                  {filter.literal}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </div>
       </section>

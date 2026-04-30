@@ -1,44 +1,52 @@
-const PORT = String(import.meta.env.VITE_PORT);
+const DEFAULT_PORT = "3000";
+const rawBaseUrl =
+  import.meta.env.VITE_API_BASE_URL ??
+  import.meta.env.VITE_BASE_URL ??
+  `http://localhost:${import.meta.env.VITE_PORT ?? DEFAULT_PORT}`;
 
-export const USER_ME_BOOKS_ENDOPINT = String(
-  import.meta.env.VITE_API_USERS_ME_BOOKS_ENDPOINT ||
-    `http://127.0.0.1:${PORT}/api/v1/users/me/books`,
+const API_BASE_URL = String(rawBaseUrl).replace(/\/+$/, "");
+
+const buildApiUrl = (endpoint: string | undefined, fallbackPath: string): string => {
+  const path = endpoint ?? fallbackPath;
+  return `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+};
+
+export const USER_ME_BOOKS_ENDPOINT = buildApiUrl(
+  import.meta.env.VITE_API_USERS_ME_BOOKS_ENDPOINT,
+  "/api/v1/users/me/books",
 );
 
 export const API_ENDPOINTS = {
-  REGISTER: String(
-    import.meta.env.VITE_API_REGISTER_ENDPOINT ||
-      `http://127.0.0.1:${PORT}/api/v1/auth/register`,
+  REGISTER: buildApiUrl(
+    import.meta.env.VITE_API_REGISTER_ENDPOINT,
+    "/api/v1/auth/register",
   ),
-  LOGIN: String(
-    import.meta.env.VITE_API_LOGIN_ENDPOINT ||
-      `http://127.0.0.1:${PORT}/api/v1/auth/login`,
+  LOGIN: buildApiUrl(
+    import.meta.env.VITE_API_LOGIN_ENDPOINT,
+    "/api/v1/auth/login",
   ),
-  LOGOUT: String(
-    import.meta.env.VITE_API_LOGOUT_ENDPOINT ||
-      `http://127.0.0.1:${PORT}/api/v1/auth/logout`,
+  LOGOUT: buildApiUrl(
+    import.meta.env.VITE_API_LOGOUT_ENDPOINT,
+    "/api/v1/auth/logout",
   ),
-  ME: String(
-    import.meta.env.VITE_API_ME_ENDPOINT ||
-      `http://127.0.0.1:${PORT}/api/v1/auth/me`,
+  ME: buildApiUrl(
+    import.meta.env.VITE_API_ME_ENDPOINT,
+    "/api/v1/auth/me",
   ),
-  REFRESH: String(
-    import.meta.env.VITE_API_REFRESH_ENDPOINT ||
-      `http://127.0.0.1:${PORT}/api/v1/auth/refresh`,
+  REFRESH: buildApiUrl(
+    import.meta.env.VITE_API_REFRESH_ENDPOINT,
+    "/api/v1/auth/refresh",
   ),
-  BOOKS_SEARCH: String(
-    import.meta.env.VITE_API_BOOKS_SEARCH_ENDPOINT ||
-      `http://127.0.0.1:${PORT}/api/v1/books/search`,
+  BOOKS_SEARCH: buildApiUrl(
+    import.meta.env.VITE_API_BOOKS_SEARCH_ENDPOINT,
+    "/api/v1/books/search",
   ),
-  BOOK_SAVE: USER_ME_BOOKS_ENDOPINT,
-
-  GET_USERBOOKS: USER_ME_BOOKS_ENDOPINT,
-
-  DELETE_USERBOOK: USER_ME_BOOKS_ENDOPINT,
-
-  GET_USER_LISTS: String(
-    import.meta.env.VITE_API_USERS_ME_LISTS ||
-      `http://127.0.0.1:${PORT}/api/v1/users/me/lists`,
+  BOOK_SAVE: USER_ME_BOOKS_ENDPOINT,
+  GET_USERBOOKS: USER_ME_BOOKS_ENDPOINT,
+  DELETE_USERBOOK: USER_ME_BOOKS_ENDPOINT,
+  GET_USER_LISTS: buildApiUrl(
+    import.meta.env.VITE_API_USERS_ME_LISTS,
+    "/api/v1/users/me/lists",
   ),
-  USER_BOOKS: USER_ME_BOOKS_ENDOPINT
+  USER_BOOKS: USER_ME_BOOKS_ENDPOINT,
 } as const;
