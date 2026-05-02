@@ -4,11 +4,13 @@ import { NotificationProvider } from "./features/notifications/notificationProvi
 
 function App(): React.JSX.Element {
   return (
-    <NotificationProvider>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
-    </NotificationProvider>
+    <div className="app-container">
+      <NotificationProvider>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </NotificationProvider>
+    </div>
   );
 }
 

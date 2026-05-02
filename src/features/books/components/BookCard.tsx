@@ -43,7 +43,7 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
 
       if (!result.ok) {
         setSaveState("error");
-        showNotification(result.error.message, "error");
+        showNotification(result.error.message, "info");
         return;
       }
 

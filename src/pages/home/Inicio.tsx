@@ -1,12 +1,17 @@
+import { NavLink } from "react-router-dom";
+
 export const Inicio: React.FC = () => {
   return (
     <div className="layout">
-      <section className="hero-section">
+      <div className="hero-container content-padding">
+        <section className="hero-section">
         <h1 className="main-title">Bienvenido a <em>NovelNest</em></h1>
-      <h2 className="subtitle">Comienza a organizar y hacer de seguimiento de <em>todas tus lecturas</em></h2>
-      <a href="html/spa.html" className="action-link hover-opacity">¡Busca tus obras favoritas!</a>
+      <p className="subtitle">Comienza a organizar y hacer de seguimiento de <em>todas tus lecturas</em></p>
+      <NavLink to="/buscar" className="action-link hover-opacity">¡Busca tus obras favoritas!</NavLink>
       </section>
-      <section className="main-section">
+      </div>
+      <div className="home-content-layout content-padding">
+        <section className="main-section">
         <article className="article">
           <section id="introduction">
             <h2>¿Te gusta leer?</h2>
@@ -36,13 +41,13 @@ export const Inicio: React.FC = () => {
               <li>Consultar el progreso de tus lecturas</li>
             </ul>
           </section>
-          <a href="html/micoleccion.html" className="action-link hover-opacity">
+          <NavLink to="/mis-libros" className="action-link hover-opacity">
             ¡Empieza a coleccionar!
-          </a>
+          </NavLink>
         </article>
       </section>
       {/* <!-- Contenido complementario --> */}
-      <section className="top-books-section">
+      <aside className="top-books-section small-section">
         <article>
           <h2>Top libros del mes</h2>
           <ol className="top-books-items">
@@ -95,7 +100,8 @@ export const Inicio: React.FC = () => {
             </li>
           </ol>
         </article>
-      </section>
+      </aside>
+      </div>
     </div>
   );
 };

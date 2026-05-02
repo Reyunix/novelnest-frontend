@@ -1,7 +1,7 @@
 export const HEADER_MENU_LINKS = [
   { id: 0, literal: "Inicio", href: "/inicio" },
-  { id: 1, literal: "Contacto", href: "/contact" },
   { id: 2, literal: "Buscar", href: "/buscar" },
+  { id: 1, literal: "Contacto", href: "/contact" },
 ];
 
 export const HEADER_MENU_LOGGED_LINKS = [

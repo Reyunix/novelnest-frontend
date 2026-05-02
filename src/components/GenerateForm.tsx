@@ -98,7 +98,7 @@ export const GenerateForm = <T extends schemaType>({
         <form className="form" onSubmit={handleSubmit(onSubmit)}>
           {formFieldsList.map((field) => {
             return (
-              <div key={field.id}>
+              <div key={field.id} className={field.inputType === "checkbox" ? "form-group-checkbox" : "form-group"}>
                 <label htmlFor={field.id} className="form-label">
                   {field.literal}
                   {field.required && <span className="required-field"> *</span>}
@@ -109,7 +109,7 @@ export const GenerateForm = <T extends schemaType>({
                     key={field.id}
                     id={field.id}
                     required={field.required}
-                    rows={15}
+                    rows={5}
                     cols={70}
                     className="form-input-field"
                     {...register(field.id as FormDataTyped)}
