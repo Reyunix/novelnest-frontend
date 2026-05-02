@@ -42,7 +42,7 @@ export const SearchPage = () => {
   };
 
   return (
-    <div className="search-page-layout">
+    <div className="search-page-layout section-padding">
       <form action="" onSubmit={querySubmit} className="search-form">
         <fieldset className="search-fieldset">
           <div>

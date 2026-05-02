@@ -58,42 +58,51 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
     }
   };
   return (
-    <div className="book-card">
-      <h3>{bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}</h3>
-      <p>
-        Autores:{" "}
-        {bookItem.authors.length > 0
-          ? bookItem.authors.join(", ")
-          : NOT_AVAILABLE_INFO}
-      </p>
+    <article className="book-card">
       {secureThumbnail ? (
-        <img src={secureThumbnail} alt={bookItem.title} />
+        <img
+          src={secureThumbnail}
+          alt={bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}
+        />
       ) : null}
-      <p>
-        Categorías:{" "}
-        {bookItem.categories.length > 0
-          ? bookItem.categories.join(", ")
-          : NOT_AVAILABLE_INFO}
-      </p>
-      <p>Editorial: {bookItem.publisher ?? NOT_AVAILABLE_INFO}</p>
-      <p>
-        Fecha de publicación: {bookItem.publishedDate ?? NOT_AVAILABLE_INFO}
-      </p>
-      <p>Páginas: {bookItem.pageCount ?? NOT_AVAILABLE_INFO}</p>
-      {secureCanonicalLink ? (
-        <a href={secureCanonicalLink} target="_blank" rel="noreferrer">
-          Ver en Google Books
-        </a>
-      ) : null}
-      <button
-        type="button"
-        onClick={handleclickSaveToLibrary}
-        disabled={loading || isSaved}
-      >
-        {(loading && <>Guardando</>) || (isSaved && <>Añadido</>) || (
-          <>Guardar en mi biblioteca</>
-        )}
-      </button>
-    </div>
+      <div className="book-card-content">
+        <div className="book-card-body">
+          <h3>{bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}</h3>
+          <p>
+            Autores:{" "}
+            {bookItem.authors.length > 0
+              ? bookItem.authors.join(", ")
+              : NOT_AVAILABLE_INFO}
+          </p>
+          <p>
+            Categorías:{" "}
+            {bookItem.categories.length > 0
+              ? bookItem.categories.join(", ")
+              : NOT_AVAILABLE_INFO}
+          </p>
+          <p>Editorial: {bookItem.publisher ?? NOT_AVAILABLE_INFO}</p>
+          <p>
+            Fecha de publicación: {bookItem.publishedDate ?? NOT_AVAILABLE_INFO}
+          </p>
+          <p>Páginas: {bookItem.pageCount ?? NOT_AVAILABLE_INFO}</p>
+        </div>
+        <div className="book-card-actions">
+          {secureCanonicalLink ? (
+            <a href={secureCanonicalLink} target="_blank" rel="noreferrer">
+              Ver en Google Books
+            </a>
+          ) : null}
+          <button
+            type="button"
+            onClick={handleclickSaveToLibrary}
+            disabled={loading || isSaved}
+          >
+            {(loading && <>Guardando</>) || (isSaved && <>Añadido</>) || (
+              <>Guardar en mi biblioteca</>
+            )}
+          </button>
+        </div>
+      </div>
+    </article>
   );
 };
