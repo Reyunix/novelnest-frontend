@@ -786,12 +786,13 @@ textarea {
   flex: 1 1 0;
   min-width: 0;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: stretch;
   flex-wrap: wrap;
 }
 
 .book-details-texts {
   min-width: 0;
+  width: 100%;
 }
 
 .book-status-panel {
@@ -916,6 +917,13 @@ textarea {
   text-overflow: ellipsis;
   white-space: nowrap;
   margin: 0;
+}
+
+.book-details-title a {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .books-collection-items {
