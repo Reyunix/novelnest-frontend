@@ -65,7 +65,10 @@ export const BookShelfPanel = ({
       >
         <button
           className="select-book-status-btn"
-          onClick={() => onSetMenuOpen(isMenuOpen ? null : userBook.id)}
+          onClick={() => {
+            onSetMenuOpen(isMenuOpen ? null : userBook.id)
+            
+          }}
         ></button>
       </div>
       <div

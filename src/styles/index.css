@@ -36,7 +36,7 @@
 }
 
 html {
-  font-size: clamp(14px, 1.2vw, 18px);
+  font-size: clamp(14px, 1.2vw, 16px);
   font-family: "Avenir Next", "Nunito Sans", "Segoe UI", sans-serif;
   line-height: 1.5;
   color: var(--text-soft);
@@ -138,7 +138,7 @@ h6 {
   color: var(--text-main);
   background: rgba(255, 251, 245, 0.76);
   border-radius: var(--radius-sm);
-  padding: 0 13rem;
+  padding: 0 17rem;
   backdrop-filter: blur(19px);
   box-shadow: var(--shadow-soft);
   margin-inline: auto;
@@ -927,14 +927,20 @@ textarea {
 }
 
 .books-collection-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   flex-grow: 1;
+  width: 100%;
 }
 .userbooks-collection-section {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  gap: 1rem;
+  width: min(100%, 64rem);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
 }
 
 .select-book-status-container {
@@ -963,35 +969,129 @@ textarea {
 
 .my-books-page-layout {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 100%;
+  gap: 1.5rem;
+  width: min(100%, 64rem);
+  margin-inline: auto;
+  padding: 0 1rem 3rem;
 }
 
-.my-books-page-header {
+.my-books-page-content {
   display: flex;
-  flex-direction: row;
-  max-height: 3rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
 
-  align-content: space-between;
+.my-books-filters-panel {
+  position: sticky;
+  top: 5rem;
+  max-width: 12rem;
+  align-self: flex-start;
+
+}
+
+.my-books-hero,
+.my-books-filters-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.5rem;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 252, 247, 0.94),
+    rgba(244, 237, 228, 0.9)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(14px);
 }
 
 .my-books-page-title {
+  font-size: clamp(1rem, 4vw, 2rem);
+}
+
+.my-books-hero-copy,
+.my-books-section-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.my-books-page-intro,
+.my-books-section-copy {
+  margin: 0;
+  max-width: 42rem;
+}
+
+.my-books-search-form {
+  display: flex;
+  gap: 0.75rem;
+  width: min(100%, 36rem);
+}
+
+.my-books-search-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 3rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(63, 41, 21, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text-main);
+  font: inherit;
+}
+
+.my-books-search-btn {
+  min-height: 3rem;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #6f4b2f, #4f3524);
+  color: #fffaf3;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.my-books-section-title {
   font-size: 1.4rem;
+}
+
+.my-books-filters-wrap {
+  width: 100%;
 }
 
 .my-books-filters-list {
   display: flex;
-  gap: 1rem;
-  list-style: none;
+  gap: 0.75rem;
+  flex-wrap: wrap;
   padding: 0;
   margin: 0;
 }
 
+.my-books-filter,
 .my-books-filter-active {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  text-decoration: none;
   font-weight: 600;
-  background-color: rgb(222, 224, 144);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(63, 41, 21, 0.12);
+  color: var(--text-main);
+}
+
+.my-books-filter:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.my-books-filter-active {
+  background: rgba(111, 75, 47, 0.14);
+  border-color: rgba(111, 75, 47, 0.26);
 }
 
 .form-layout,
@@ -1046,5 +1146,24 @@ textarea {
 
   .main-title {
     max-width: none;
+  }
+
+  .my-books-page-layout {
+    padding: 0 0.5rem 2rem;
+  }
+
+  .my-books-hero,
+  .my-books-filters-panel,
+  .userbooks-collection-section {
+    padding: 1rem;
+  }
+
+  .my-books-search-form {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .my-books-search-btn {
+    width: 100%;
   }
 }
