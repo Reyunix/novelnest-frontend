@@ -4,7 +4,7 @@ export const UserGreetings:React.FC<{ userName: string | null | undefined }> = (
     const isValidUserName = userName !== "" && userName !== null && userName !== undefined;
     return(
         isValidUserName 
-        ? <span className="user-greeting">¡Hola, {userName}!</span> 
-        : <span className="user-greeting">¡Hola, Usuario!</span>
+        ? <span className="user-greeting">¡Hola, <em>{userName}</em>! 👋</span> 
+        : <span className="user-greeting">¡Hola, Usuario! 👋</span>
     )
 }

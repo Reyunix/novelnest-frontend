@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type {
   UserBookSchemaType,
   UserBookStatus,
@@ -21,6 +22,29 @@ export const BookDisplay: React.FC<Props> = ({
   onDelete,
   onChangeStatus,
 }) => {
+  const formatAuthors = () => {
+    if (!userBook.authors || userBook.authors.length === 0) {
+      return "Autor desconocido";
+    }
+    {
+      const authorElements = userBook.authors.map((author, index) => (
+        <span key={author}>
+          <Link
+            to={`/buscar?query=${encodeURIComponent(author)}&filterState=author&sortBy=relevance`}
+          >
+            {author}
+          </Link>
+          {index < userBook.authors.length - 1 ? ", " : ""}
+        </span>
+      ));
+      return authorElements;
+    }
+  };
+  
+  const formatDateTime = (dateString: string) =>
+    new Intl.DateTimeFormat("es-ES", {
+      dateStyle: "medium",
+    }).format(new Date(dateString));
   return (
     <article
       className={
@@ -38,28 +62,28 @@ export const BookDisplay: React.FC<Props> = ({
       )}
       <div className="book-details-content">
         <div className="book-details-texts">
-        <h3 className="book-details-title">
-          <a
-          href={
-            userBook.canonicalVolumeLink ? userBook.canonicalVolumeLink : ""
-          }
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-         {userBook.title}
-        </a>
-        </h3>
-        <p>Añadido: {userBook.createdAt}</p>
-        <p>Por: <em>{userBook.authors.join(", ")}</em></p>
-      </div>
-      <BookShelfPanel
-        onChangeStatus={onChangeStatus}
-        onSetMenuOpen={onSetMenuOpen}
-        userBookId={userBook.id}
-        userBook={userBook}
-        isMenuOpen={isMenuOpen}
-        onDelete={onDelete}
-      />
+          <h3 className="book-details-title">
+            <a
+              href={
+                userBook.canonicalVolumeLink ? userBook.canonicalVolumeLink : ""
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {userBook.title}
+            </a>
+          </h3>
+          <p>Añadido: {formatDateTime(userBook.createdAt)}</p>
+          de {formatAuthors()}
+        </div>
+        <BookShelfPanel
+          onChangeStatus={onChangeStatus}
+          onSetMenuOpen={onSetMenuOpen}
+          userBookId={userBook.id}
+          userBook={userBook}
+          isMenuOpen={isMenuOpen}
+          onDelete={onDelete}
+        />
       </div>
     </article>
   );
