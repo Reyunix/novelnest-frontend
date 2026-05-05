@@ -1,4 +1,4 @@
-export type BookSearchFilter = "title" | "author" | "subject" | "all";
+export type BookSearchFilter = "title" | "author" | "subject" | "all";  
 export type SortBy = "relevance" | "newest";
 
 export type FilterOption = {

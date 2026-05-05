@@ -24,6 +24,7 @@ export const UserBooksDisplay = ({
   statusUrlParam?: UserBookStatus;
 }) => {
   const [deletedIds, setDeletedIds] = useState<number[]>([]);
+  const [openMenuBookId, setOpenMenuBookId] = useState<number | null>(null);
   const {
     loading: booksLoading,
     data,
@@ -66,7 +67,7 @@ export const UserBooksDisplay = ({
   };
 
   return (
-    <section className="userbooks-collection">
+    <section className="userbooks-collection-section">
       {booksLoading ? (
         <span>Cargando...</span>
       ) : booksError ? (
@@ -74,16 +75,20 @@ export const UserBooksDisplay = ({
       ) : visibleBooks && visibleBooks.length > 0 ? (
         <>
           <h3>{bookStatusLabel}</h3>
-          {visibleBooks.map((book) => {
+          <div className="books-collection-items">
+                      {visibleBooks.map((book) => {
             return (
               <BookDisplay
                 key={book.id}
                 userBook={book}
+                isMenuOpen={openMenuBookId === book.id}
+                onSetMenuOpen={setOpenMenuBookId}
                 onDelete={handleDelete}
                 onChangeStatus={handleUpdateStatus}
               />
             );
           })}
+          </div>
         </>
       ) : (
         <span>

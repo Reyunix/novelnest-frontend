@@ -1,10 +1,12 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { HEADER_MENU_LINKS, HEADER_MENU_LOGGED_LINKS, HEADER_MENU_UNLOGGED_LINKS } from "../shared/constants/navigation.constants";
 import { useAuth } from "../features/auth/authContext";
 import { UserGreetings } from "../components/UserGreetings";
 
 export const Nav:React.FC = () => {
   const { authStatus, user } = useAuth();
+  const {pathname} = useLocation()
+  const isHome = pathname === "/inicio" || pathname === "/"
 
   const authLinks =
     authStatus === "authenticated"
@@ -28,7 +30,7 @@ export const Nav:React.FC = () => {
             </li>
           );
         })}
-        {authStatus === "authenticated" && <UserGreetings userName={userName} />}
+        {(authStatus === "authenticated" && isHome) && <UserGreetings userName={userName} />}
         {authStatus === "loading" && (
           <li className="header-menu-item">Comprobando sesión...</li>
         )}

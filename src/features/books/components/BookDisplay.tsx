@@ -2,82 +2,65 @@ import type {
   UserBookSchemaType,
   UserBookStatus,
 } from "../schemas/books.schemas";
-
-const statusLabels: Record<UserBookStatus, string> = {
-  want_to_read: "Quiero leer",
-  reading: "Actualmente leyendo",
-  completed: "Leído",
-  abandoned: "Lo abandoné",
-};
+import { BookShelfPanel } from "./BookShelfPanel";
 
 type Props = {
   userBook: UserBookSchemaType;
+  isMenuOpen: boolean;
+  onSetMenuOpen: (bookId: number | null) => void;
   onDelete: (bookId: number) => Promise<unknown> | void;
   onChangeStatus: (
     bookId: number,
     status: UserBookStatus,
   ) => Promise<unknown> | void;
 };
-export const BookDisplay: React.FC<Props> = ({ userBook, onDelete, onChangeStatus }) => {
+export const BookDisplay: React.FC<Props> = ({
+  userBook,
+  isMenuOpen,
+  onSetMenuOpen,
+  onDelete,
+  onChangeStatus,
+}) => {
   return (
-    <div className="book-details">
+    <article
+      className={
+        isMenuOpen ? "book-details book-details--menu-open" : "book-details"
+      }
+    >
       {userBook.thumbnail && (
-        <img
-          className="book-details-thumbnail"
-          src={userBook.thumbnail}
-          alt=""
-        />
+        <div className="thumbnail-container">
+          <img
+            className="book-details-thumbnail"
+            src={userBook.thumbnail}
+            alt=""
+          />
+        </div>
       )}
-      <div className="book-details-texts">
-        <a
+      <div className="book-details-content">
+        <div className="book-details-texts">
+        <h3 className="book-details-title">
+          <a
           href={
             userBook.canonicalVolumeLink ? userBook.canonicalVolumeLink : ""
           }
           target="_blank"
           rel="noopener noreferrer"
         >
-          <p className="book-details-title">{userBook.title}</p>
+         {userBook.title}
         </a>
+        </h3>
         <p>Añadido: {userBook.createdAt}</p>
-        <p>{statusLabels[userBook.status]}</p>
+        <p>Por: <em>{userBook.authors.join(", ")}</em></p>
       </div>
-      <div className="book-details-panel">
-        <button
-          type="button"
-          className="start-book-button"
-          onClick={() => onChangeStatus(userBook.id, "reading")}
-        >
-          Empezar
-        </button>
-        <button
-          type="button"
-          className="complete-book-button"
-          onClick={() => onChangeStatus(userBook.id, "completed")}
-        >
-          Completar
-        </button>
-        <button
-          type="button"
-          className="drop-book-button"
-          onClick={() => onChangeStatus(userBook.id, "abandoned")}
-        >
-          Abandonar
-        </button>
-        <button
-          type="button"
-          className="drop-book-button"
-          onClick={() => onChangeStatus(userBook.id, "want_to_read")}
-        >
-          Quiero leer
-        </button>
-        <button
-          type="button"
-          className="delete-book-button"
-          onClick={() => onDelete(userBook.id)}
-        >
-          X
-        </button>
+      <BookShelfPanel
+        onChangeStatus={onChangeStatus}
+        onSetMenuOpen={onSetMenuOpen}
+        userBookId={userBook.id}
+        userBook={userBook}
+        isMenuOpen={isMenuOpen}
+        onDelete={onDelete}
+      />
       </div>
-    </div>
+    </article>
   );
 };

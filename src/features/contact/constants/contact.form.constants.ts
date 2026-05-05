@@ -15,7 +15,7 @@ export const CONTACT_FORM_FIELDS = [
   {
     id: "contactCompany",
     literal: "Empresa",
-    required: true,
+    required: false,
     inputType: "text",
   },
   {
