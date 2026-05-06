@@ -46,7 +46,7 @@ export const Mybooks = () => {
         aria-label={isFiltersOpen ? "Cerrar filtros" : "Abrir filtros"}
         onClick={() => setIsFiltersOpen((open) => !open)}
       >
-      <img className="book-filters-icon" src="/src/assets/icons/book-icon.webp" alt="" />
+      <img className="book-filters-icon" src="/book-icon.webp" alt="" />
         {/* {isFiltersOpen ? "Cerrar" : ""} */}
       </button>
       <div

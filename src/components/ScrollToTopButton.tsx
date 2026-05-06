@@ -36,7 +36,7 @@ export const ScrollToTopButton: React.FC = () => {
       aria-label="Volver arriba"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
     >
-      <img className="scroll-to-top-icon" src="/src/assets/icons/flecha-izquierda.webp" alt="" />
+      <img className="scroll-to-top-icon" src="/flecha-izquierda.webp" alt="" />
     </button>
   );
 };
