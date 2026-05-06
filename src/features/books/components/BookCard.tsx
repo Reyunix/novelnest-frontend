@@ -24,7 +24,7 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
   const NOT_AVAILABLE_INFO = BOOK_CARD_MESSAGES.NOT_AVAILABLE_INFO;
   const secureThumbnail = toSecureUrl(bookItem.thumbnail);
   const secureCanonicalLink = toSecureUrl(bookItem.canonicalVolumeLink);
-  console.log(bookItem.publishedDate)
+  console.log(bookItem.publishedDate);
 
   const handleclickSaveToLibrary = async () => {
     setSaveState("saving");
@@ -70,22 +70,23 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
       ) : null}
       <div className="book-card-content">
         <div className="book-card-body">
-          <h3 className="book-card-title">{bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}</h3>
+          <h3 className="book-card-title">
+            {bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}
+          </h3>
           <p>
-            por{" "}
-            {bookItem.authors.length > 0
-              ? bookItem.authors.join(", ")
-              : NOT_AVAILABLE_INFO}
+            de{" "}
+            <em>
+              {bookItem.authors.length > 0
+                ? bookItem.authors.join(", ")
+                : NOT_AVAILABLE_INFO}
+            </em>
           </p>
           <p>
-            
             {bookItem.categories.length > 0
               ? bookItem.categories.join(", ")
               : NOT_AVAILABLE_INFO}
           </p>
-          <p>
-            Publicado {bookItem.publishedDate ?? NOT_AVAILABLE_INFO}
-          </p>
+          <p>Publicado {bookItem.publishedDate ?? NOT_AVAILABLE_INFO}</p>
         </div>
         <div className="book-card-actions">
           {secureCanonicalLink ? (
