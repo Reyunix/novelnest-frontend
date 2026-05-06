@@ -17,9 +17,7 @@ export const Mybooks = () => {
       : undefined;
 
   const isFilterActive = (filterId: string) => {
-    return (
-      rawStatus === filterId || (filterId === "all" && rawStatus === null)
-    );
+    return rawStatus === filterId || (filterId === "all" && rawStatus === null);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,33 +46,35 @@ export const Mybooks = () => {
         aria-label={isFiltersOpen ? "Cerrar filtros" : "Abrir filtros"}
         onClick={() => setIsFiltersOpen((open) => !open)}
       >
-        {isFiltersOpen ? "Cerrar" : "🕮"}
+      <img className="book-filters-icon" src="/src/assets/icons/book-icon.webp" alt="" />
+        {/* {isFiltersOpen ? "Cerrar" : ""} */}
       </button>
       <div
         className={
           isFiltersOpen
-          ? "my-books-filters-backdrop my-books-filters-backdrop--open"
-          : "my-books-filters-backdrop"
+            ? "my-books-filters-backdrop my-books-filters-backdrop--open"
+            : "my-books-filters-backdrop"
         }
         onClick={() => setIsFiltersOpen(false)}
-        ></div>
+      ></div>
 
       <section
         id="my-books-filters-panel"
         className={
           isFiltersOpen
-          ? "my-books-filters-panel my-books-filters-panel--open small-section"
-          : "my-books-filters-panel small-section"
+            ? "my-books-filters-panel my-books-filters-panel--open small-section"
+            : "my-books-filters-panel small-section"
         }
-        >
+      >
         <div className="my-books-section-heading">
           <h2 className="my-books-section-title">Colecciones</h2>
           <p className="my-books-section-copy">
-            Elige una estantería de tu colección para concentrarte en lo que toca leer.
+            Elige una estantería de tu colección para concentrarte en lo que
+            toca leer.
           </p>
         </div>
         <div className="my-books-filters-wrap">
-        <h3>Estado</h3>
+          <h3>Estado</h3>
           <ul className="my-books-filters-list">
             {BOOK_STATUS_FILTERS.map((filter) => (
               <li key={filter.id}>
@@ -99,41 +99,38 @@ export const Mybooks = () => {
             En el futuro, podrás crear estanterías personalizadas para organizar
             tus libros como prefieras.
           </p>
-
         </div>
       </section>
       <div className="my-books-page-content">
         <section className="my-books-hero">
-        <div className="my-books-hero-copy">
-          <p className="eyebrow">Biblioteca personal</p>
-          <h1 className="my-books-page-title">Mis Libros</h1>
-          <p className="my-books-page-intro">
-            Consulta tu colección, cambia el estado de lectura y encuentra
-            rápido nuevos títulos para añadir.
-          </p>
-        </div>
-        <form
-          onSubmit={handleSubmit}
-          className="my-books-search-form"
-          role="search"
-        >
-          <input
-            className="my-books-search-input"
-            type="text"
-            placeholder="Buscar y añadir libros"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <button type="submit" className="my-books-search-btn">
-            Buscar
-          </button>
-        </form>
-      </section>
+          <div className="my-books-hero-copy">
+            <p className="eyebrow">Biblioteca personal</p>
+            <h1 className="my-books-page-title">Mis Libros</h1>
+            <p className="my-books-page-intro">
+              Consulta tu colección, cambia el estado de lectura y encuentra
+              rápido nuevos títulos para añadir.
+            </p>
+          </div>
+          <form
+            onSubmit={handleSubmit}
+            className="my-books-search-form"
+            role="search"
+          >
+            <input
+              className="my-books-search-input"
+              type="text"
+              placeholder="Buscar y añadir libros"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+            <button type="submit" className="my-books-search-btn">
+              Buscar
+            </button>
+          </form>
+        </section>
 
-      
-      <UserBooksDisplay statusUrlParam={statusParam} />
+        <UserBooksDisplay statusUrlParam={statusParam} />
       </div>
-      
     </main>
   );
 };

@@ -822,6 +822,9 @@ textarea {
 }
 
 .scroll-to-top-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   right: 4rem;
   bottom: 2rem;
@@ -837,6 +840,11 @@ textarea {
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(14px);
   cursor: pointer;
+}
+
+.scroll-to-top-icon{
+  rotate: 90deg;
+  max-height: 2rem;
 }
 
 .scroll-to-top-btn:hover {
@@ -1301,7 +1309,7 @@ textarea {
 
   .my-books-filters-toggle {
     position: fixed;
-    top: 9rem;
+    top: 23rem;
     left: 0;
     display: inline-flex;
     align-items: center;
@@ -1374,8 +1382,12 @@ textarea {
     right: 2rem;
     bottom: 15rem;
     min-height: 2.7rem;
-    padding: 0.7rem 0.9rem;
+    /* padding: 0.7rem 0.9rem; */
     z-index: 19;
+    width: 3rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
   }
   .book-card {
     /* flex-direction: column; */
@@ -1398,5 +1410,13 @@ textarea {
     height: 7.5rem;
     flex-shrink: 0;
     overflow: hidden;
+  }
+
+  .book-filters-icon {
+    max-height: 1rem;
+  }
+
+  .scroll-to-top-icon {
+    max-height: 1.1rem;
   }
 }
