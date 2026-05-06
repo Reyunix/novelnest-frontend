@@ -49,7 +49,7 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
       }
 
       setSaveState("saved");
-      showNotification("Book saved to your library", "success");
+      showNotification("Libro añadido a la colección", "success");
     } catch (error) {
       setSaveState("error");
       showNotification(
