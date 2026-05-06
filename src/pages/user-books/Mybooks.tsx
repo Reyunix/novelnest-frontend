@@ -5,6 +5,7 @@ import { BOOK_STATUS_FILTERS } from "../../features/books/constants/books.consta
 export const Mybooks = () => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [searchParams] = useSearchParams();
   const rawStatus = searchParams.get("status");
   const statusParam =
@@ -39,14 +40,41 @@ export const Mybooks = () => {
 
   return (
     <main className="my-books-page-layout">
-      <section className="my-books-filters-panel small-section">
+      <button
+        type="button"
+        className="my-books-filters-toggle"
+        aria-expanded={isFiltersOpen}
+        aria-controls="my-books-filters-panel"
+        aria-label={isFiltersOpen ? "Cerrar filtros" : "Abrir filtros"}
+        onClick={() => setIsFiltersOpen((open) => !open)}
+      >
+        {isFiltersOpen ? "Cerrar" : "🕮"}
+      </button>
+      <div
+        className={
+          isFiltersOpen
+          ? "my-books-filters-backdrop my-books-filters-backdrop--open"
+          : "my-books-filters-backdrop"
+        }
+        onClick={() => setIsFiltersOpen(false)}
+        ></div>
+
+      <section
+        id="my-books-filters-panel"
+        className={
+          isFiltersOpen
+          ? "my-books-filters-panel my-books-filters-panel--open small-section"
+          : "my-books-filters-panel small-section"
+        }
+        >
         <div className="my-books-section-heading">
           <h2 className="my-books-section-title">Colecciones</h2>
           <p className="my-books-section-copy">
-            Filtra tu estantería por estado para centrarte en lo que toca leer.
+            Elige una estantería de tu colección para concentrarte en lo que toca leer.
           </p>
         </div>
         <div className="my-books-filters-wrap">
+        <h3>Estado</h3>
           <ul className="my-books-filters-list">
             {BOOK_STATUS_FILTERS.map((filter) => (
               <li key={filter.id}>
@@ -57,12 +85,21 @@ export const Mybooks = () => {
                       ? "my-books-filter-active"
                       : "my-books-filter"
                   }
+                  onClick={() => setIsFiltersOpen(false)}
                 >
                   {filter.literal}
                 </NavLink>
               </li>
             ))}
           </ul>
+        </div>
+        <div className="custom-shelves">
+          <h3>Próximamente</h3>
+          <p>
+            En el futuro, podrás crear estanterías personalizadas para organizar
+            tus libros como prefieras.
+          </p>
+
         </div>
       </section>
       <div className="my-books-page-content">
