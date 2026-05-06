@@ -42,7 +42,11 @@ export const Nav: React.FC = () => {
     <>
       <button
         type="button"
-        className="header-menu-toggle"
+        className={
+          isMenuOpen
+            ? "header-menu-toggle header-menu-toggle--open"
+            : "header-menu-toggle"
+        }
         aria-expanded={isMenuOpen}
         aria-controls="main-navigation"
         aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}

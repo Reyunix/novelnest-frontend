@@ -24,6 +24,7 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
   const NOT_AVAILABLE_INFO = BOOK_CARD_MESSAGES.NOT_AVAILABLE_INFO;
   const secureThumbnail = toSecureUrl(bookItem.thumbnail);
   const secureCanonicalLink = toSecureUrl(bookItem.canonicalVolumeLink);
+  console.log(bookItem.publishedDate)
 
   const handleclickSaveToLibrary = async () => {
     setSaveState("saving");
@@ -58,33 +59,33 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
     }
   };
   return (
-    <article className="book-card">
+    <article className="book-card small-section">
       {secureThumbnail ? (
-        <img
-          src={secureThumbnail}
-          alt={bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}
-        />
+        <div className="book-card-thumbnail-container">
+          <img
+            src={secureThumbnail}
+            alt={bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}
+          />
+        </div>
       ) : null}
       <div className="book-card-content">
         <div className="book-card-body">
-          <h3>{bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}</h3>
+          <h3 className="book-card-title">{bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}</h3>
           <p>
-            Autores:{" "}
+            por{" "}
             {bookItem.authors.length > 0
               ? bookItem.authors.join(", ")
               : NOT_AVAILABLE_INFO}
           </p>
           <p>
-            Categorías:{" "}
+            
             {bookItem.categories.length > 0
               ? bookItem.categories.join(", ")
               : NOT_AVAILABLE_INFO}
           </p>
-          <p>Editorial: {bookItem.publisher ?? NOT_AVAILABLE_INFO}</p>
           <p>
-            Fecha de publicación: {bookItem.publishedDate ?? NOT_AVAILABLE_INFO}
+            Publicado {bookItem.publishedDate ?? NOT_AVAILABLE_INFO}
           </p>
-          <p>Páginas: {bookItem.pageCount ?? NOT_AVAILABLE_INFO}</p>
         </div>
         <div className="book-card-actions">
           {secureCanonicalLink ? (
@@ -98,7 +99,7 @@ export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
             disabled={loading || isSaved}
           >
             {(loading && <>Guardando</>) || (isSaved && <>Añadido</>) || (
-              <>Guardar en mi biblioteca</>
+              <span>Quiero leerlo</span>
             )}
           </button>
         </div>

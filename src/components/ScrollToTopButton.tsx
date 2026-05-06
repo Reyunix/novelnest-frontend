@@ -27,7 +27,7 @@ export const ScrollToTopButton: React.FC = () => {
       aria-label="Volver arriba"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
     >
-      Arriba
+      ⬆
     </button>
   );
 };
