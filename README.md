@@ -71,3 +71,7 @@ La ruta pública `/libros/:provider/:providerBookId` permite abrir directamente 
 La puntuación de NovelNest se calcula con aportaciones públicas de usuarios autenticados, independientemente de su biblioteca. La referencia de Google Books se muestra por separado. La ficha carga bibliografía y comunidad por separado para permitir reintentos independientes. El formulario conserva el borrador si falla una publicación.
 
 En producción, el servidor del frontend debe servir `index.html` como alternativa para rutas de la SPA, incluida `/libros/*`.
+
+## Mensajes de error
+
+La interfaz utiliza un catálogo local de mensajes por código de error y alternativas por estado HTTP. Nunca muestra directamente `message` recibido del backend o de un proxy. Los códigos desconocidos, respuestas no JSON y errores de rutas reciben mensajes genéricos. Al añadir códigos de negocio, actualizar `src/shared/http/publicErrorMessage.ts` con una explicación útil para el usuario.

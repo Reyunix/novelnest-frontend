@@ -22,7 +22,7 @@ const replaceFetch = (
 };
 
 describe("HTTP failures and session recovery", () => {
-  test("PATCH reports the backend message instead of swallowing failures", async () => {
+  test("PATCH returns controlled feedback instead of forwarding raw backend text", async () => {
     replaceFetch(async () =>
       Response.json(
         { message: "Datos inválidos", errorCode: "INVALID_DATA" },
@@ -31,7 +31,10 @@ describe("HTTP failures and session recovery", () => {
     );
     await expect(
       patchJson("http://local/book", {}, (response) => response.json()),
-    ).rejects.toMatchObject({ status: 400, message: "Datos inválidos" });
+    ).rejects.toMatchObject({
+      status: 400,
+      message: "Revisa los datos e inténtalo de nuevo.",
+    });
   });
   test("DELETE network failures are actionable structured errors", async () => {
     replaceFetch(async () => {
@@ -183,4 +186,92 @@ test("withdrawing a contribution sends DELETE without an empty JSON body", async
   expect(init?.method).toBe("DELETE");
   expect(init?.body).toBeUndefined();
   expect(new Headers(init?.headers).has("Content-Type")).toBe(false);
+});
+
+test("Fastify route errors never expose endpoints in user messages", async () => {
+  replaceFetch(async () =>
+    Response.json(
+      {
+        message:
+          "Route GET:/api/v1/books/google/R2hkAAAACAAJ/community?page=1&limit=10 not found",
+        error: "Not Found",
+        statusCode: 404,
+      },
+      { status: 404 },
+    ),
+  );
+  await expect(
+    request(`${API_ENDPOINTS.BOOKS}/google/R2hkAAAACAAJ/community`),
+  ).rejects.toMatchObject({
+    status: 404,
+    message: "Este contenido no está disponible en este momento.",
+  });
+});
+
+test("known error codes use local copy even when server messages contain technical details", async () => {
+  replaceFetch(async () =>
+    Response.json(
+      {
+        errorCode: "BOOK_NOT_FOUND",
+        message: "Database SELECT failed at /private/source.ts",
+      },
+      { status: 404 },
+    ),
+  );
+  await expect(
+    request(`${API_ENDPOINTS.BOOKS}/google/book`),
+  ).rejects.toMatchObject({ message: "No hemos encontrado este libro." });
+});
+
+test("unknown errors, non-JSON bodies and inherited property names receive safe defaults", async () => {
+  for (const payload of [
+    { errorCode: "INTERNAL_DETAILS", message: "/api/v1/private" },
+    { errorCode: "toString", message: "GET /api/v1/private" },
+    { errorCode: "constructor", message: "SQL details" },
+  ]) {
+    replaceFetch(async () => Response.json(payload, { status: 400 }));
+    await expect(request("https://example.test")).rejects.toMatchObject({
+      message: "Revisa los datos e inténtalo de nuevo.",
+    });
+  }
+  replaceFetch(
+    async () =>
+      new Response("<html>Proxy /private/path</html>", { status: 404 }),
+  );
+  await expect(request("https://example.test")).rejects.toMatchObject({
+    message: "Este contenido no está disponible en este momento.",
+  });
+});
+
+test("error feedback renders safe copy rather than technical routes", async () => {
+  const { createElement } = await import("react");
+  const { renderToStaticMarkup } = await import("react-dom/server");
+  const { BookRequestError } =
+    await import("../src/features/books/components/BookRequestError");
+  const { errorMessage } = await import("../src/shared/http/request");
+  replaceFetch(async () =>
+    Response.json(
+      { message: "Route GET:/api/v1/books/google/private not found" },
+      { status: 404 },
+    ),
+  );
+  let failure: unknown;
+  try {
+    await request(`${API_ENDPOINTS.BOOKS}/google/private`);
+  } catch (error) {
+    failure = error;
+  }
+  expect(failure).toBeDefined();
+  const html = renderToStaticMarkup(
+    createElement(BookRequestError, {
+      title: "No se pudo cargar la ficha del libro",
+      message: errorMessage(failure),
+      retry: async () => {},
+    }),
+  );
+  expect(html).toContain("No se pudo cargar la ficha del libro");
+  expect(html).toContain("Este contenido no está disponible en este momento.");
+  expect(html).toContain("Reintentar");
+  expect(html).not.toContain("/api/");
+  expect(html).not.toContain("Route GET");
 });

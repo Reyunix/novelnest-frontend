@@ -70,7 +70,11 @@ export const BookCommunity = ({
         )}
       </div>
       {community.error && (
-        <BookRequestError message={community.error} retry={community.refetch} />
+        <BookRequestError
+          title="Las valoraciones no están disponibles"
+          message={community.error}
+          retry={community.refetch}
+        />
       )}
       {children}
       <h2>La comunidad de NovelNest</h2>
@@ -85,7 +89,11 @@ export const BookCommunity = ({
       ) : own.loading && !own.data ? (
         <p>Cargando tu aportación…</p>
       ) : own.error ? (
-        <BookRequestError message={own.error} retry={own.refetch} />
+        <BookRequestError
+          title="No se pudo cargar tu aportación"
+          message={own.error}
+          retry={own.refetch}
+        />
       ) : (
         <BookReviewEditor
           key={user?.userId}

@@ -46,7 +46,11 @@ const DetailContent = ({
       </Link>
       {detail.loading && <FeedbackState title="Abriendo el libro…" />}
       {detail.error && (
-        <BookRequestError message={detail.error} retry={detail.refetch} />
+        <BookRequestError
+          title="No se pudo cargar la ficha del libro"
+          message={detail.error}
+          retry={detail.refetch}
+        />
       )}
       {book && (
         <>

@@ -1,3 +1,4 @@
+import { publicErrorMessage } from "./publicErrorMessage";
 import { refreshSessionToken, reportSessionExpired } from "./sessionToken";
 import { API_ENDPOINTS } from "../config/config.api";
 import { AppHttpError } from "../types/httpError.types";
@@ -43,17 +44,12 @@ export const request = async (
       payload && typeof payload === "object"
         ? (payload as Record<string, unknown>)
         : {};
-    const message =
-      response.status >= 500
-        ? "El servicio no está disponible temporalmente. Inténtalo de nuevo en unos instantes."
-        : typeof error.message === "string"
-          ? error.message
-          : `No se pudo completar la operación (${response.status}).`;
+    const errorCode =
+      typeof error.errorCode === "string" ? error.errorCode : "HTTP_ERROR";
     throw new AppHttpError({
       status: response.status,
-      errorCode:
-        typeof error.errorCode === "string" ? error.errorCode : "HTTP_ERROR",
-      message,
+      errorCode,
+      message: publicErrorMessage(response.status, errorCode),
       url: String(url),
       method,
     });
@@ -69,5 +65,5 @@ export const jsonHeaders = (existing?: HeadersInit) => {
 
 export const errorMessage = (error: unknown) =>
   error instanceof AppHttpError
-    ? error.message
+    ? publicErrorMessage(error.status, error.errorCode)
     : "No se pudo completar la operación. Vuelve a intentarlo.";
