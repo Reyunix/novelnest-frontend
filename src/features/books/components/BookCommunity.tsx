@@ -1,3 +1,5 @@
+import { useDemo } from "../../demo/demoContext";
+import { DemoCommunity } from "../../demo/DemoCommunity";
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/authContext";
@@ -12,7 +14,7 @@ import { BookRequestError } from "./BookRequestError";
 import { BookOwnReview } from "./BookOwnReview";
 import { StarRating } from "./StarRating";
 
-export const BookCommunity = ({
+const RemoteBookCommunity = ({
   baseUrl,
   returnTo,
   externalRating,
@@ -164,5 +166,21 @@ export const BookCommunity = ({
         </>
       )}
     </section>
+  );
+};
+
+export const BookCommunity = (
+  props: Parameters<typeof RemoteBookCommunity>[0],
+) => {
+  const { active } = useDemo();
+  return active || props.returnTo.startsWith("/libros/demo/") ? (
+    <DemoCommunity
+      returnTo={props.returnTo}
+      externalRating={props.externalRating}
+    >
+      {props.children}
+    </DemoCommunity>
+  ) : (
+    <RemoteBookCommunity {...props} />
   );
 };

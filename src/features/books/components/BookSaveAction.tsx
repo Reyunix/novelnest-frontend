@@ -1,3 +1,4 @@
+import { useDemo } from "../../demo/demoContext";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/authContext";
@@ -9,6 +10,7 @@ import { errorMessage } from "../../../shared/http/request";
 export const BookSaveAction = ({ book }: { book: BookDetail }) => {
   const { isAuthenticated, authStatus } = useAuth();
   const library = useLibrary();
+  const { active: demo } = useDemo();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const saved = library.books.some(
@@ -35,8 +37,10 @@ export const BookSaveAction = ({ book }: { book: BookDetail }) => {
       setPending(false);
     }
   };
-  if (authStatus === "loading") return <p>Comprobando sesión…</p>;
-  if (!isAuthenticated)
+  if (book.provider === "demo" && !demo)
+    return <p>Libro ilustrativo. Usa el catálogo real para tu biblioteca.</p>;
+  if (authStatus === "loading" && !demo) return <p>Comprobando sesión…</p>;
+  if (!isAuthenticated && !demo)
     return (
       <Link
         className="button button-primary"

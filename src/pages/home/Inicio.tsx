@@ -1,3 +1,5 @@
+import { useDemo } from "../../features/demo/demoContext";
+import { DemoStartButton } from "../../features/demo/DemoControls";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../features/auth/authContext";
 import { searchLink } from "../../features/books/searchQuery";
@@ -28,6 +30,7 @@ const selection = [
 
 export const Inicio = () => {
   const { isAuthenticated } = useAuth();
+  const { active: demo } = useDemo();
   return (
     <div className="page-shell home-page">
       <section className="home-hero" aria-labelledby="home-title">
@@ -43,23 +46,28 @@ export const Inicio = () => {
             los libros que ya forman parte de ti.
           </p>
           <div className="hero-actions">
+            <DemoStartButton />
             <Link className="button button-primary" to="/buscar">
               Descubrir libros <span aria-hidden="true">→</span>
             </Link>
             <Link
               className="text-link"
-              to={isAuthenticated ? "/mis-libros" : "/register"}
+              to={isAuthenticated || demo ? "/mis-libros" : "/register"}
             >
               {isAuthenticated
                 ? "Volver a mi biblioteca"
-                : "Crear mi biblioteca"}{" "}
+                : demo
+                  ? "Mi biblioteca de prueba"
+                  : "Crear mi biblioteca"}{" "}
               ↗
             </Link>
           </div>
           <p className="hero-note">
             {isAuthenticated
               ? "Tu próxima lectura, a un paso de tu biblioteca."
-              : "Explora sin cuenta. Inicia sesión para guardar tus lecturas."}
+              : demo
+                ? "Tu biblioteca de prueba se guarda solo en este navegador."
+                : "Prueba el modo invitado o crea una cuenta para guardar tus lecturas en línea."}
           </p>
         </div>
         <div

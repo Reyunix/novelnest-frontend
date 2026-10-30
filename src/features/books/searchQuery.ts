@@ -7,7 +7,8 @@ export const readSearchQuery = (params: URLSearchParams) => {
       : "all";
   const sortBy = params.get("sortBy") === "newest" ? "newest" : "relevance";
   const rawPage = Number(params.get("page") ?? 1);
-  const page = Number.isSafeInteger(rawPage) && rawPage > 0 ? rawPage : 1;
+  const page =
+    Number.isSafeInteger(rawPage) && rawPage > 0 ? Math.min(rawPage, 50) : 1;
   return {
     query: (params.get("query") ?? "").trim(),
     filterState,

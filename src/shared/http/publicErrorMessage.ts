@@ -1,5 +1,13 @@
 // UI text belongs to the client. Never render arbitrary messages from an API or proxy.
 const messages: Record<string, string> = {
+  CATALOG_QUOTA_EXCEEDED:
+    "La búsqueda real ha alcanzado su límite de hoy. Puedes seguir explorando los libros de muestra.",
+  RATE_LIMITED:
+    "Has realizado demasiadas solicitudes. Espera un momento y vuelve a intentarlo.",
+  ORIGIN_NOT_ALLOWED:
+    "No se pudo verificar la solicitud. Recarga la página e inténtalo de nuevo.",
+  PAYLOAD_TOO_LARGE:
+    "Los datos enviados son demasiado largos. Reduce el contenido e inténtalo de nuevo.",
   BOOK_NOT_FOUND: "No hemos encontrado este libro.",
   ROUTE_NOT_FOUND: "Este contenido no está disponible en este momento.",
   INVALID_BOOK_PARAMS:

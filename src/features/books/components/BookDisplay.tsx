@@ -5,19 +5,14 @@ import { BookCover } from "./BookCover";
 import { useLibrary } from "../libraryContext";
 import { useNotifications } from "../../notifications/notificationContext";
 import { errorMessage } from "../../../shared/http/request";
-import type {
-  UserBookSchemaType,
-  UserBookStatus,
-} from "../schemas/books.schemas";
+import type { UserBookStatus } from "../schemas/books.schemas";
 import { bookLink } from "../bookLinks";
 import { BookAuthors } from "./BookAuthors";
 import { toSecureUrl } from "../../../shared/http/secureUrl";
 
-export const BookDisplay = ({
-  userBook: book,
-}: {
-  userBook: UserBookSchemaType;
-}) => {
+import type { LibraryEntry } from "../types/libraryEntry";
+
+export const BookDisplay = ({ userBook: book }: { userBook: LibraryEntry }) => {
   const { changeStatus, remove } = useLibrary();
   const { showNotification } = useNotifications();
   const [pending, setPending] = useState(false);

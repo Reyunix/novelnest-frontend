@@ -1,3 +1,4 @@
+import { DemoProvider } from "./features/demo/DemoProvider";
 import { LibraryProvider } from "./features/books/LibraryProvider";
 import { AppRoutes } from "./routes/AppRoutes";
 import { AuthProvider } from "./features/auth/authProvider";
@@ -8,9 +9,11 @@ function App(): React.JSX.Element {
     <div className="app-container">
       <NotificationProvider>
         <AuthProvider>
-          <LibraryProvider>
-            <AppRoutes />
-          </LibraryProvider>
+          <DemoProvider>
+            <LibraryProvider>
+              <AppRoutes />
+            </LibraryProvider>
+          </DemoProvider>
         </AuthProvider>
       </NotificationProvider>
     </div>

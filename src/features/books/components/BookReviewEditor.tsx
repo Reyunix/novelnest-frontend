@@ -14,12 +14,18 @@ export const BookReviewEditor = ({
   draftKey,
   url,
   onSaved,
+  saveContribution,
+  demo = false,
   onCancel,
 }: {
   own: Review | null;
   draftKey: string;
   url: string;
   onSaved: (review: Review | null) => Promise<void>;
+  saveContribution?: (
+    input: { rating: number | null; text: string | null } | null,
+  ) => Promise<Review | null>;
+  demo?: boolean;
   onCancel?: () => void;
 }) => {
   const [draft, setDraft] = useState(() =>
@@ -47,22 +53,27 @@ export const BookReviewEditor = ({
     }
     setPending(true);
     try {
-      const saved = await submitBookReview(
-        url,
-        remove
-          ? null
-          : {
-              rating: rating ? Number(rating) : null,
-              text: text.trim() || null,
-            },
-      );
+      const input = remove
+        ? null
+        : { rating: rating ? Number(rating) : null, text: text.trim() || null };
+      const saved = saveContribution
+        ? await saveContribution(input)
+        : await submitBookReview(url, input);
       writeReviewDraft(draftKey, null);
       setDraft({
         rating: saved?.rating?.toString() ?? "",
         text: saved?.text ?? "",
       });
       if (remove) setConfirmDelete(false);
-      setMessage(remove ? "Aportación retirada." : "Aportación publicada.");
+      setMessage(
+        demo
+          ? remove
+            ? "Reseña de prueba retirada."
+            : "Reseña de prueba guardada."
+          : remove
+            ? "Aportación retirada."
+            : "Aportación publicada.",
+      );
       await onSaved(saved);
     } catch (cause) {
       setError(errorMessage(cause));
@@ -81,7 +92,9 @@ export const BookReviewEditor = ({
     >
       <h3>{own ? "Tu valoración y reseña" : "Comparte tu lectura"}</h3>
       <p>
-        Tu puntuación y tu reseña serán públicas junto a tu nombre de usuario.
+        {demo
+          ? "Esta reseña de prueba se guarda solo en tu navegador. No se publica ni modifica las valoraciones reales."
+          : "Tu puntuación y tu reseña serán públicas junto a tu nombre de usuario."}
       </p>
       <label htmlFor="review-rating">Tu puntuación</label>
       <select

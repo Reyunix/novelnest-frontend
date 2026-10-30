@@ -1,0 +1,39 @@
+.demo-banner {
+  max-width: 1200px;
+  margin: 1rem auto;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--line);
+  background: #edf0e8;
+  border-radius: var(--radius);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.demo-banner p {
+  margin: 0.35rem 0 0;
+}
+.demo-banner .inline-actions {
+  flex-wrap: wrap;
+}
+.demo-confirmation {
+  width: 100%;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+.demo-confirmation .inline-actions {
+  margin-top: 0.8rem;
+}
+.demo-catalog {
+  margin: 2rem 0;
+}
+.demo-catalog > p {
+  margin: 0.7rem 0 1.5rem;
+}
+@media (max-width: 650px) {
+  .demo-banner {
+    margin: 0.75rem;
+    padding: 1rem;
+  }
+}

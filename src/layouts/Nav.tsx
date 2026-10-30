@@ -1,9 +1,12 @@
+import { DemoStartButton } from "../features/demo/DemoControls";
+import { useDemo } from "../features/demo/demoContext";
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../features/auth/authContext";
 
 export const Nav = () => {
   const { authStatus } = useAuth();
+  const { active: demo } = useDemo();
   const location = useLocation();
   const [openAt, setOpenAt] = useState<string | null>(null);
   const toggle = useRef<HTMLButtonElement>(null);
@@ -28,6 +31,9 @@ export const Nav = () => {
           { href: "/logout", label: "Cerrar sesión" },
         ]
       : [
+          ...(demo
+            ? [{ href: "/mis-libros", label: "Mi biblioteca de prueba" }]
+            : []),
           { href: "/login", label: "Iniciar sesión" },
           { href: "/register", label: "Crear cuenta" },
         ]),
@@ -58,6 +64,11 @@ export const Nav = () => {
               </NavLink>
             </li>
           ))}
+          {authStatus !== "authenticated" && !demo && (
+            <li>
+              <DemoStartButton label="Modo invitado" />
+            </li>
+          )}
         </ul>
       </nav>
     </>

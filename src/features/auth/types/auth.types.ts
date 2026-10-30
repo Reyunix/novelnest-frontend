@@ -11,6 +11,6 @@ export interface AuthContextValue {
   authStatus: AuthStatus;
   isAuthenticated: boolean;
   user: User;
-  refreshSession: () => Promise<void>;
+  refreshSession: (force?: boolean) => Promise<void>;
   logout: () => Promise<boolean>;
 }

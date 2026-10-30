@@ -1,3 +1,4 @@
+import { useDemo } from "../../features/demo/demoContext";
 import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../features/auth/authContext";
@@ -6,6 +7,8 @@ import { FeedbackState } from "../../components/FeedbackState";
 export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const { authStatus, refreshSession } = useAuth();
   const location = useLocation();
+  const { active: demo } = useDemo();
+  if (demo) return <>{children}</>;
   if (authStatus === "loading")
     return <FeedbackState title="Comprobando tu sesión…" />;
   if (authStatus === "error")

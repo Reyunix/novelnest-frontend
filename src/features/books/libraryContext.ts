@@ -1,12 +1,13 @@
 import { createContext, useContext } from "react";
 import type {
   SaveToLibraryData,
-  UserBookSchemaType,
   UserBookStatus,
 } from "./schemas/books.schemas";
 
+import type { LibraryEntry } from "./types/libraryEntry";
+
 export interface LibraryValue {
-  books: UserBookSchemaType[];
+  books: LibraryEntry[];
   loading: boolean;
   error: string | null;
   refetch: () => Promise<void>;

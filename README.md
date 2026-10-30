@@ -75,3 +75,11 @@ En producción, el servidor del frontend debe servir `index.html` como alternati
 ## Mensajes de error
 
 La interfaz utiliza un catálogo local de mensajes por código de error y alternativas por estado HTTP. Nunca muestra directamente `message` recibido del backend o de un proxy. Los códigos desconocidos, respuestas no JSON y errores de rutas reciben mensajes genéricos. Al añadir códigos de negocio, actualizar `src/shared/http/publicErrorMessage.ts` con una explicación útil para el usuario.
+
+## Portfolio guest demo
+
+Use **Probar sin registrarme** on Home or Login, or **Modo invitado** in navigation. The demo has eight fictional books, an initial library and illustrative reviews. Library changes and personal test reviews stay in `localStorage` (`novelnest:demo:v1`), with a validated and versioned format. No account, JWT or public contribution is created. A visible banner distinguishes the demo and explains storage limitations if the browser denies persistence.
+
+**Salir del modo invitado** preserves the local data for another visit. **Reiniciar demo** confirms before restoring the seed library, clearing test reviews and saved detail snapshots, and resetting open editors. A real authenticated session takes priority and uses remote data exclusively, with no automatic import from the demo.
+
+The sample detail routes (`/libros/demo/:fixtureId`) work without the backend. Submitted searches query the real catalogue with normal API limits. Real detail records opened in demo mode are stored locally so they can be reopened offline. Community actions stay local even on those real books; external Google ratings are shown separately. A quota error leaves the sample catalogue usable. Production builds include the configured Render API URL from `.env.production`.

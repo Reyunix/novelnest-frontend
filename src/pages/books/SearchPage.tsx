@@ -1,3 +1,5 @@
+import { useDemo } from "../../features/demo/demoContext";
+import { DemoCatalog } from "../../features/demo/DemoCatalog";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { BookCard } from "../../features/books/components/BookCard";
@@ -43,6 +45,7 @@ const SearchForm = ({
           placeholder="¿Qué te apetece leer?"
           value={values.query}
           required
+          maxLength={120}
           onChange={(event) =>
             setValues({ ...values, query: event.target.value })
           }
@@ -86,6 +89,7 @@ const SearchForm = ({
 };
 
 export const SearchPage = () => {
+  const { active: demo } = useDemo();
   const [params, setParams] = useSearchParams();
   const applied = readSearchQuery(params);
   const { data, loading, error, refetch } = useBookSearch(params);
@@ -107,7 +111,9 @@ export const SearchPage = () => {
       ?.scrollIntoView({ block: "start" });
   };
   // Google Books totals are estimates. A short page is the reliable end signal.
-  const hasNext = Boolean(result && result.items.length === SEARCH_PAGE_SIZE);
+  const hasNext = Boolean(
+    result && result.items.length === SEARCH_PAGE_SIZE && applied.page < 50,
+  );
   return (
     <div className="page-shell search-page">
       <header className="page-heading">
@@ -120,6 +126,7 @@ export const SearchPage = () => {
         initial={applied}
         onSubmit={submit}
       />
+      {demo && !applied.query && <DemoCatalog />}
       <section
         id="search-results"
         aria-label="Resultados de búsqueda"
@@ -207,6 +214,7 @@ export const SearchPage = () => {
           </p>
         )}
       </section>
+      {demo && applied.query && <DemoCatalog />}
     </div>
   );
 };

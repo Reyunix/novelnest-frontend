@@ -1,3 +1,4 @@
+import { DemoStartButton } from "../../features/demo/DemoControls";
 import { getReturnTo } from "../../features/auth/returnTo";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -38,7 +39,7 @@ export const Login = () => {
           : { userName: identifier }),
         userPassword: values.userPassword,
       });
-      await refreshSession();
+      await refreshSession(true);
       navigate(destination, { replace: true });
     } catch (error) {
       setError("root", { message: errorMessage(error) });
@@ -47,6 +48,7 @@ export const Login = () => {
   return (
     <div className="center">
       <section className="form-layout">
+        <DemoStartButton />
         <header className="form-header">
           <p className="eyebrow">Tu biblioteca te espera</p>
           <h1 className="form-h1">Vuelve a tus lecturas</h1>

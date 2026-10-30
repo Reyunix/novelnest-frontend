@@ -1,3 +1,4 @@
+import { useDemo } from "../../demo/demoContext";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../auth/authContext";
@@ -27,6 +28,7 @@ export const BookCard = ({
     error: libraryError,
   } = useLibrary();
   const { authStatus, isAuthenticated } = useAuth();
+  const { active: demo } = useDemo();
   const { showNotification } = useNotifications();
   const location = useLocation();
   const saved = books.some(
@@ -83,7 +85,7 @@ export const BookCard = ({
           )}
         </div>
         <div className="book-card-actions">
-          {isAuthenticated ? (
+          {(isAuthenticated || demo) && (provider !== "demo" || demo) ? (
             <button
               className={
                 saved ? "button button-saved" : "button button-primary"

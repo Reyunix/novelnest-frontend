@@ -25,7 +25,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(null);
   const inFlight = useRef<Promise<void> | null>(null);
   const generation = useRef(0);
-  const refreshSession = useCallback((): Promise<void> => {
+  const refreshSession = useCallback((force = false): Promise<void> => {
+    if (force) {
+      ++generation.current;
+      inFlight.current = null;
+    }
     if (inFlight.current) return inFlight.current;
     const version = generation.current;
     const run = async () => {

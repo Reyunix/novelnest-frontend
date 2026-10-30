@@ -8,11 +8,17 @@ export const BookOwnReview = ({
   draftKey,
   url,
   onSaved,
+  saveContribution,
+  demo = false,
 }: {
   own: Review | null;
   draftKey: string;
   url: string;
   onSaved: (review: Review | null) => Promise<void>;
+  saveContribution?: (
+    input: { rating: number | null; text: string | null } | null,
+  ) => Promise<Review | null>;
+  demo?: boolean;
 }) => {
   const [editing, setEditing] = useState(false);
   const [notice, setNotice] = useState("");
@@ -27,9 +33,13 @@ export const BookOwnReview = ({
     const refresh = onSaved(review);
     setEditing(false);
     setNotice(
-      review
-        ? "Tu aportación se ha publicado."
-        : "Tu aportación se ha retirado.",
+      demo
+        ? review
+          ? "Tu reseña de prueba se ha guardado."
+          : "Tu reseña de prueba se ha retirado."
+        : review
+          ? "Tu aportación se ha publicado."
+          : "Tu aportación se ha retirado.",
     );
     await refresh;
   };
@@ -38,6 +48,8 @@ export const BookOwnReview = ({
       {showEditor ? (
         <BookReviewEditor
           own={own}
+          demo={demo}
+          saveContribution={saveContribution}
           draftKey={draftKey}
           url={url}
           onSaved={saved}
@@ -46,10 +58,10 @@ export const BookOwnReview = ({
       ) : (
         <article
           className="community-review own-review"
-          aria-label="Tu aportación publicada"
+          aria-label={demo ? "Tu reseña de prueba" : "Tu aportación publicada"}
         >
           <div className="review-heading">
-            <h3>Tu aportación</h3>
+            <h3>{demo ? "Tu reseña de prueba" : "Tu aportación"}</h3>
             <button
               type="button"
               className="button button-secondary"

@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useDemo } from "../../features/demo/demoContext";
+import { demoCatalog, demoBookKey } from "../../features/demo/fixtures";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { BookCover } from "../../features/books/components/BookCover";
 import { BookAuthors } from "../../features/books/components/BookAuthors";
@@ -18,12 +21,28 @@ const DetailContent = ({
   providerBookId: string;
 }) => {
   const location = useLocation();
+  const demo = useDemo();
+  const cached = demo.active
+    ? demo.state.snapshots[demoBookKey(provider, providerBookId)]
+    : undefined;
+  const local =
+    provider === "demo"
+      ? demoCatalog.find((book) => book.providerBookId === providerBookId)
+      : undefined;
   const fromSearch = searchOrigin(
     (location.state as { fromSearch?: unknown } | null)?.fromSearch,
   );
   const baseUrl = `${API_ENDPOINTS.BOOKS.replace(/\/+$/, "")}/${encodeURIComponent(provider)}/${encodeURIComponent(providerBookId)}`;
-  const detail = useFetch({ url: baseUrl, parseResponse: parseBookDetail });
-  const book = detail.data;
+  const detail = useFetch({
+    url: baseUrl,
+    queryKey: `${baseUrl}:${demo.active ? "demo" : "remote"}`,
+    enabled: provider !== "demo" && !cached,
+    parseResponse: parseBookDetail,
+  });
+  const book = local ?? cached ?? detail.data;
+  useEffect(() => {
+    if (demo.active && detail.data) demo.store.remember(detail.data);
+  }, [demo.active, demo.store, detail.data]);
   const metadata = book
     ? [
         ["Editorial", book.publisher],
@@ -44,6 +63,9 @@ const DetailContent = ({
       <Link className="text-link" to={fromSearch ?? "/buscar"}>
         {fromSearch ? "← Volver a resultados" : "← Explorar libros"}
       </Link>
+      {provider === "demo" && !local && (
+        <FeedbackState title="No encontramos este libro de muestra" />
+      )}
       {detail.loading && <FeedbackState title="Abriendo el libro…" />}
       {detail.error && (
         <BookRequestError
