@@ -1,136 +1,139 @@
-import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
-import { UserBooksDisplay } from "../../features/books/components/UserBooksDisplay";
 import { useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { UserBooksDisplay } from "../../features/books/components/UserBooksDisplay";
 import { BOOK_STATUS_FILTERS } from "../../features/books/constants/books.constants";
+import { useLibrary } from "../../features/books/libraryContext";
+
+const LibrarySearch = ({
+  query,
+  onSearch,
+}: {
+  query: string;
+  onSearch: (query: string) => void;
+}) => {
+  const [draft, setDraft] = useState(query);
+  return (
+    <form
+      className="library-search-form"
+      role="search"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSearch(draft.trim());
+      }}
+    >
+      <label className="library-search">
+        <span className="field-label">Buscar en tu biblioteca</span>
+        <input
+          type="search"
+          placeholder="Título o autor de tus libros"
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+        />
+      </label>
+      <button className="button button-secondary" type="submit">
+        Filtrar
+      </button>
+    </form>
+  );
+};
+
 export const Mybooks = () => {
-  const navigate = useNavigate();
-  const [inputValue, setInputValue] = useState("");
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [searchParams] = useSearchParams();
-  const rawStatus = searchParams.get("status");
-  const statusParam =
+  const [params, setParams] = useSearchParams();
+  const { books, loading, refetch } = useLibrary();
+  const rawStatus = params.get("status");
+  const status =
     rawStatus === "want_to_read" ||
     rawStatus === "reading" ||
     rawStatus === "completed" ||
     rawStatus === "abandoned"
       ? rawStatus
       : undefined;
-
-  const isFilterActive = (filterId: string) => {
-    return rawStatus === filterId || (filterId === "all" && rawStatus === null);
+  const query = params.get("q") ?? "";
+  const sort = params.get("sort") === "title" ? "title" : "recent";
+  const setFilter = (name: string, value: string, replace = false) => {
+    const next = new URLSearchParams(params);
+    if (value) next.set(name, value);
+    else next.delete(name);
+    setParams(next, { replace });
   };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const normalizedQuery = inputValue.trim();
-    if (!normalizedQuery) return;
-
-    const params = new URLSearchParams({
-      filterState: "all",
-      query: normalizedQuery,
-      sortBy: "relevance",
-    });
-
-    navigate(`/buscar?${params.toString()}`);
-    setInputValue("");
-  };
-
   return (
-    <main className="my-books-page-layout">
-      <button
-        type="button"
-        className="my-books-filters-toggle"
-        aria-expanded={isFiltersOpen}
-        aria-controls="my-books-filters-panel"
-        aria-label={isFiltersOpen ? "Cerrar filtros" : "Abrir filtros"}
-        onClick={() => setIsFiltersOpen((open) => !open)}
-      >
-      <img className="book-filters-icon" src="/book-icon.webp" alt="" />
-        {/* {isFiltersOpen ? "Cerrar" : ""} */}
-      </button>
-      <div
-        className={
-          isFiltersOpen
-            ? "my-books-filters-backdrop my-books-filters-backdrop--open"
-            : "my-books-filters-backdrop"
-        }
-        onClick={() => setIsFiltersOpen(false)}
-      ></div>
-
+    <div className="page-shell library-page">
+      <header className="page-heading heading-with-action">
+        <div>
+          <p className="eyebrow">Tu espacio de lectura</p>
+          <h1>Mi biblioteca</h1>
+          <p>Los libros que te esperan, te acompañan y se quedan contigo.</p>
+        </div>
+        <div className="inline-actions heading-actions">
+          <button className="button button-secondary" disabled={loading} onClick={() => void refetch()}>{loading ? "Actualizando…" : "Actualizar"}</button>
+          <Link className="button button-primary" to="/buscar">+ Añadir libros</Link>
+        </div>
+      </header>
       <section
-        id="my-books-filters-panel"
-        className={
-          isFiltersOpen
-            ? "my-books-filters-panel my-books-filters-panel--open small-section"
-            : "my-books-filters-panel small-section"
-        }
+        className="library-toolbar surface"
+        aria-label="Filtros de la biblioteca"
       >
-        <div className="my-books-section-heading">
-          <h2 className="my-books-section-title">Colecciones</h2>
-          <p className="my-books-section-copy">
-            Elige una estantería de tu colección para concentrarte en lo que
-            toca leer.
-          </p>
+        <div className="library-summary">
+          <span>
+            <strong>{books.length}</strong> en tu biblioteca
+          </span>
+          <span>
+            <strong>
+              {books.filter((book) => book.status === "reading").length}
+            </strong>{" "}
+            leyendo
+          </span>
+          <span>
+            <strong>
+              {books.filter((book) => book.status === "completed").length}
+            </strong>{" "}
+            leídos
+          </span>
         </div>
-        <div className="my-books-filters-wrap">
-          <h3>Estado</h3>
-          <ul className="my-books-filters-list">
-            {BOOK_STATUS_FILTERS.map((filter) => (
-              <li key={filter.id}>
-                <NavLink
-                  to={filter.href}
-                  className={
-                    isFilterActive(filter.id)
-                      ? "my-books-filter-active"
-                      : "my-books-filter"
-                  }
-                  onClick={() => setIsFiltersOpen(false)}
-                >
-                  {filter.literal}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+        <div
+          className="library-filters"
+          role="group"
+          aria-label="Estado de lectura"
+        >
+          {BOOK_STATUS_FILTERS.map((filter) => (
+            <button
+              key={filter.id}
+              className="filter-chip"
+              aria-pressed={filter.id === (status ?? "all")}
+              onClick={() =>
+                setFilter("status", filter.id === "all" ? "" : filter.id)
+              }
+            >
+              {filter.literal}
+              <span>
+                {
+                  books.filter(
+                    (book) => filter.id === "all" || book.status === filter.id,
+                  ).length
+                }
+              </span>
+            </button>
+          ))}
         </div>
-        <div className="custom-shelves">
-          <h3>Próximamente</h3>
-          <p>
-            En el futuro, podrás crear estanterías personalizadas para organizar
-            tus libros como prefieras.
-          </p>
+        <div className="library-search-row">
+          <LibrarySearch
+            key={query}
+            query={query}
+            onSearch={(query) => setFilter("q", query)}
+          />
+          <label className="sort-field">
+            Ordenar por
+            <select
+              value={sort}
+              onChange={(event) => setFilter("sort", event.target.value)}
+            >
+              <option value="recent">Añadidos recientemente</option>
+              <option value="title">Título, de A a Z</option>
+            </select>
+          </label>
         </div>
       </section>
-      <div className="my-books-page-content">
-        <section className="my-books-hero">
-          <div className="my-books-hero-copy">
-            <p className="eyebrow">Biblioteca personal</p>
-            <h1 className="my-books-page-title">Mis Libros</h1>
-            <p className="my-books-page-intro">
-              Consulta tu colección, cambia el estado de lectura y encuentra
-              rápido nuevos títulos para añadir.
-            </p>
-          </div>
-          <form
-            onSubmit={handleSubmit}
-            className="my-books-search-form"
-            role="search"
-          >
-            <input
-              className="my-books-search-input"
-              type="text"
-              placeholder="Buscar y añadir libros"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-            <button type="submit" className="my-books-search-btn">
-              Buscar
-            </button>
-          </form>
-        </section>
-
-        <UserBooksDisplay statusUrlParam={statusParam} />
-      </div>
-    </main>
+      <UserBooksDisplay statusUrlParam={status} query={query} sort={sort} />
+    </div>
   );
 };

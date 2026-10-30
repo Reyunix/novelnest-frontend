@@ -1,108 +1,132 @@
 import { useState } from "react";
-import { API_ENDPOINTS } from "../../../shared/config/config.api";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../../auth/authContext";
 import { useNotifications } from "../../notifications/notificationContext";
+import { useLibrary } from "../libraryContext";
+import { errorMessage } from "../../../shared/http/request";
+import { AppHttpError } from "../../../shared/types/httpError.types";
 import { toSecureUrl } from "../../../shared/http/secureUrl";
-import type { SaveStateType } from "../types/books.types";
-import { BOOK_CARD_MESSAGES } from "../constants/books.constants";
-import {
-  parseSaveTolibraryData,
-  type BooksSearchItem,
-  type SaveToLibraryData,
-} from "../schemas/books.schemas";
-import { useSaveBook } from "../hooks/useSaveBook";
+import type { BooksSearchItem } from "../schemas/books.schemas";
+import { BookCover } from "./BookCover";
+import { BookAuthors } from "./BookAuthors";
+import { bookLink } from "../bookLinks";
 
-interface Props {
+export const BookCard = ({
+  bookItem: book,
+  provider,
+}: {
   bookItem: BooksSearchItem;
   provider: string;
-}
-
-export const BookCard: React.FC<Props> = ({ bookItem, provider }) => {
-  const [saveState, setSaveState] = useState<SaveStateType>("idle");
-  const { saveBook, loading } = useSaveBook(API_ENDPOINTS.BOOK_SAVE);
+}) => {
+  const [saving, setSaving] = useState(false);
+  const {
+    books,
+    save,
+    refetch,
+    loading: libraryLoading,
+    error: libraryError,
+  } = useLibrary();
+  const { authStatus, isAuthenticated } = useAuth();
   const { showNotification } = useNotifications();
-  const isSaved = saveState === "saved";
-  const NOT_AVAILABLE_INFO = BOOK_CARD_MESSAGES.NOT_AVAILABLE_INFO;
-  const secureThumbnail = toSecureUrl(bookItem.thumbnail);
-  const secureCanonicalLink = toSecureUrl(bookItem.canonicalVolumeLink);
-  console.log(bookItem.publishedDate);
-
-  const handleclickSaveToLibrary = async () => {
-    setSaveState("saving");
-
-    const payload: SaveToLibraryData = {
-      provider,
-      providerBookId: bookItem.providerBookId,
-      title: bookItem.title,
-      authors: bookItem.authors,
-      thumbnail: secureThumbnail,
-      canonicalVolumeLink: secureCanonicalLink,
-    };
-
+  const location = useLocation();
+  const saved = books.some(
+    (item) =>
+      item.provider === provider && item.providerBookId === book.providerBookId,
+  );
+  const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
     try {
-      const parsed = parseSaveTolibraryData(payload);
-      const result = await saveBook(parsed);
-
-      if (!result.ok) {
-        setSaveState("error");
-        showNotification(result.error.message, "info");
-        return;
-      }
-
-      setSaveState("saved");
-      showNotification("Libro añadido a la colección", "success");
+      await save({
+        provider,
+        providerBookId: book.providerBookId,
+        title: book.title,
+        authors: book.authors,
+        thumbnail: toSecureUrl(book.thumbnail),
+        canonicalVolumeLink: toSecureUrl(book.canonicalVolumeLink),
+      });
+      showNotification("Libro añadido a tu biblioteca", "success");
     } catch (error) {
-      setSaveState("error");
-      showNotification(
-        error instanceof Error ? error.message : "Unexpected error",
-        "error",
-      );
+      if (error instanceof AppHttpError && error.status === 409)
+        await refetch();
+      showNotification(errorMessage(error), "error");
+    } finally {
+      setSaving(false);
     }
   };
   return (
-    <article className="book-card small-section">
-      {secureThumbnail ? (
-        <div className="book-card-thumbnail-container">
-          <img
-            src={secureThumbnail}
-            alt={bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}
-          />
-        </div>
-      ) : null}
+    <article className="book-card">
+      <BookCover src={book.thumbnail} title={book.title} />
       <div className="book-card-content">
         <div className="book-card-body">
+          <p className="book-category">{book.categories[0] ?? "Libro"}</p>
           <h3 className="book-card-title">
-            {bookItem.title || BOOK_CARD_MESSAGES.TITLE_NOT_AVAILABLE}
+            <Link
+              to={bookLink(provider, book.providerBookId)}
+              state={{
+                fromSearch:
+                  location.pathname === "/buscar"
+                    ? location.pathname + location.search
+                    : null,
+              }}
+            >
+              {book.title}
+            </Link>
           </h3>
-          <p>
-            de{" "}
-            <em>
-              {bookItem.authors.length > 0
-                ? bookItem.authors.join(", ")
-                : NOT_AVAILABLE_INFO}
-            </em>
+          <p className="book-author">
+            <BookAuthors authors={book.authors} />
           </p>
-          <p>
-            {bookItem.categories.length > 0
-              ? bookItem.categories.join(", ")
-              : NOT_AVAILABLE_INFO}
-          </p>
-          <p>Publicado {bookItem.publishedDate ?? NOT_AVAILABLE_INFO}</p>
+          {book.publishedDate && (
+            <p className="book-meta">
+              Publicado en {book.publishedDate.slice(0, 4)}
+            </p>
+          )}
         </div>
         <div className="book-card-actions">
-          {secureCanonicalLink ? (
-            <a href={secureCanonicalLink} target="_blank" rel="noreferrer">
-              Ver en Google Books
+          {isAuthenticated ? (
+            <button
+              className={
+                saved ? "button button-saved" : "button button-primary"
+              }
+              disabled={saving || saved || libraryLoading}
+              onClick={() => {
+                if (libraryError) {
+                  void refetch();
+                } else {
+                  void handleSave();
+                }
+              }}
+            >
+              {saved
+                ? "✓ En tu biblioteca"
+                : saving
+                  ? "Guardando…"
+                  : libraryLoading
+                    ? "Comprobando…"
+                    : libraryError
+                      ? "Comprobar biblioteca"
+                      : "+ Quiero leerlo"}
+            </button>
+          ) : authStatus === "loading" ? (
+            <span>Comprobando sesión…</span>
+          ) : (
+            <Link
+              className="button button-primary"
+              to={`/login?returnTo=${encodeURIComponent(location.pathname + location.search)}`}
+            >
+              Inicia sesión para guardar
+            </Link>
+          )}
+          {book.canonicalVolumeLink && (
+            <a
+              className="text-link"
+              href={toSecureUrl(book.canonicalVolumeLink) ?? undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Google Books <span aria-hidden="true">↗</span>
             </a>
-          ) : null}
-          <button
-            type="button"
-            onClick={handleclickSaveToLibrary}
-            disabled={loading || isSaved}
-          >
-            {(loading && <>Guardando</>) || (isSaved && <>Añadido</>) || (
-              <span>Quiero leerlo</span>
-            )}
-          </button>
+          )}
         </div>
       </div>
     </article>

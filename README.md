@@ -1,92 +1,73 @@
 # NovelNest Frontend
 
-Frontend app for NovelNest built with React + TypeScript + Vite.
+Biblioteca personal desarrollada con React 19, TypeScript y Vite. Permite descubrir libros en Google Books a través del backend, guardarlos y organizar su estado de lectura.
 
-## Repositories
-- Main (hub): https://github.com/Reyunix/novelnest
-- Backend: https://github.com/Reyunix/novelnest-backend
+## Ejecutar en local
 
-## Tech Stack
+Desde el repositorio principal, `bun run dev` inicia PostgreSQL, backend y frontend. Para arrancar únicamente este frontend:
 
-- React 19
-- TypeScript
-- React Router
-- React Hook Form + Zod
-- Vite
-
-## Current Features
-
-- Register and login forms
-- Auth context with session bootstrap (`/api/v1/auth/me`)
-- Protected routes
-- Logout flow
-- Book search UI connected to backend
-
-## Main Structure
-
-- `src/layouts`: app shell and shared layout components (`Header`, `Nav`, `Footer`, `MainLayout`)
-- `src/routes`: router map and guards (`AppRoutes`, `guards/ProtectedRoute`)
-- `src/features/auth`: auth state, context, provider, API and auth form constants
-- `src/features/books`: books domain API and query hooks
-- `src/features/contact`: contact feature constants
-- `src/pages`: routed pages grouped by domain (`auth`, `books`, `contact`, `home`, `user-books`, `system`)
-- `src/components`: reusable UI/form components
-- `src/shared/config`: shared runtime config (API endpoints)
-- `src/shared/constants`: shared app constants (navigation, form error map)
-- `src/shared/http`: shared HTTP helpers (JSON post and API error parsing)
-- `src/shared/hooks`: generic reusable hooks (e.g. `useFetch`)
-- `src/schemas`: frontend form/response schemas
-
-## Documentation
-
-- Auth flow and context internals: [`../docs/frontend/auth-context.md`](../docs/frontend/auth-context.md)
-- Protected routes and guard flow: [`../docs/frontend/protected-routes.md`](../docs/frontend/protected-routes.md)
-- Constants/modules organization: [`../docs/frontend/constants-organization.md`](../docs/frontend/constants-organization.md)
-
-## Requirements
-
-- Bun
-- Backend running at `http://localhost:3000`
-
-## Environment Variables
-
-File: `novelnest-frontend/.env.local`
-
-Common keys:
-- `VITE_PORT`
-- `VITE_API_REGISTER_ENDPOINT`
-- `VITE_API_LOGIN_ENDPOINT`
-- `VITE_API_LOGOUT_ENDPOINT`
-- `VITE_API_ME_ENDPOINT`
-- `VITE_API_BOOKS_SEARCH_ENDPOINT`
-
-Note:
-- Google Books key and query translation belong to backend. Frontend should call backend endpoints only.
-
-## Install
-
-```bash
+```sh
 bun install
-```
-
-
-## Run
-
-```bash
 bun run dev
 ```
 
+Frontend: http://localhost:5173. Backend: http://localhost:3000. Usa `localhost` en ambos servicios para mantener la sesión mediante cookies.
 
-Default frontend URL: `http://localhost:5173`
+Copia `.env.example` a `.env.local` si necesitas configurar el backend:
 
-## Build
+```env
+VITE_API_BASE_URL=http://localhost:3000
+```
 
-```bash
+Las rutas de la API tienen valores predeterminados. Los overrides `VITE_API_*_ENDPOINT` admiten rutas o URLs completas. Las claves de Google Books pertenecen exclusivamente al backend.
+
+## Funciones
+
+- Portada con selección editorial y acceso directo al catálogo.
+- Búsqueda por título, autor y tema, ordenación y páginas de 12 resultados.
+- Consulta aplicada en la URL: enlaces compartidos, recarga y navegación del historial.
+- Ficha pública por edición con descripción, autores enlazados, metadatos y puntuación externa secundaria.
+- Puntuaciones y reseñas públicas propias; media de NovelNest y reseñas paginadas en el servidor.
+- Biblioteca compartida entre páginas: guardar, cambiar estado y eliminar con confirmación.
+- Filtros con recuentos, búsqueda por título/autor dentro de la colección y ordenación.
+- Formularios de registro y acceso tipados, validación Zod y retorno tras el login.
+- Renovación de sesión compartida entre peticiones concurrentes, estados de error y reintentos.
+- Portadas con alternativa cuando faltan o no cargan; navegación por teclado y diseño adaptable.
+
+## Estructura
+
+- `src/features/books`: contratos Zod, consulta del catálogo y fuente compartida de la biblioteca.
+- `src/features/auth`: sesión, validación de formularios y destinos de retorno.
+- `src/shared/http`: cliente HTTP, renovación de sesión y cancelación de consultas.
+- `src/pages`: pantallas cargadas por ruta.
+- `src/components`: campos, portadas y estados de interfaz reutilizables.
+- `src/styles`: base, layout, home, libros, formularios y reglas adaptables.
+- `tests`: regresiones de parámetros, errores HTTP, sesión y concurrencia.
+
+La biblioteca se conserva en un proveedor por sesión y actualiza sus datos con la respuesta de cada mutación. Se reinicia al cambiar de usuario o cerrar sesión. Las lecturas pendientes se invalidan al cambiar de consulta, desmontar o aplicar una mutación.
+
+## Comprobaciones
+
+```sh
+bun run test
+bun run lint
 bun run build
 ```
 
+Las pruebas usan el runner incluido en Bun. Las comprobaciones manuales se realizan con el backend local y una cuenta de prueba.
 
-## Notes
+## Límites actuales
 
-- Auth requests use `credentials: include`, so backend CORS/cookie settings must match.
-- Keep protocol/host consistent in dev (`http://localhost` for both frontend and backend).
+Google Books puede devolver errores temporales y estimaciones variables del total. La interfaz pagina mediante `page` y `limit`; permite avanzar cuando la página recibida está completa y no presenta un número de páginas calculado a partir de ese total estimado.
+
+La biblioteca descarga la colección completa porque el endpoint actual no ofrece paginación. Sus filtros y búsqueda se ejecutan sobre esos datos. Una colección grande requerirá paginación y búsqueda en el backend.
+
+Las estanterías personalizadas, recomendaciones, recuperación de contraseña y contacto por formulario siguen fuera de esta versión. Los enlaces de la interfaz muestran únicamente destinos disponibles.
+
+## Ficha y comunidad
+
+La ruta pública `/libros/:provider/:providerBookId` permite abrir directamente una edición. Los títulos de los resultados y la biblioteca enlazan a ella. Cada autor conocido lleva a una búsqueda por autor.
+
+La puntuación de NovelNest se calcula con aportaciones públicas de usuarios autenticados, independientemente de su biblioteca. La referencia de Google Books se muestra por separado. La ficha carga bibliografía y comunidad por separado para permitir reintentos independientes. El formulario conserva el borrador si falla una publicación.
+
+En producción, el servidor del frontend debe servir `index.html` como alternativa para rutas de la SPA, incluida `/libros/*`.

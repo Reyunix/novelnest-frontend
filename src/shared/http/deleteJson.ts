@@ -1,13 +1,6 @@
-export const deleteJson = async (
+import { request } from "./request";
+
+export const deleteJson = (
   url: string | URL,
-  requestInit?: RequestInit,
-): Promise<Response> => {
-  const requestUrl = url instanceof URL ? url.toString() : url;
-
-  return await fetch(requestUrl, {
-    ...requestInit,
-    credentials: requestInit?.credentials ?? "include",
-    method: "DELETE",
-  });
-};
-
+  init?: RequestInit,
+): Promise<Response> => request(url, { ...init, method: "DELETE" });

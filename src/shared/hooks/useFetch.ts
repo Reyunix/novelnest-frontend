@@ -1,64 +1,99 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createRequestScope } from "../http/requestScope";
+import { errorMessage, request } from "../http/request";
 
-interface UseFetchOptions<TData> {
+interface UseFetchOptions<T> {
   url: string;
   enabled?: boolean;
+  queryKey?: string;
   requestInit?: RequestInit;
-  parseResponse?: (response: Response) => Promise<TData>;
+  parseResponse?: (response: Response) => Promise<T>;
 }
-
-interface UseFetchResult<TData> {
-  data: TData | null;
+interface FetchState<T> {
+  key: string;
+  data: T | null;
   loading: boolean;
   error: string | null;
-  refetch: () => Promise<void>;
 }
 
-const defaultParser = async <TData>(response: Response): Promise<TData> => {
-  return (await response.json()) as TData;
-};
-
-export const useFetch = <TData>({
+export const useFetch = <T>({
   url,
+  queryKey = url,
   enabled = true,
   requestInit,
   parseResponse,
-}: UseFetchOptions<TData>): UseFetchResult<TData> => {
-  const [data, setData] = useState<TData | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+}: UseFetchOptions<T>) => {
+  const [state, setState] = useState<FetchState<T>>({
+    key: "",
+    data: null,
+    loading: false,
+    error: null,
+  });
+  const currentKey = useRef(queryKey);
+  const scope = useMemo(() => createRequestScope(), []);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(url, {
-        ...requestInit,
+  const runRequest = useCallback((): Promise<void> => {
+    const task = scope.start();
+    if (!enabled || !url) return Promise.resolve();
+    return request(url, { ...requestInit, signal: task.signal })
+      .then((response) =>
+        parseResponse
+          ? parseResponse(response)
+          : (response.json() as Promise<T>),
+      )
+      .then((data) => {
+        if (task.isCurrent())
+          setState({ key: queryKey, data, loading: false, error: null });
+      })
+      .catch((error) => {
+        if (task.isCurrent())
+          setState({
+            key: queryKey,
+            data: null,
+            loading: false,
+            error: errorMessage(error),
+          });
       });
-
-      if (!response.ok) {
-        throw new Error(`Request failed (${response.status})`);
-      }
-
-      const parser = parseResponse ?? defaultParser<TData>;
-      const parsed = await parser(response);
-      setData(parsed);
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Unexpected request error");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [url, requestInit, parseResponse]);
+  }, [url, queryKey, enabled, requestInit, parseResponse, scope]);
 
   useEffect(() => {
-    if (!enabled) return;
-    void fetchData();
-  }, [enabled, fetchData]);
+    currentKey.current = queryKey;
+    void runRequest();
+    return scope.cancel;
+  }, [runRequest, scope, queryKey]);
 
-  return { data, loading, error, refetch: fetchData };
+  const refetch = useCallback(async () => {
+    if (!enabled || !url || currentKey.current !== queryKey) return;
+    setState((previous) => ({
+      key: queryKey,
+      data: previous.key === queryKey ? previous.data : null,
+      loading: true,
+      error: null,
+    }));
+    await runRequest();
+  }, [enabled, url, queryKey, runRequest]);
+
+  const updateData = useCallback(
+    (update: (previous: T | null) => T) => {
+      if (currentKey.current !== queryKey) return;
+      scope.cancel();
+      setState((previous) => ({
+        key: queryKey,
+        data: update(previous.key === queryKey ? previous.data : null),
+        loading: false,
+        error: null,
+      }));
+    },
+    [queryKey, scope],
+  );
+
+  const active = enabled && Boolean(url);
+  const matches = active && state.key === queryKey;
+  return {
+    data: matches ? state.data : null,
+    loading: active && (!matches || state.loading),
+    error: matches ? state.error : null,
+    refetch,
+    updateData,
+  };
 };

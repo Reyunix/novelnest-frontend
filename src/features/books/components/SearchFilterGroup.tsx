@@ -11,7 +11,12 @@ type SearchFilterGroupProps<T extends string> = {
   onChange: (next: T) => void;
 };
 
-export const SearchFilterGroup = <T extends string> ({ value, onChange, name = "searchBy", options}: SearchFilterGroupProps<T>) => {
+export const SearchFilterGroup = <T extends string>({
+  value,
+  onChange,
+  name = "searchBy",
+  options,
+}: SearchFilterGroupProps<T>) => {
   return (
     <div className="search-filter-group">
       {options.map((opt) => (

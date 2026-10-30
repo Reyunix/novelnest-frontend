@@ -1,89 +1,124 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { BookShelfPanel } from "./BookShelfPanel";
+import { BookCover } from "./BookCover";
+import { useLibrary } from "../libraryContext";
+import { useNotifications } from "../../notifications/notificationContext";
+import { errorMessage } from "../../../shared/http/request";
 import type {
   UserBookSchemaType,
   UserBookStatus,
 } from "../schemas/books.schemas";
-import { BookShelfPanel } from "./BookShelfPanel";
+import { bookLink } from "../bookLinks";
+import { BookAuthors } from "./BookAuthors";
+import { toSecureUrl } from "../../../shared/http/secureUrl";
 
-type Props = {
+export const BookDisplay = ({
+  userBook: book,
+}: {
   userBook: UserBookSchemaType;
-  isMenuOpen: boolean;
-  onSetMenuOpen: (bookId: number | null) => void;
-  onDelete: (bookId: number) => Promise<unknown> | void;
-  onChangeStatus: (
-    bookId: number,
-    status: UserBookStatus,
-  ) => Promise<unknown> | void;
-};
-export const BookDisplay: React.FC<Props> = ({
-  userBook,
-  isMenuOpen,
-  onSetMenuOpen,
-  onDelete,
-  onChangeStatus,
 }) => {
-  const formatAuthors = () => {
-    if (!userBook.authors || userBook.authors.length === 0) {
-      return "Autor desconocido";
-    }
-    {
-      const authorElements = userBook.authors.map((author, index) => (
-        <span key={author}>
-          <Link
-            to={`/buscar?query=${encodeURIComponent(author)}&filterState=author&sortBy=relevance`}
-          >
-            {author}
-          </Link>
-          {index < userBook.authors.length - 1 ? ", " : ""}
-        </span>
-      ));
-      return authorElements;
+  const { changeStatus, remove } = useLibrary();
+  const { showNotification } = useNotifications();
+  const [pending, setPending] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const updateStatus = async (status: UserBookStatus) => {
+    setPending(true);
+    setError(null);
+    try {
+      await changeStatus(book.id, status);
+      showNotification("Estado de lectura actualizado", "success");
+    } catch (cause) {
+      setError(errorMessage(cause));
+    } finally {
+      setPending(false);
     }
   };
-  
-  const formatDateTime = (dateString: string) =>
-    new Intl.DateTimeFormat("es-ES", {
-      dateStyle: "medium",
-    }).format(new Date(dateString));
+  const deleteBook = async () => {
+    setPending(true);
+    setError(null);
+    try {
+      await remove(book.id);
+      showNotification("Libro eliminado de tu biblioteca", "success");
+    } catch (cause) {
+      setError(errorMessage(cause));
+      setPending(false);
+    }
+  };
   return (
-    <article
-      className={
-        isMenuOpen ? "book-details book-details--menu-open" : "book-details"
-      }
-    >
-      {userBook.thumbnail && (
-        <div className="thumbnail-container">
-          <img
-            className="book-details-thumbnail"
-            src={userBook.thumbnail}
-            alt=""
-          />
+    <article className="book-card library-book" aria-busy={pending}>
+      <BookCover src={book.thumbnail} title={book.title} />
+      <div className="book-card-content">
+        <div className="book-card-body">
+          <h3>
+            <Link to={bookLink(book.provider, book.providerBookId)}>
+              {book.title}
+            </Link>
+          </h3>
+          <p className="book-author">
+            <BookAuthors authors={book.authors} />
+          </p>
+          <p className="book-meta">
+            Añadido el{" "}
+            {new Intl.DateTimeFormat("es-ES", { dateStyle: "medium" }).format(
+              new Date(book.createdAt),
+            )}
+          </p>
         </div>
-      )}
-      <div className="book-details-content">
-        <div className="book-details-texts">
-          <h3 className="book-details-title">
+        <div className="library-book-actions">
+          <BookShelfPanel
+            id={book.id}
+            title={book.title}
+            status={book.status}
+            pending={pending}
+            onChange={(status) => void updateStatus(status)}
+          />
+          {book.canonicalVolumeLink && (
             <a
-              href={
-                userBook.canonicalVolumeLink ? userBook.canonicalVolumeLink : ""
-              }
+              className="text-link"
+              href={toSecureUrl(book.canonicalVolumeLink) ?? undefined}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {userBook.title}
+              Ver libro ↗
             </a>
-          </h3>
-          <p>Añadido: {formatDateTime(userBook.createdAt)}</p>
-          de {formatAuthors()}
+          )}
+          <button
+            className="text-button danger-text"
+            disabled={pending}
+            onClick={() => setConfirmDelete(true)}
+            aria-label={`Eliminar ${book.title}`}
+          >
+            Eliminar
+          </button>
         </div>
-        <BookShelfPanel
-          onChangeStatus={onChangeStatus}
-          onSetMenuOpen={onSetMenuOpen}
-          userBookId={userBook.id}
-          userBook={userBook}
-          isMenuOpen={isMenuOpen}
-          onDelete={onDelete}
-        />
+        {confirmDelete && (
+          <div className="delete-confirmation">
+            <p>¿Eliminar «{book.title}» de tu biblioteca?</p>
+            <div className="inline-actions">
+              <button
+                className="button button-danger"
+                disabled={pending}
+                onClick={() => void deleteBook()}
+              >
+                {pending ? "Eliminando…" : "Sí, eliminar"}
+              </button>
+              <button
+                className="button button-secondary"
+                disabled={pending}
+                onClick={() => setConfirmDelete(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+        {error && (
+          <p className="error-message" role="alert">
+            {error}
+          </p>
+        )}
       </div>
     </article>
   );

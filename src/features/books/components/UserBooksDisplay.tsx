@@ -1,101 +1,80 @@
-import { useState } from "react";
-import { useDeleteUserBook } from "../hooks/useDeleteUserBook";
-import { useGetUserBooks } from "../hooks/useGetUserBooks";
+import { Link } from "react-router-dom";
 import { BookDisplay } from "./BookDisplay";
-import { useNotifications } from "../../notifications/notificationContext";
-import type {
-  UserBookSchemaType,
-  UserBookStatus,
-} from "../schemas/books.schemas";
-import { useUpdateUserBookStatus } from "../hooks/useUpdateUserBookStatus";
-import { BOOK_STATUS_LITERAL } from "../constants/books.constants";
-
-const countBooksByStatus = (
-  books: UserBookSchemaType[],
-  status?: UserBookStatus,
-) => {
-  if (!status) return books.length;
-  return books.filter((book) => book.status === status).length;
-};
+import { useLibrary } from "../libraryContext";
+import type { UserBookStatus } from "../schemas/books.schemas";
+import { FeedbackState } from "../../../components/FeedbackState";
 
 export const UserBooksDisplay = ({
   statusUrlParam,
+  query = "",
+  sort = "recent",
 }: {
   statusUrlParam?: UserBookStatus;
+  query?: string;
+  sort?: string;
 }) => {
-  const [deletedIds, setDeletedIds] = useState<number[]>([]);
-  const [openMenuBookId, setOpenMenuBookId] = useState<number | null>(null);
-  const {
-    loading: booksLoading,
-    data,
-    error: booksError,
-    refetch,
-  } = useGetUserBooks(statusUrlParam);
-  const { showNotification } = useNotifications();
-  const { deleteBook } = useDeleteUserBook();
-  const { updateUserBookStatus } = useUpdateUserBookStatus();
-
-  const visibleBooks =
-    data?.filter((book) => !deletedIds.includes(book.id)) ?? [];
-
-  const booksPendingCount = countBooksByStatus(visibleBooks, statusUrlParam);
-  const bookStatusLabel = statusUrlParam
-    ? `${BOOK_STATUS_LITERAL[statusUrlParam].toUpperCase()} (${booksPendingCount}) `
-    : `TODOS (${booksPendingCount})`;
-
-  const handleDelete = async (bookId: number) => {
-    const response = await deleteBook(bookId);
-    if (!response?.ok) {
-      showNotification("No se pudo eliminar el libro correctamente", "error");
-      return;
-    }
-    setDeletedIds((prev) => [...prev, bookId]);
-    showNotification("Libro eliminado correctamente", "success");
-  };
-
-  const handleUpdateStatus = async (bookId: number, status: UserBookStatus) => {
-    const response = await updateUserBookStatus(bookId, status);
-    if (!response) {
-      showNotification("No se pudo eliminar el libro correctamente", "error");
-      return;
-    }
-    await refetch();
-    showNotification(
-      `Estado actualizado a ${BOOK_STATUS_LITERAL[status]}`,
-      "success",
+  const { books, loading, error, refetch } = useLibrary();
+  if (loading && !books.length)
+    return <FeedbackState title="Abriendo tu biblioteca…" />;
+  if (error)
+    return (
+      <FeedbackState title="No hemos podido cargar tu biblioteca" error>
+        <p>{error}</p>
+        <button
+          className="button button-secondary"
+          onClick={() => void refetch()}
+        >
+          Reintentar
+        </button>
+      </FeedbackState>
     );
-  };
-
+  const normalizedQuery = query.trim().toLocaleLowerCase("es");
+  const visible = books
+    .filter(
+      (book) =>
+        (!statusUrlParam || book.status === statusUrlParam) &&
+        `${book.title} ${book.authors.join(" ")}`
+          .toLocaleLowerCase("es")
+          .includes(normalizedQuery),
+    )
+    .sort((a, b) =>
+      sort === "title"
+        ? a.title.localeCompare(b.title, "es")
+        : Date.parse(b.createdAt) - Date.parse(a.createdAt),
+    );
+  if (!visible.length)
+    return (
+      <FeedbackState
+        title={
+          !books.length
+            ? "Tu biblioteca empieza aquí"
+            : "No hay libros con estos filtros"
+        }
+      >
+        <p>
+          {!books.length
+            ? "Encuentra tu próxima lectura y guárdala para volver a ella cuando quieras."
+            : "Prueba otro estado o cambia la búsqueda. Tus demás libros siguen en tu biblioteca."}
+        </p>
+        <Link
+          className="button button-primary"
+          to={!books.length ? "/buscar" : "/mis-libros"}
+        >
+          {!books.length ? "Explorar libros" : "Ver toda mi biblioteca"}
+        </Link>
+      </FeedbackState>
+    );
   return (
-    <section className="userbooks-collection-section">
-      {booksLoading ? (
-        <span>Cargando...</span>
-      ) : booksError ? (
-        <span>{booksError}</span>
-      ) : visibleBooks && visibleBooks.length > 0 ? (
-        <>
-          <h3>{bookStatusLabel}</h3>
-          <div className="books-collection-items">
-                      {visibleBooks.map((book) => {
-            return (
-              <BookDisplay
-                key={book.id}
-                userBook={book}
-                isMenuOpen={openMenuBookId === book.id}
-                onSetMenuOpen={setOpenMenuBookId}
-                onDelete={handleDelete}
-                onChangeStatus={handleUpdateStatus}
-              />
-            );
-          })}
-          </div>
-        </>
-      ) : (
-        <span>
-          Colección vacía. Comienza tu colección buscando en la barra de
-          búsqueda.
-        </span>
-      )}
+    <section aria-label="Libros de tu biblioteca" aria-busy={loading}>
+      <p className="collection-count" role="status">
+        {visible.length} {visible.length === 1 ? "libro" : "libros"}
+        {query ? ` para «${query}»` : " en esta vista"}
+      </p>
+      <div className="collection-grid">
+        {visible.map((book) => (
+          <BookDisplay key={book.id} userBook={book} />
+        ))}
+      </div>
     </section>
   );
 };

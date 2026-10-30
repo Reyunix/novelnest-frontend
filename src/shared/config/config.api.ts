@@ -5,9 +5,12 @@ const rawBaseUrl =
 
 const API_BASE_URL = String(rawBaseUrl).replace(/\/+$/, "");
 
-const buildApiUrl = (endpoint: string | undefined, fallbackPath: string): string => {
+const buildApiUrl = (
+  endpoint: string | undefined,
+  fallbackPath: string,
+): string => {
   const path = endpoint ?? fallbackPath;
-  return `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  return new URL(path, `${API_BASE_URL}/`).toString();
 };
 
 export const USER_ME_BOOKS_ENDPOINT = buildApiUrl(
@@ -28,10 +31,7 @@ export const API_ENDPOINTS = {
     import.meta.env.VITE_API_LOGOUT_ENDPOINT,
     "/api/v1/auth/logout",
   ),
-  ME: buildApiUrl(
-    import.meta.env.VITE_API_ME_ENDPOINT,
-    "/api/v1/auth/me",
-  ),
+  ME: buildApiUrl(import.meta.env.VITE_API_ME_ENDPOINT, "/api/v1/auth/me"),
   REFRESH: buildApiUrl(
     import.meta.env.VITE_API_REFRESH_ENDPOINT,
     "/api/v1/auth/refresh",
@@ -40,6 +40,7 @@ export const API_ENDPOINTS = {
     import.meta.env.VITE_API_BOOKS_SEARCH_ENDPOINT,
     "/api/v1/books/search",
   ),
+  BOOKS: buildApiUrl(import.meta.env.VITE_API_BOOKS_ENDPOINT, "/api/v1/books"),
   BOOK_SAVE: USER_ME_BOOKS_ENDPOINT,
   GET_USERBOOKS: USER_ME_BOOKS_ENDPOINT,
   DELETE_USERBOOK: USER_ME_BOOKS_ENDPOINT,

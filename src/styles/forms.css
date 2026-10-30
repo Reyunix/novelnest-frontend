@@ -1,0 +1,83 @@
+/* Forms and secondary pages */
+.center {
+  width: min(100% - 2rem, 29rem);
+  margin-inline: auto;
+}
+.form-layout {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+.form-header {
+  margin-bottom: 1.75rem;
+}
+.form-h1 {
+  font-size: 2.25rem;
+}
+.form {
+  display: grid;
+  gap: 1rem;
+}
+.form-group {
+  display: grid;
+  gap: 0.4rem;
+}
+.form-label {
+  font-size: 0.85rem;
+  color: var(--text-main);
+}
+.form-input-field {
+  width: 100%;
+}
+.form textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+.required-field {
+  color: var(--error);
+}
+.form-footer {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+.btn {
+  border: 0;
+  border-radius: 0.55rem;
+  min-height: 2.9rem;
+  background: var(--accent);
+  color: white;
+  padding: 0.65rem 1rem;
+  font-weight: 600;
+}
+.btn:hover {
+  background: var(--accent-dark);
+}
+.links {
+  font-size: 0.82rem;
+  color: var(--accent-dark);
+}
+.flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+}
+.error-message {
+  color: var(--error);
+  font-size: 0.82rem;
+}
+[aria-invalid="true"] {
+  border-color: var(--error);
+}
+.about-page {
+  max-width: 48rem;
+  padding: 2rem;
+  display: grid;
+  gap: 1.5rem;
+}
+.about-page h2 {
+  font-size: 1.8rem;
+}

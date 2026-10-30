@@ -1,4 +1,5 @@
-export type AuthStatus = "loading" | "authenticated" | "unauthenticated";
+export type AuthStatus =
+  "loading" | "authenticated" | "unauthenticated" | "error";
 export type User = {
   userId?: number;
   userName?: string;

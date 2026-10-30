@@ -1,158 +1,185 @@
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../features/auth/authContext";
+import { searchLink } from "../../features/books/searchQuery";
 
-export const Inicio: React.FC = () => {
+const selection = [
+  {
+    title: "La sombra del viento",
+    author: "Carlos Ruiz Zafón",
+    tone: "terracotta",
+    letter: "Z",
+    category: "Una ciudad, muchos secretos",
+  },
+  {
+    title: "1984",
+    author: "George Orwell",
+    tone: "olive",
+    letter: "O",
+    category: "Para mirar el mundo de otra manera",
+  },
+  {
+    title: "La biblioteca de la medianoche",
+    author: "Matt Haig",
+    tone: "ink",
+    letter: "H",
+    category: "Todas las vidas posibles",
+  },
+];
+
+export const Inicio = () => {
+  const { isAuthenticated } = useAuth();
   return (
-    <div className="layout">
-      <div className="hero-container section-padding">
-        <section className="hero-section" aria-labelledby="inicio-title">
-          <h1 id="inicio-title" className="main-title">
-            Bienvenido a <em>Novelnest</em>
+    <div className="page-shell home-page">
+      <section className="home-hero" aria-labelledby="home-title">
+        <div className="home-hero-copy">
+          <p className="eyebrow">Un lugar para tus lecturas</p>
+          <h1 id="home-title">
+            Hay libros que
+            <br />
+            merecen <em>quedarse.</em>
           </h1>
-          <p className="subtitle">
-            Comienza a organizar, recordar y dar seguimiento a <em>todas tus lecturas</em>.
+          <p className="hero-description">
+            Encuentra tu próxima historia, guarda tus pendientes y lleva contigo
+            los libros que ya forman parte de ti.
           </p>
-          <p>
-            Un lugar pensado para quienes disfrutan leyendo y quieren reunir su
-            biblioteca personal en un espacio claro, cómodo y fácil de consultar.
+          <div className="hero-actions">
+            <Link className="button button-primary" to="/buscar">
+              Descubrir libros <span aria-hidden="true">→</span>
+            </Link>
+            <Link
+              className="text-link"
+              to={isAuthenticated ? "/mis-libros" : "/register"}
+            >
+              {isAuthenticated
+                ? "Volver a mi biblioteca"
+                : "Crear mi biblioteca"}{" "}
+              ↗
+            </Link>
+          </div>
+          <p className="hero-note">
+            {isAuthenticated
+              ? "Tu próxima lectura, a un paso de tu biblioteca."
+              : "Explora sin cuenta. Inicia sesión para guardar tus lecturas."}
           </p>
-          <NavLink to="/buscar" className="action-link hover-opacity">
-            ¡Busca tus obras favoritas!
-          </NavLink>
-        </section>
-      </div>
-
-      <div className="home-content-layout section-padding">
-        <section className="main-section" aria-labelledby="introduction">
-          <article className="article">
-            <section id="introduction">
-              <h2>¿Te gusta leer?</h2>
-              <p>
-                Estás en el lugar indicado. Este es un rincón personal en el que
-                podrás guardar todas tus obras favoritas y llevarlas contigo a
-                cualquier parte. Nos complace poder acompañarte en el
-                maravilloso mundo de la lectura.
-              </p>
-              <p>
-                Novelnest te ayuda a convertir lecturas sueltas en una colección
-                viva: una biblioteca que puedes revisar, ordenar y ampliar a tu
-                ritmo.
-              </p>
-            </section>
-
-            <section aria-labelledby="funciones-principales">
-              <h2 id="funciones-principales">¿Qué puedes hacer en Novelnest?</h2>
-              <p>
-                En esta web podrás crear tu propia biblioteca personal con
-                <strong> listas personalizadas</strong> de libros. Podrás
-                organizarlos, clasificarlos y llevar un seguimiento sencillo de
-                todo lo que lees.
-              </p>
-              <ul>
-                <li>Visualizar libros disponibles y descubrir nuevas lecturas.</li>
-                <li>Crear múltiples listas y clasificarlas por temática o género.</li>
-                <li>Marcar libros como leídos o en proceso de lectura.</li>
-                <li>Filtrar los libros por género, autor o estado de lectura.</li>
-                <li>Consultar el progreso de tus lecturas de un vistazo.</li>
-              </ul>
-            </section>
-
-            <section aria-labelledby="como-empezar">
-              <h2 id="como-empezar">Cómo empezar</h2>
-              <ol>
-                <li>Busca un libro por título o autor.</li>
-                <li>Añádelo a tu colección personal.</li>
-                <li>Organízalo en la lista que prefieras.</li>
-                <li>Vuelve cuando quieras para seguir leyendo o descubrir más.</li>
-              </ol>
-            </section>
-
-            <section aria-labelledby="por-que-usarla">
-              <h2 id="por-que-usarla">Por qué usar Novelnest</h2>
-              <p>
-                Porque leer no es solo terminar libros: también es recordarlos,
-                relacionarlos entre sí y conservar aquello que te hicieron
-                sentir. Novelnest quiere ayudarte a que tu experiencia lectora
-                tenga continuidad y orden sin perder cercanía.
-              </p>
-              <p>
-                Tanto si lees de forma constante como si vas por temporadas,
-                aquí tendrás un punto de apoyo para volver a tus historias,
-                revisar tus pendientes y preparar tus próximas lecturas.
-              </p>
-            </section>
-
-            <section aria-labelledby="cta-home">
-              <h2 id="cta-home">Tu próxima lectura puede empezar aquí</h2>
-              <p>
-                Explora títulos, guarda tus favoritos y construye una biblioteca
-                digital que crezca contigo.
-              </p>
-              <NavLink to="/mis-libros" className="action-link hover-opacity">
-                ¡Empieza a coleccionar!
-              </NavLink>
-            </section>
-          </article>
-        </section>
-
-        <aside className="top-books-section small-section" aria-labelledby="top-books-title">
-          <article>
-            <h2 id="top-books-title">Top libros del mes</h2>
-            <p>
-              Una pequeña selección para inspirarte si no sabes cuál será tu
-              próxima lectura.
-            </p>
-            <ol className="top-books-items">
-              <li>
-                <em>
-                  <strong>La llamada</strong>, Leila Guerriero
-                </em>
-              </li>
-              <li>
-                <em>
-                  <strong>La biblioteca de la medianoche</strong>, Matt Haig
-                </em>
-              </li>
-              <li>
-                <em>
-                  <strong>El club de los libros prohibidos</strong>, Kim
-                  Hyun-sook, Ryan Estrada, Ko Hyung-ju
-                </em>
-              </li>
-              <li>
-                <em>
-                  <strong>Un cuento perfecto</strong>, Elísabet Benavent
-                </em>
-              </li>
-              <li>
-                <em>
-                  <strong>La sombra del viento</strong>, Carlos Ruiz Zafón
-                </em>
-              </li>
-              <li>
-                <em>
-                  <strong>1984</strong>, George Orwell
-                </em>
-              </li>
-              <li>
-                <em>
-                  <strong>Los siete maridos de Evelyn Hugo</strong>, Taylor
-                  Jenkins Reid
-                </em>
-              </li>
-              <li>
-                <em>
-                  <strong>El cuento de la criada</strong>, Margaret Atwood
-                </em>
-              </li>
-              <li>
-                <em>
-                  <strong>Matar a un ruiseñor</strong>, Harper Lee
-                </em>
-              </li>
-            </ol>
-          </article>
-        </aside>
-      </div>
+        </div>
+        <div
+          className="library-preview"
+          aria-label="Ejemplo ilustrativo de una biblioteca"
+        >
+          <div className="preview-header">
+            <span className="eyebrow">Así puede verse tu biblioteca</span>
+            <span className="example-badge">Ejemplo</span>
+          </div>
+          <div className="preview-book">
+            <div className="drawn-cover cover-terracotta" aria-hidden="true">
+              <span>
+                La sombra
+                <br />
+                del viento
+              </span>
+              <small>C. R. Zafón</small>
+            </div>
+            <div>
+              <span className="book-category">La historia continúa</span>
+              <h2>
+                Un libro para
+                <br />
+                volver a perderse.
+              </h2>
+              <p>La sombra del viento</p>
+              <span className="status-tag">Leyendo</span>
+            </div>
+          </div>
+          <div className="preview-shelves">
+            <span>
+              Quiero leer <strong>03</strong>
+            </span>
+            <span>
+              Leyendo <strong>01</strong>
+            </span>
+            <span>
+              Leídos <strong>12</strong>
+            </span>
+          </div>
+          <p className="preview-caption">Tus historias, a tu ritmo.</p>
+        </div>
+      </section>
+      <section className="home-how" aria-labelledby="how-title">
+        <div className="section-heading">
+          <p className="eyebrow">Simple, como elegir un libro</p>
+          <h2 id="how-title">De un descubrimiento a tu estantería.</h2>
+        </div>
+        <div className="steps-grid">
+          {[
+            [
+              "01",
+              "Encuentra",
+              "Busca por título, autor o tema. Una pista basta para empezar.",
+            ],
+            [
+              "02",
+              "Guarda",
+              "Añade los libros que te interesan a tu biblioteca personal.",
+            ],
+            [
+              "03",
+              "Sigue leyendo",
+              "Organiza tus libros entre pendientes, leyendo, leídos y abandonados.",
+            ],
+          ].map(([number, title, description]) => (
+            <article className="step" key={number}>
+              <span className="step-number">{number}</span>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="home-selection" aria-labelledby="selection-title">
+        <div className="section-heading heading-with-action">
+          <div>
+            <p className="eyebrow">Por si no sabes por dónde empezar</p>
+            <h2 id="selection-title">Unas lecturas para descubrir.</h2>
+          </div>
+          <Link className="text-link" to="/buscar">
+            Explorar catálogo ↗
+          </Link>
+        </div>
+        <div className="selection-grid">
+          {selection.map((book) => (
+            <Link
+              className="selection-card"
+              key={book.title}
+              to={searchLink(book.title, "title")}
+            >
+              <div
+                className={`selection-art cover-${book.tone}`}
+                aria-hidden="true"
+              >
+                <span className="selection-letter">{book.letter}</span>
+                <span className="selection-art-title">{book.title}</span>
+              </div>
+              <div className="selection-copy">
+                <span className="book-category">{book.category}</span>
+                <h3>{book.title}</h3>
+                <p>{book.author}</p>
+                <span className="text-link">Buscar este libro →</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <p className="catalog-credit">
+          Selección editorial. Las ilustraciones son interpretaciones gráficas,
+          no portadas oficiales.
+        </p>
+      </section>
+      <section className="home-closing surface">
+        <p className="eyebrow">El siguiente capítulo es tuyo</p>
+        <h2>Haz sitio para tu próxima historia.</h2>
+        <Link className="button button-primary" to="/buscar">
+          Encontrar mi próxima lectura →
+        </Link>
+      </section>
     </div>
   );
 };

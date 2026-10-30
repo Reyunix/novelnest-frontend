@@ -1,14 +1,10 @@
-import z from "zod";
+import { z } from "zod";
 
-export const LoginFormSchema = z
-  .object({
-    userName: z.string().trim().optional(),
-    userEmail: z.email("Formato de correo inválido").optional(),
-    userPassword: z.string().min(1, "La contraseña es obligatoria"),
-  })
-  .refine((data) => data.userName || data.userEmail, {
-    error: "Debes proporcionar un nombre de usuario o correo electrónico",
-    path: ["userName"],
-  });
-
+export const LoginFormSchema = z.object({
+  userName: z
+    .string()
+    .trim()
+    .min(1, "Introduce tu nombre de usuario o correo electrónico"),
+  userPassword: z.string().min(1, "La contraseña es obligatoria"),
+});
 export type LoginForm = z.infer<typeof LoginFormSchema>;

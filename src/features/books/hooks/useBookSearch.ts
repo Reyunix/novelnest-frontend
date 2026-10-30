@@ -1,14 +1,14 @@
 import { useFetch } from "../../../shared/hooks/useFetch";
 import { buildBookSearchUrl } from "../books.api";
-import {
-  type BooksSearchSuccessResponse,
-} from "../schemas/books.schemas";
+import { BooksSearchSuccessResponseSchema } from "../schemas/books.schemas";
 
-export const useBookSearch = (submittedQuery: URLSearchParams) => {
-  const url = buildBookSearchUrl(submittedQuery);
-
-  return useFetch<BooksSearchSuccessResponse>({
+const parseSearchResponse = async (response: Response) =>
+  BooksSearchSuccessResponseSchema.parse(await response.json());
+export const useBookSearch = (params: URLSearchParams) => {
+  const url = buildBookSearchUrl(params);
+  return useFetch({
     url,
-    enabled: url !== "",
+    enabled: Boolean(url),
+    parseResponse: parseSearchResponse,
   });
 };

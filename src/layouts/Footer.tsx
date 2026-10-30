@@ -1,47 +1,30 @@
-import { FOOTER_MENU_LINKS } from "../shared/constants/navigation.constants";
 import { Link } from "react-router-dom";
 
-export const Footer: React.FC = () => {
-  return (
-    <footer className="footer">
-      <nav className="footer-nav">
-        <div className="footer-menu-company-wrap">
-          <h3>Empresa</h3>
-          <ul className="footer-menu-company">
-          {FOOTER_MENU_LINKS.company.map((link) => {
-            return (
-              <li key={link.id} className="footer-menu-company-item">
-                <Link rel="noopener noreferrer" to={link.href}> {link.literal} </Link>
-              </li>
-            );
-          })}
-        </ul>
-        </div>
-        <div className="footer-menu-social-wrap">
-          <h3>Conecta</h3>
-          <ul className="footer-menu-social">
-          {FOOTER_MENU_LINKS.social.map((link) => {
-            return (
-              <li key={link.id} className="footer-menu-social-item">
-                <a href={link.href} target="_blank" rel="noopener noreferrer"> {link.literal} </a>
-              </li>
-            );
-          })}
-        </ul>
-        </div>
-        <div className="footer-menu-legal-wrap">
-          <h3>Legal</h3>
-          <ul className="footer-menu-legal">
-          {FOOTER_MENU_LINKS.legal.map((link) => {
-            return (
-              <li key={link.id} className="footer-menu-legal-item">
-                <Link  rel="noopener noreferrer" to={link.href}> {link.literal} </Link>
-              </li>
-            );
-          })}
-        </ul>
-        </div>
+export const Footer = () => (
+  <footer className="footer">
+    <div className="footer-inner">
+      <div>
+        <Link className="footer-brand" to="/inicio">
+          Novelnest<span aria-hidden="true">.</span>
+        </Link>
+        <p>Un lugar para tus lecturas.</p>
+      </div>
+      <nav aria-label="Enlaces del pie de página">
+        <Link to="/buscar">Explorar libros</Link>
+        <Link to="/mis-libros">Mi biblioteca</Link>
+        <Link to="/contact">Sobre el proyecto</Link>
+        <a
+          href="https://github.com/Reyunix"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub ↗
+        </a>
       </nav>
-    </footer>
-  );
-};
+    </div>
+    <p className="footer-note">
+      Hecho para quienes siempre tienen un libro pendiente. Catálogo de Google
+      Books.
+    </p>
+  </footer>
+);

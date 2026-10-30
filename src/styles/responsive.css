@@ -1,0 +1,238 @@
+@media (max-width: 1000px) {
+  .home-hero {
+    gap: 2.5rem;
+  }
+  .book-grid {
+    grid-template-columns: 1fr;
+  }
+  .preview-book {
+    gap: 1rem;
+  }
+  .preview-book h2 {
+    font-size: 1.4rem;
+  }
+  .drawn-cover {
+    width: 6.5rem;
+  }
+  .header-menu {
+    gap: 1.2rem;
+  }
+}
+@media (max-width: 720px) {
+  .page-shell,
+  .header {
+    width: calc(100% - 2rem);
+  }
+  .header {
+    margin-bottom: 1.75rem;
+    padding-block: 1rem;
+  }
+  .header-menu-toggle {
+    display: block;
+  }
+  .header-nav {
+    display: none;
+    position: absolute;
+    top: calc(100% - 1px);
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 0 0 0.6rem 0.6rem;
+    box-shadow: 0 12px 20px #322d2412;
+  }
+  .header-nav--open {
+    display: block;
+  }
+  .header-menu {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.2rem;
+  }
+  .header-menu a {
+    display: block;
+    padding: 0.75rem;
+  }
+  .home-hero {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 0.5rem 0 3rem;
+  }
+  .home-hero-copy {
+    gap: 1.25rem;
+  }
+  .home-hero h1 {
+    font-size: clamp(2.7rem, 10vw, 4rem);
+  }
+  .library-preview {
+    max-width: 30rem;
+    width: calc(100% - 1rem);
+    margin: 0.25rem auto;
+  }
+  .preview-book h2 {
+    font-size: 1.7rem;
+  }
+  .drawn-cover {
+    width: 7rem;
+  }
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .step {
+    grid-template-columns: 2rem 1fr;
+    column-gap: 0.75rem;
+  }
+  .step-number {
+    grid-row: span 2;
+    padding-top: 0.4rem;
+  }
+  .step p {
+    max-width: none;
+  }
+  .home-how {
+    padding-block: 2rem;
+  }
+  .home-selection {
+    padding-block: 2.5rem;
+  }
+  .heading-with-action {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .selection-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .selection-card {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+  }
+  .selection-art {
+    height: 100%;
+    min-height: 11rem;
+    padding: 0.75rem;
+  }
+  .selection-letter {
+    font-size: 4rem;
+  }
+  .selection-art-title {
+    font-size: 0.8rem;
+  }
+  .selection-copy {
+    padding: 1rem;
+  }
+  .selection-copy h3 {
+    font-size: 1.35rem;
+  }
+  .search-form,
+  .library-toolbar {
+    padding: 1.1rem;
+  }
+  .search-input-row {
+    flex-direction: column;
+  }
+  .search-options {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sort-field select {
+    width: 100%;
+  }
+  .results-heading {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .book-card {
+    padding: 1rem;
+    gap: 0.9rem;
+  }
+  .book-cover {
+    width: 4.7rem;
+  }
+  .book-card-title {
+    font-size: 1.2rem;
+  }
+  .book-card-content {
+    gap: 1rem;
+  }
+  .book-category {
+    font-size: 0.6rem;
+  }
+  .book-author {
+    font-size: 0.8rem;
+  }
+  .pagination {
+    gap: 0.75rem;
+    justify-content: space-between;
+  }
+  .pagination .button {
+    font-size: 0.8rem;
+    padding: 0.6rem 0.75rem;
+  }
+  .pagination > span {
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+  .library-summary {
+    gap: 1rem;
+  }
+  .library-summary strong {
+    font-size: 1.4rem;
+  }
+  .library-summary span {
+    font-size: 0.7rem;
+  }
+  .library-search-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .library-book-actions {
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .reading-status {
+    width: 100%;
+  }
+  .reading-status select {
+    width: 100%;
+    min-width: 0;
+  }
+  .library-book h3 {
+    font-size: 1.3rem;
+  }
+  .footer {
+    padding: 2rem 1rem;
+  }
+  .footer-inner {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .footer-inner nav {
+    gap: 1rem;
+  }
+  .form-layout {
+    padding: 1.5rem;
+  }
+  .about-page {
+    padding: 1.5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+@media (max-width: 720px) {
+  .library-search-form {
+    width: 100%;
+  }
+}

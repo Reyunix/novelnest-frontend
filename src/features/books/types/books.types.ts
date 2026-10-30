@@ -1,4 +1,4 @@
-export type BookSearchFilter = "title" | "author" | "subject" | "all";  
+export type BookSearchFilter = "title" | "author" | "subject" | "all";
 export type SortBy = "relevance" | "newest";
 
 export type FilterOption = {
@@ -12,11 +12,3 @@ export type SortOption = {
   value: SortBy;
   literal: string;
 };
-
-// export type BookSearchQuery = {
-//   filterState: BookSearchFilter;
-//   query: string;
-//   sortBy: SortBy;
-// };
-
-export type SaveStateType = "idle" | "saving" | "saved" | "error"

@@ -1,4 +1,5 @@
-import { AUTH_ENDPOINTS } from "./constants/auth.constants";
+import { refreshSessionToken } from "../../shared/http/sessionToken";
+import { API_ENDPOINTS } from "../../shared/config/config.api";
 
 export type ProtectedSessionResponse = {
   data?: {
@@ -12,23 +13,17 @@ export type ProtectedSessionResponse = {
 };
 
 export const getCurrentSession = async (): Promise<Response> => {
-  return fetch(AUTH_ENDPOINTS.ME, {
+  return fetch(API_ENDPOINTS.ME, {
     method: "GET",
     credentials: "include",
   });
 };
 
-export const refreshAccessToken = async (): Promise<Response> => {
-  return fetch(AUTH_ENDPOINTS.REFRESH, {
-    method: "POST",
-    credentials: "include",
-  });
-}
+export const refreshAccessToken = refreshSessionToken;
 
 export const logoutSession = async (): Promise<Response> => {
-  return fetch(AUTH_ENDPOINTS.LOGOUT, {
+  return fetch(API_ENDPOINTS.LOGOUT, {
     method: "POST",
     credentials: "include",
   });
 };
-

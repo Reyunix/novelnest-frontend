@@ -8,7 +8,7 @@ import {
 
 export const BOOK_SEARCH_FILTER_OPTIONS: FilterOption[] = [
   { id: "all", value: "all", literal: "Todo" },
-  { id: "title", value: "title", literal: "Titulo" },
+  { id: "title", value: "title", literal: "Título" },
   { id: "author", value: "author", literal: "Autor" },
   { id: "subject", value: "subject", literal: "Tema" },
 ];
@@ -59,7 +59,7 @@ export const BOOK_STATUS_FILTERS = [
   },
   {
     id: "completed",
-    literal: "Completados",
+    literal: "Leídos",
     href: "/mis-libros?status=completed",
   },
   {

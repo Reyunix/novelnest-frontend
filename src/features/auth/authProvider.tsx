@@ -1,7 +1,9 @@
+import { onSessionExpired } from "../../shared/http/sessionToken";
 import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -18,86 +20,84 @@ import {
 } from "./types/auth.types";
 import { AuthContext } from "./authContext";
 
-const toUser = (payload: ProtectedSessionResponse): User => {
-  const sessionUser = payload.data?.user;
-  if (!sessionUser) return null;
-
-  return sessionUser
-};
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [authStatus, setAuthStatus] = useState<AuthStatus>("loading");
   const [user, setUser] = useState<User>(null);
-
-  const refreshSession = useCallback(async () => {
-    try {
-      let res = await getCurrentSession();
-
-      if (res.status === 401) {
-        const refreshRes = await refreshAccessToken();
-        if (!refreshRes.ok) {
-          setAuthStatus("unauthenticated");
+  const inFlight = useRef<Promise<void> | null>(null);
+  const generation = useRef(0);
+  const refreshSession = useCallback((): Promise<void> => {
+    if (inFlight.current) return inFlight.current;
+    const version = generation.current;
+    const run = async () => {
+      try {
+        let response = await getCurrentSession();
+        if (response.status === 401) {
+          const refreshed = await refreshAccessToken();
+          if (refreshed.status === 401 || refreshed.status === 403) {
+            if (version === generation.current) {
+              setUser(null);
+              setAuthStatus("unauthenticated");
+            }
+            return;
+          }
+          if (!refreshed.ok) throw new Error("Session unavailable");
+          response = await getCurrentSession();
+        }
+        if (version !== generation.current) return;
+        if (response.status === 401) {
           setUser(null);
+          setAuthStatus("unauthenticated");
           return;
         }
-        res = await getCurrentSession();
+        if (!response.ok) throw new Error("Session unavailable");
+        const payload = (await response.json()) as ProtectedSessionResponse;
+        if (version !== generation.current) return;
+        const nextUser = payload.data?.user;
+        if (!nextUser?.userId) throw new Error("Invalid session");
+        setUser(nextUser);
+        setAuthStatus("authenticated");
+      } catch {
+        if (version === generation.current) setAuthStatus("error");
       }
-
-      if (!res.ok) {
-        setAuthStatus("unauthenticated");
-        setUser(null);
-        return;
-      }
-
-      const payload = (await res.json()) as ProtectedSessionResponse;
-      const nextUser = toUser(payload);
-
-      if (!nextUser) {
-        setAuthStatus("unauthenticated");
-        setUser(null);
-        return;
-      }
-
-      setUser(nextUser);
-      setAuthStatus("authenticated");
-    } catch {
-      setAuthStatus("unauthenticated");
-      setUser(null);
-    }
-  }, []);
-
-  const logout = useCallback(async () => {
-    try {
-      const res = await logoutSession();
-      setAuthStatus("unauthenticated");
-      setUser(null);
-      return res.ok;
-    } catch {
-      setAuthStatus("unauthenticated");
-      setUser(null);
-      return false;
-    }
-  }, []);
-
-  // On mount, check if there's an active session
-  useEffect(() => {
-    // inline async function to avoid linting warnings
-    const initializeSession = async () => {
-      await refreshSession();
     };
-    void initializeSession();
+    const pending = run();
+    inFlight.current = pending;
+    void pending.finally(() => {
+      if (inFlight.current === pending) inFlight.current = null;
+    });
+    return pending;
+  }, []);
+  const logout = useCallback(async () => {
+    const response = await logoutSession();
+    if (!response.ok) return false;
+    ++generation.current;
+    inFlight.current = null;
+    setUser(null);
+    setAuthStatus("unauthenticated");
+    return true;
+  }, []);
+  useEffect(() => {
+    void refreshSession();
   }, [refreshSession]);
-
-  const value: AuthContextValue = useMemo(
+  useEffect(
+    () =>
+      onSessionExpired(() => {
+        ++generation.current;
+        inFlight.current = null;
+        setUser(null);
+        setAuthStatus("unauthenticated");
+      }),
+    [],
+  );
+  const value = useMemo<AuthContextValue>(
     () => ({
       authStatus,
       isAuthenticated: authStatus === "authenticated",
+      user,
       refreshSession,
       logout,
-      user,
     }),
-    [authStatus, refreshSession, logout, user],
+    [authStatus, user, refreshSession, logout],
   );
-
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

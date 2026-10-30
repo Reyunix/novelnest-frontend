@@ -12,8 +12,12 @@ export const NotificationToast = () => {
       aria-live="polite"
     >
       <p>{message}</p>
-      <button type="button" onClick={hideNotification} aria-label="Close notification">
-        x
+      <button
+        type="button"
+        onClick={hideNotification}
+        aria-label="Cerrar notificación"
+      >
+        ×
       </button>
     </aside>
   );
