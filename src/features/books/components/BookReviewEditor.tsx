@@ -1,3 +1,4 @@
+import { StarRating } from "./StarRating";
 import {
   readReviewDraft,
   writeReviewDraft,
@@ -13,11 +14,13 @@ export const BookReviewEditor = ({
   draftKey,
   url,
   onSaved,
+  onCancel,
 }: {
   own: Review | null;
   draftKey: string;
   url: string;
   onSaved: (review: Review | null) => Promise<void>;
+  onCancel?: () => void;
 }) => {
   const [draft, setDraft] = useState(() =>
     readReviewDraft(draftKey, {
@@ -96,6 +99,7 @@ export const BookReviewEditor = ({
           </option>
         ))}
       </select>
+      {rating && <StarRating value={Number(rating)} />}
       <label htmlFor="review-text">Tu reseña (opcional)</label>
       <textarea
         id="review-text"
@@ -116,6 +120,16 @@ export const BookReviewEditor = ({
               ? "Actualizar aportación"
               : "Publicar aportación"}
         </button>
+        {onCancel && (
+          <button
+            type="button"
+            className="button button-secondary"
+            disabled={pending}
+            onClick={onCancel}
+          >
+            Cancelar edición
+          </button>
+        )}
         {own && (
           <button
             type="button"

@@ -132,3 +132,70 @@
     padding: 1rem;
   }
 }
+
+/* Community rhythm and published contribution */
+.community-participation {
+  margin: 2rem 0 2.5rem;
+}
+.community-participation > h2 {
+  margin-bottom: 1rem;
+}
+.reader-reviews-heading {
+  margin: 0 0 1rem;
+}
+.own-review {
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+.own-review .review-heading {
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.own-review h3 {
+  margin: 0;
+}
+.own-review-section > [role="status"] {
+  margin-top: 1rem;
+}
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.6rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.rating-stars {
+  position: relative;
+  display: inline-block;
+  color: #aaa49a;
+  font-family: Arial, sans-serif;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+.rating-stars-filled {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #956820;
+}
+.book-rating > .star-rating {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+.external-rating .star-rating {
+  font-size: 0.9rem;
+}
+.review-heading .star-rating {
+  flex-shrink: 0;
+}
+@media (max-width: 650px) {
+  .review-heading {
+    flex-wrap: wrap;
+  }
+}
